@@ -20,7 +20,6 @@ struct ItemDetailsView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                // Display item image
                 if let url = URL(string: item.imageURL) {
                     AsyncImage(url: url) { image in
                         image.resizable().scaledToFit()
@@ -106,12 +105,9 @@ struct ItemDetailsView: View {
             await viewModel.fetchItemHistory(for: item.id)
         }
         .sheet(isPresented: $isEditing) {
-            // Present the edit view
             EditItemView(editableItem: item) { updatedItem in
-                // Update the local state
                 self.item = updatedItem
                 
-                // Call the update function asynchronously
                 Task {
                     do {
                         try await InventoryService().updateItem(updatedItem)

@@ -30,7 +30,6 @@ struct InventoryService {
             throw NSError(domain: "InvalidItemID", code: -1, userInfo: [NSLocalizedDescriptionKey: "Item ID must be numeric for row mapping."])
         }
         
-        // Construct the range – adjust as necessary for your sheet's layout.
         let range = "Inventory!A\(rowNumber):J\(rowNumber)"
         let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/\(range)?valueInputOption=USER_ENTERED&key=\(apiKey)"
         
@@ -38,7 +37,6 @@ struct InventoryService {
             throw NetworkError.invalidURL
         }
         
-        // Build the updated row values.
         let updatedValues: [[Any]] = [[
             item.id,
             item.imageURL,
@@ -55,13 +53,11 @@ struct InventoryService {
         let payload: [String: Any] = ["values": updatedValues]
         let jsonData = try JSONSerialization.data(withJSONObject: payload, options: [])
         
-        // Create the URLRequest with method PUT.
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = jsonData
         
-        // Execute the request.
         let (data, _) = try await URLSession.shared.data(for: request)
         print("Update response: \(String(data: data, encoding: .utf8) ?? "")")
     }
