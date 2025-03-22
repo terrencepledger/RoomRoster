@@ -22,6 +22,7 @@
 		767E82C72D8F1A2B00B48011 /* InventoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767E82C62D8F1A2B00B48011 /* InventoryService.swift */; };
 		767E82C92D8F1AA500B48011 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767E82C82D8F1AA500B48011 /* NetworkService.swift */; };
 		767E82CB2D8F1B2C00B48011 /* ItemDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767E82CA2D8F1B2C00B48011 /* ItemDetailsViewModel.swift */; };
+		767E82CD2D8F2D0200B48011 /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 767E82CC2D8F2CFC00B48011 /* Secrets.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 		767E82C62D8F1A2B00B48011 /* InventoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryService.swift; sourceTree = "<group>"; };
 		767E82C82D8F1AA500B48011 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		767E82CA2D8F1B2C00B48011 /* ItemDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailsViewModel.swift; sourceTree = "<group>"; };
+		767E82CC2D8F2CFC00B48011 /* Secrets.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Secrets.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +121,7 @@
 			children = (
 				767E82C82D8F1AA500B48011 /* NetworkService.swift */,
 				767E82C62D8F1A2B00B48011 /* InventoryService.swift */,
+				767B05BE2D4C5F9E00566C25 /* GoogleSheetsResponse.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -146,13 +149,13 @@
 		767B058E2D4C5DC000566C25 /* RoomRoster */ = {
 			isa = PBXGroup;
 			children = (
+				767E82CC2D8F2CFC00B48011 /* Secrets.plist */,
 				767E82C42D8F19EE00B48011 /* AppConfig.swift */,
-				765183BC2D8CD25300FBA72E /* Services */,
+				767B058F2D4C5DC000566C25 /* RoomRosterApp.swift */,
 				765183BB2D8CD22300FBA72E /* Models */,
+				765183BC2D8CD25300FBA72E /* Services */,
 				765183BA2D8CD20800FBA72E /* ViewModels */,
 				765183B92D8CD1F300FBA72E /* Views */,
-				767B058F2D4C5DC000566C25 /* RoomRosterApp.swift */,
-				767B05BE2D4C5F9E00566C25 /* GoogleSheetsResponse.swift */,
 				767B05952D4C5DC400566C25 /* Assets.xcassets */,
 				767B05972D4C5DC400566C25 /* RoomRoster.entitlements */,
 				767B05982D4C5DC400566C25 /* Preview Content */,
@@ -290,6 +293,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				767B059A2D4C5DC400566C25 /* Preview Assets.xcassets in Resources */,
+				767E82CD2D8F2D0200B48011 /* Secrets.plist in Resources */,
 				767B05962D4C5DC400566C25 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

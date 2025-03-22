@@ -5,8 +5,27 @@
 //  Created by Terrence Pledger on 3/22/25.
 //
 
+import Foundation
+
 struct AppConfig {
     static let shared = AppConfig()
-    let sheetId: String = "1ou2GfHqxToomJ4RqUD1AWE4zvs-3t3k3zm9XsXhd7xw"
-    let apiKey: String = "AIzaSyDrXnrlOfWOOtfnCFy8HLENg7jXXh1NFt0"
+    
+    let sheetId: String
+    let apiKey: String
+    
+    private init() {
+        guard let url = Bundle.main.url(forResource: "Secrets", withExtension: "plist"),
+              let data = try? Data(contentsOf: url),
+              let plist = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String: Any] else {
+            fatalError("Unable to load Secrets.plist")
+        }
+        
+        guard let sheetId = plist["SheetID"] as? String,
+              let apiKey = plist["GoogleSheetsAPIKey"] as? String else {
+            fatalError("Missing keys in Secrets.plist")
+        }
+        
+        self.sheetId = sheetId
+        self.apiKey = apiKey
+    }
 }
