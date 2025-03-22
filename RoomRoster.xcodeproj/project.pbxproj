@@ -25,6 +25,8 @@
 		767E82CD2D8F2D0200B48011 /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 767E82CC2D8F2CFC00B48011 /* Secrets.plist */; };
 		767E82D32D8F34C800B48011 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767E82D22D8F34C800B48011 /* Extensions.swift */; };
 		767E82D52D8F356500B48011 /* EditItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767E82D42D8F356500B48011 /* EditItemView.swift */; };
+		767E82D72D8F3ABE00B48011 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767E82D62D8F3ABE00B48011 /* AuthenticationManager.swift */; };
+		767E82DA2D8F3B4E00B48011 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 767E82D92D8F3B4E00B48011 /* GoogleSignIn */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +69,8 @@
 		767E82CC2D8F2CFC00B48011 /* Secrets.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Secrets.plist; sourceTree = "<group>"; };
 		767E82D22D8F34C800B48011 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		767E82D42D8F356500B48011 /* EditItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditItemView.swift; sourceTree = "<group>"; };
+		767E82D62D8F3ABE00B48011 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
+		767E82DF2D8F52FF00B48011 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				767E82DA2D8F3B4E00B48011 /* GoogleSignIn in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -154,6 +159,7 @@
 		767B058E2D4C5DC000566C25 /* RoomRoster */ = {
 			isa = PBXGroup;
 			children = (
+				767E82DF2D8F52FF00B48011 /* Info.plist */,
 				767E82CC2D8F2CFC00B48011 /* Secrets.plist */,
 				767E82C42D8F19EE00B48011 /* AppConfig.swift */,
 				767B058F2D4C5DC000566C25 /* RoomRosterApp.swift */,
@@ -197,6 +203,7 @@
 		767E82D12D8F34B900B48011 /* Utitlities */ = {
 			isa = PBXGroup;
 			children = (
+				767E82D62D8F3ABE00B48011 /* AuthenticationManager.swift */,
 				767E82D22D8F34C800B48011 /* Extensions.swift */,
 			);
 			path = Utitlities;
@@ -290,6 +297,9 @@
 				Base,
 			);
 			mainGroup = 767B05832D4C5DC000566C25;
+			packageReferences = (
+				767E82D82D8F3B4E00B48011 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+			);
 			productRefGroup = 767B058D2D4C5DC000566C25 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -340,6 +350,7 @@
 				767B05BD2D4C5E1700566C25 /* InventoryViewModel.swift in Sources */,
 				767E82D52D8F356500B48011 /* EditItemView.swift in Sources */,
 				767E82C52D8F19EE00B48011 /* AppConfig.swift in Sources */,
+				767E82D72D8F3ABE00B48011 /* AuthenticationManager.swift in Sources */,
 				767B05942D4C5DC000566C25 /* Item.swift in Sources */,
 				767E82C92D8F1AA500B48011 /* NetworkService.swift in Sources */,
 				767B05BF2D4C5F9E00566C25 /* GoogleSheetsResponse.swift in Sources */,
@@ -508,6 +519,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RoomRoster/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -546,6 +558,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RoomRoster/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -701,6 +714,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		767E82D82D8F3B4E00B48011 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		767E82D92D8F3B4E00B48011 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 767E82D82D8F3B4E00B48011 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 767B05842D4C5DC000566C25 /* Project object */;
 }

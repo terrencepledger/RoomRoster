@@ -25,13 +25,20 @@ struct InventoryService {
         return []
     }
     
-    func updateItem(_ item: Item) async throws {
-        guard let rowNumber = Int(item.id) else {
-            throw NSError(domain: "InvalidItemID", code: -1, userInfo: [NSLocalizedDescriptionKey: "Item ID must be numeric for row mapping."])
+    func getRowNumber(for id: String) async throws -> Int {
+        let response = try await fetchInventory()
+        
+        guard let index = response.values.dropFirst().firstIndex(where: { $0.first == id }) else {
+            throw NSError(domain: "InventoryService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Row not found for id \(id)"])
         }
         
+        return index + 2
+    }
+    
+    func updateItem(_ item: Item) async throws {
+        let rowNumber = try await getRowNumber(for: item.id)
         let range = "Inventory!A\(rowNumber):J\(rowNumber)"
-        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/\(range)?valueInputOption=USER_ENTERED&key=\(apiKey)"
+        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/\(range)?valueInputOption=USER_ENTERED"
         
         guard let url = URL(string: urlString) else {
             throw NetworkError.invalidURL
@@ -53,9 +60,14 @@ struct InventoryService {
         let payload: [String: Any] = ["values": updatedValues]
         let jsonData = try JSONSerialization.data(withJSONObject: payload, options: [])
         
+        guard let accessToken = await AuthenticationManager.shared.accessToken else {
+            throw NSError(domain: "Auth", code: -1, userInfo: [NSLocalizedDescriptionKey: "User is not signed in"])
+        }
+        
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         request.httpBody = jsonData
         
         let (data, _) = try await URLSession.shared.data(for: request)

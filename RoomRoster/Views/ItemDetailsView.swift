@@ -102,6 +102,7 @@ struct ItemDetailsView: View {
         }
         .navigationTitle("Item Details")
         .task {
+            try? await AuthenticationManager.shared.signIn()
             await viewModel.fetchItemHistory(for: item.id)
         }
         .sheet(isPresented: $isEditing) {
