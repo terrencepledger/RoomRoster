@@ -23,6 +23,8 @@
 		767E82C92D8F1AA500B48011 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767E82C82D8F1AA500B48011 /* NetworkService.swift */; };
 		767E82CB2D8F1B2C00B48011 /* ItemDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767E82CA2D8F1B2C00B48011 /* ItemDetailsViewModel.swift */; };
 		767E82CD2D8F2D0200B48011 /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 767E82CC2D8F2CFC00B48011 /* Secrets.plist */; };
+		767E82D32D8F34C800B48011 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767E82D22D8F34C800B48011 /* Extensions.swift */; };
+		767E82D52D8F356500B48011 /* EditItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767E82D42D8F356500B48011 /* EditItemView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +65,8 @@
 		767E82C82D8F1AA500B48011 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		767E82CA2D8F1B2C00B48011 /* ItemDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailsViewModel.swift; sourceTree = "<group>"; };
 		767E82CC2D8F2CFC00B48011 /* Secrets.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Secrets.plist; sourceTree = "<group>"; };
+		767E82D22D8F34C800B48011 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		767E82D42D8F356500B48011 /* EditItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditItemView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +97,7 @@
 		765183B92D8CD1F300FBA72E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				767E82D42D8F356500B48011 /* EditItemView.swift */,
 				767B05912D4C5DC000566C25 /* ContentView.swift */,
 				767B05C02D4C666F00566C25 /* ItemDetailsView.swift */,
 			);
@@ -156,6 +161,7 @@
 				765183BC2D8CD25300FBA72E /* Services */,
 				765183BA2D8CD20800FBA72E /* ViewModels */,
 				765183B92D8CD1F300FBA72E /* Views */,
+				767E82D12D8F34B900B48011 /* Utitlities */,
 				767B05952D4C5DC400566C25 /* Assets.xcassets */,
 				767B05972D4C5DC400566C25 /* RoomRoster.entitlements */,
 				767B05982D4C5DC400566C25 /* Preview Content */,
@@ -186,6 +192,14 @@
 				767B05AF2D4C5DC400566C25 /* RoomRosterUITestsLaunchTests.swift */,
 			);
 			path = RoomRosterUITests;
+			sourceTree = "<group>";
+		};
+		767E82D12D8F34B900B48011 /* Utitlities */ = {
+			isa = PBXGroup;
+			children = (
+				767E82D22D8F34C800B48011 /* Extensions.swift */,
+			);
+			path = Utitlities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -324,10 +338,12 @@
 				767E82CB2D8F1B2C00B48011 /* ItemDetailsViewModel.swift in Sources */,
 				767B05922D4C5DC000566C25 /* ContentView.swift in Sources */,
 				767B05BD2D4C5E1700566C25 /* InventoryViewModel.swift in Sources */,
+				767E82D52D8F356500B48011 /* EditItemView.swift in Sources */,
 				767E82C52D8F19EE00B48011 /* AppConfig.swift in Sources */,
 				767B05942D4C5DC000566C25 /* Item.swift in Sources */,
 				767E82C92D8F1AA500B48011 /* NetworkService.swift in Sources */,
 				767B05BF2D4C5F9E00566C25 /* GoogleSheetsResponse.swift in Sources */,
+				767E82D32D8F34C800B48011 /* Extensions.swift in Sources */,
 				767B05902D4C5DC000566C25 /* RoomRosterApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -8,12 +8,19 @@
 import SwiftUI
 
 struct ItemDetailsView: View {
-    var item: Item
+    @State var item: Item
+    @State private var historyLogs: [String] = []
+    @State private var isEditing = false
     @StateObject private var viewModel = ItemDetailsViewModel()
+    
+    init(item: Item) {
+        _item = State(initialValue: item)
+    }
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
+                // Display item image
                 if let url = URL(string: item.imageURL) {
                     AsyncImage(url: url) { image in
                         image.resizable().scaledToFit()
@@ -28,33 +35,42 @@ struct ItemDetailsView: View {
                     Text(item.name)
                         .font(.title)
                         .fontWeight(.bold)
+                    
                     Text(item.description)
                         .font(.body)
                         .foregroundColor(.gray)
+                    
                     Divider()
+                    
                     HStack {
                         Text("Date Added:").bold()
                         Text(item.dateAdded)
                     }
+                    
                     if let price = item.estimatedPrice {
                         HStack {
                             Text("Estimated Price:").bold()
                             Text("$\(price, specifier: "%.2f")")
                         }
                     }
+                    
                     HStack {
                         Text("Status:").bold()
                         Text(item.status)
                             .foregroundColor(item.statusColor)
                     }
+                    
                     HStack {
                         Text("Last Known Room:").bold()
                         Text(item.lastKnownRoom)
                     }
+                    
                     if let date = item.lastUpdated {
                         Text("Last Updated: \(date.description(with: .autoupdatingCurrent))")
                     }
+                    
                     Divider()
+                    
                     Text("History Log")
                         .font(.headline)
                         .padding(.top)
@@ -73,7 +89,7 @@ struct ItemDetailsView: View {
                 .padding()
                 
                 Button(action: {
-                    // Navigate to edit screen
+                    isEditing = true
                 }) {
                     Text("Edit Item")
                         .frame(maxWidth: .infinity)
@@ -88,6 +104,23 @@ struct ItemDetailsView: View {
         .navigationTitle("Item Details")
         .task {
             await viewModel.fetchItemHistory(for: item.id)
+        }
+        .sheet(isPresented: $isEditing) {
+            // Present the edit view
+            EditItemView(editableItem: item) { updatedItem in
+                // Update the local state
+                self.item = updatedItem
+                
+                // Call the update function asynchronously
+                Task {
+                    do {
+                        try await InventoryService().updateItem(updatedItem)
+                        // Optionally, you could trigger a refresh of the inventory list.
+                    } catch {
+                        print("Error updating item: \(error)")
+                    }
+                }
+            }
         }
     }
 }
