@@ -18,7 +18,7 @@ extension GoogleSheetsResponse {
         guard values.count > 1 else { return [] } // Ensure there’s data beyond headers
         
         return values.dropFirst().compactMap { row in
-            guard row.count >= 9 else { return nil } // Ensure row has enough columns
+            guard row.count >= 10 else { return nil } // Ensure row has enough columns
             
             return Item(
                 id: row[0],

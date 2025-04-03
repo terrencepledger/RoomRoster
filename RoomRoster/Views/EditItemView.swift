@@ -17,17 +17,65 @@ struct EditItemView: View {
         NavigationView {
             Form {
                 Section(header: Text("Basic Information")) {
-                    TextField("Name", text: $editableItem.name)
-                    TextField("Description", text: $editableItem.description)
+                    HStack {
+                        Text("Name")
+                            .foregroundColor(.gray)
+                        Spacer()
+                        TextField("Enter name", text: $editableItem.name)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    HStack {
+                        Text("Description")
+                            .foregroundColor(.gray)
+                        Spacer()
+                        TextField("Enter description", text: $editableItem.description)
+                            .multilineTextAlignment(.trailing)
+                    }
                 }
                 
                 Section(header: Text("Details")) {
-                    TextField("Image URL", text: $editableItem.imageURL)
-                    TextField("Date Added", text: $editableItem.dateAdded)
-                    TextField("Estimated Price", value: $editableItem.estimatedPrice, format: .number)
-                    TextField("Status", text: $editableItem.status)
-                    TextField("Last Known Room", text: $editableItem.lastKnownRoom)
-                    TextField("Updated By", text: $editableItem.updatedBy)
+                    HStack {
+                        Text("Image URL")
+                            .foregroundColor(.gray)
+                        Spacer()
+                        TextField("Enter image URL", text: $editableItem.imageURL)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    HStack {
+                        Text("Date Added")
+                            .foregroundColor(.gray)
+                        Spacer()
+                        TextField("Enter date", text: $editableItem.dateAdded)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    HStack {
+                        Text("Estimated Price")
+                            .foregroundColor(.gray)
+                        Spacer()
+                        TextField("Enter price", value: $editableItem.estimatedPrice, format: .number)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    HStack {
+                        Text("Status")
+                            .foregroundColor(.gray)
+                        Spacer()
+                        TextField("Enter status", text: $editableItem.status)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    HStack {
+                        Text("Last Known Room")
+                            .foregroundColor(.gray)
+                        Spacer()
+                        TextField("Enter room", text: $editableItem.lastKnownRoom)
+                            .multilineTextAlignment(.trailing)
+                    }
+                    HStack {
+                        Text("Updated By")
+                            .foregroundColor(.gray)
+                        Spacer()
+                        TextField("Enter updater", text: $editableItem.updatedBy)
+                            .multilineTextAlignment(.trailing)
+                    }
                 }
                 
                 Section {
@@ -35,7 +83,6 @@ struct EditItemView: View {
                         onSave(editableItem)
                         dismiss()
                     }
-                    // Disable save if essential fields are empty.
                     .disabled(editableItem.name.isEmpty || editableItem.description.isEmpty)
                 }
             }
