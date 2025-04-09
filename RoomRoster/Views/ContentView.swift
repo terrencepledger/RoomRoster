@@ -26,6 +26,9 @@ struct ContentView: View {
             .task {
                 await viewModel.fetchInventory()
             }
+            .refreshable {
+                await viewModel.fetchInventory()
+            }
         }
     }
 }
