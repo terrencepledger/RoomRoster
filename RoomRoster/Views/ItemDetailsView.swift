@@ -39,6 +39,15 @@ struct ItemDetailsView: View {
                         .font(.body)
                         .foregroundColor(.gray)
                     
+                    if let tag = item.propertyTag {
+                        HStack {
+                            Text("Property Tag:")
+                                .font(.headline)
+                            
+                            Text(tag)
+                        }
+                    }
+                    
                     Divider()
                     
                     HStack {
@@ -72,7 +81,6 @@ struct ItemDetailsView: View {
                     
                     Text("History Log")
                         .font(.headline)
-                        .padding(.top)
                     
                     if viewModel.historyLogs.isEmpty {
                         Text("No history available")
@@ -136,7 +144,8 @@ struct ItemDetailsView_Previews: PreviewProvider {
             status: "Available",
             lastKnownRoom: "Sanctuary",
             updatedBy: "John Doe",
-            lastUpdated: Date.now
+            lastUpdated: Date.now,
+            propertyTag: "0000"
         ))
     }
 }

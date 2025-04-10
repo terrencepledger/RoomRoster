@@ -9,7 +9,6 @@ import Foundation
 import SwiftData
 import SwiftUICore
 
-// Sample Item Model Update
 struct Item: Identifiable {
     var id: String
     var imageURL: String
@@ -21,6 +20,7 @@ struct Item: Identifiable {
     var lastKnownRoom: String
     var updatedBy: String
     var lastUpdated: Date?
+    var propertyTag: String?
 }
 
 extension Item {

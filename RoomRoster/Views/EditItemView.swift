@@ -31,6 +31,20 @@ struct EditItemView: View {
                         TextField("Enter description", text: $editableItem.description)
                             .multilineTextAlignment(.trailing)
                     }
+                    
+                    HStack {
+                        Text("Property Tag")
+                        Spacer()
+                        TextField("Enter Tag", text: Binding<String>(
+                            get: {
+                                editableItem.propertyTag ?? ""
+                            },
+                            set: { newValue in
+                                editableItem.propertyTag = newValue
+                            }
+                        ))
+                        .multilineTextAlignment(.trailing)
+                    }
                 }
                 
                 Section(header: Text("Details")) {

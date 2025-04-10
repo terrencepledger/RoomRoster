@@ -17,7 +17,7 @@ class InventoryViewModel: ObservableObject {
             let response = try await service.fetchInventory()
             self.items = response.toItems()
         } catch {
-            // Handle error appropriately (e.g., update UI or show an alert)
+            // TODO: Handle error appropriately (e.g., update UI or show an alert)
             print("Error fetching inventory: \(error)")
         }
     }

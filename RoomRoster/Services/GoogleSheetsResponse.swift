@@ -30,7 +30,8 @@ extension GoogleSheetsResponse {
                 status: row[6],
                 lastKnownRoom: row[7],
                 updatedBy: row[8],
-                lastUpdated: ISO8601DateFormatter().date(from: row[9])
+                lastUpdated: ISO8601DateFormatter().date(from: row[9]),
+                propertyTag: row[10]
             )
         }
     }

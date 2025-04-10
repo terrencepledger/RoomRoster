@@ -37,7 +37,7 @@ struct InventoryService {
     
     func updateItem(_ item: Item) async throws {
         let rowNumber = try await getRowNumber(for: item.id)
-        let range = "Inventory!A\(rowNumber):J\(rowNumber)"
+        let range = "Inventory!A\(rowNumber):K\(rowNumber)"
         let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/\(range)?valueInputOption=USER_ENTERED"
         
         guard let url = URL(string: urlString) else {
@@ -54,7 +54,8 @@ struct InventoryService {
             item.status,
             item.lastKnownRoom,
             item.updatedBy,
-            item.lastUpdated?.iso8601String() ?? ""
+            item.lastUpdated?.iso8601String() ?? "",
+            item.propertyTag ?? ""
         ]]
         
         let payload: [String: Any] = ["values": updatedValues]

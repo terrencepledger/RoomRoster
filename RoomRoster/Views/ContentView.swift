@@ -19,6 +19,11 @@ struct ContentView: View {
                         Text(item.name).font(.headline)
                         Text("Status: \(item.status)")
                         Text("Room: \(item.lastKnownRoom)")
+                        if let tag = item.propertyTag {
+                            Text("Tag: \(tag)")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                        }
                     }
                 }
             }
