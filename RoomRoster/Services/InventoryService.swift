@@ -32,7 +32,7 @@ struct InventoryService {
             throw NSError(domain: "InventoryService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Row not found for id \(id)"])
         }
         
-        return index + 2
+        return index + 1
     }
     
     func updateItem(_ item: Item) async throws {
@@ -44,6 +44,9 @@ struct InventoryService {
             throw NetworkError.invalidURL
         }
         
+        let updatedDate = Date()
+        let updatedBy = await AuthenticationManager.shared.userName ?? "Unknown User"
+        
         let updatedValues: [[Any]] = [[
             item.id,
             item.imageURL,
@@ -53,8 +56,8 @@ struct InventoryService {
             item.estimatedPrice ?? "",
             item.status,
             item.lastKnownRoom,
-            item.updatedBy,
-            item.lastUpdated?.iso8601String() ?? "",
+            updatedBy,
+            updatedDate.iso8601String(),
             item.propertyTag ?? ""
         ]]
         

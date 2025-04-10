@@ -15,6 +15,7 @@ class AuthenticationManager: ObservableObject {
     
     @Published var isSignedIn: Bool = false
     @Published var accessToken: String?
+    @Published var userName: String?
     
     private init() { }
     
@@ -31,6 +32,7 @@ class AuthenticationManager: ObservableObject {
         let token = signInResult.user.accessToken.tokenString
         self.accessToken = token
         self.isSignedIn = true
+        self.userName = signInResult.user.profile?.name
     }
     
     func signOut() {

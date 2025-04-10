@@ -83,13 +83,6 @@ struct EditItemView: View {
                         TextField("Enter room", text: $editableItem.lastKnownRoom)
                             .multilineTextAlignment(.trailing)
                     }
-                    HStack {
-                        Text("Updated By")
-                            .foregroundColor(.gray)
-                        Spacer()
-                        TextField("Enter updater", text: $editableItem.updatedBy)
-                            .multilineTextAlignment(.trailing)
-                    }
                 }
                 
                 Section {
