@@ -25,6 +25,84 @@ struct InventoryService {
         return []
     }
     
+    func appendHistoryLog(for item: Item, action: String) async throws {
+        let historyURLString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/HistoryLog?key=\(apiKey)"
+        let historyResponse: GoogleSheetsResponse = try await NetworkService.shared.fetchData(from: historyURLString)
+        
+        var existingRowIndex: Int? = nil
+        for (i, row) in historyResponse.values.enumerated() {
+            if row.first == item.id {
+                existingRowIndex = i
+                break
+            }
+        }
+        
+        let timestamp = Date().iso8601String()
+        let updatedBy = await AuthenticationManager.shared.userName ?? "Unknown User"
+        let logEntry = "\(action) | \(timestamp) | \(updatedBy)"
+        
+        if let rowIndex = existingRowIndex {
+            let existingRow = historyResponse.values[rowIndex]
+            let nextColIndex = existingRow.count + 1
+            
+            let unicodeA = Int(("A" as UnicodeScalar).value)
+            guard let uniCodeScalar = UnicodeScalar(unicodeA + nextColIndex - 1) else {
+                //TODO: Handle error when appending history log
+                print("Error retrieving unicode scalar when appending to history log for item \(item.id)")
+                return
+            }
+            let colLetter = String(uniCodeScalar)
+            
+            let spreadsheetRow = rowIndex + 1
+            let updateRange = "HistoryLog!\(colLetter)\(spreadsheetRow)"
+            
+            let updateURLString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/\(updateRange)?valueInputOption=USER_ENTERED"
+            guard let updateURL = URL(string: updateURLString) else {
+                throw NetworkError.invalidURL
+            }
+            
+            let payload: [String: Any] = ["values": [[logEntry]]]
+            let jsonData = try JSONSerialization.data(withJSONObject: payload, options: [])
+            
+            guard let accessToken = await AuthenticationManager.shared.accessToken else {
+                throw NSError(domain: "Auth", code: -1,
+                              userInfo: [NSLocalizedDescriptionKey: "User is not signed in"])
+            }
+            
+            var updateRequest = URLRequest(url: updateURL)
+            updateRequest.httpMethod = "PUT"
+            updateRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            updateRequest.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+            updateRequest.httpBody = jsonData
+            
+            let (data, _) = try await URLSession.shared.data(for: updateRequest)
+            print("History log update response: \(String(data: data, encoding: .utf8) ?? "nil")")
+        } else {
+            let appendURLString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/HistoryLog:append?valueInputOption=USER_ENTERED"
+            guard let appendURL = URL(string: appendURLString) else {
+                throw NetworkError.invalidURL
+            }
+            
+            let payload: [String: Any] = ["values": [[item.id, logEntry]]]
+            let jsonData = try JSONSerialization.data(withJSONObject: payload, options: [])
+            
+            guard let accessToken = await AuthenticationManager.shared.accessToken else {
+                throw NSError(domain: "Auth", code: -1,
+                              userInfo: [NSLocalizedDescriptionKey: "User is not signed in"])
+            }
+            
+            var appendRequest = URLRequest(url: appendURL)
+            appendRequest.httpMethod = "POST"
+            appendRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            appendRequest.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+            appendRequest.httpBody = jsonData
+            
+            let (data, _) = try await URLSession.shared.data(for: appendRequest)
+            print("History log append response: \(String(data: data, encoding: .utf8) ?? "nil")")
+        }
+    }
+
+    
     func getRowNumber(for id: String) async throws -> Int {
         let response = try await fetchInventory()
         
@@ -76,5 +154,7 @@ struct InventoryService {
         
         let (data, _) = try await URLSession.shared.data(for: request)
         print("Update response: \(String(data: data, encoding: .utf8) ?? "")")
+        
+        try await appendHistoryLog(for: item, action: "Updated")
     }
 }
