@@ -20,7 +20,7 @@ struct InventoryService {
         let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/HistoryLog?key=\(apiKey)"
         let response: GoogleSheetsResponse = try await NetworkService.shared.fetchData(from: urlString)
         if let row = response.values.first(where: { $0.first == itemId }) {
-            return Array(row.dropFirst()) // Ignore the Item ID
+            return Array(row.dropFirst())
         }
         return []
     }
