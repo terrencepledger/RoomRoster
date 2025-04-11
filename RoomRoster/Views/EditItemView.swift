@@ -12,7 +12,7 @@ struct EditItemView: View {
     @Environment(\.dismiss) var dismiss
     @State var editableItem: Item
     var onSave: (Item) -> Void
-
+    
     var body: some View {
         NavigationView {
             Form {
@@ -55,13 +55,7 @@ struct EditItemView: View {
                         TextField("Enter image URL", text: $editableItem.imageURL)
                             .multilineTextAlignment(.trailing)
                     }
-                    HStack {
-                        Text("Date Added")
-                            .foregroundColor(.gray)
-                        Spacer()
-                        TextField("Enter date", text: $editableItem.dateAdded)
-                            .multilineTextAlignment(.trailing)
-                    }
+                    
                     HStack {
                         Text("Estimated Price")
                             .foregroundColor(.gray)

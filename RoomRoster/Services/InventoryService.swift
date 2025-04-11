@@ -37,7 +37,7 @@ struct InventoryService {
             }
         }
         
-        let timestamp = Date().iso8601String()
+        let timestamp = Date().toShortString()
         let updatedBy = await AuthenticationManager.shared.userName ?? "Unknown User"
         let logEntry = "\(action) | \(timestamp) | \(updatedBy)"
         
@@ -122,7 +122,7 @@ struct InventoryService {
             throw NetworkError.invalidURL
         }
         
-        let updatedDate = Date()
+        let updatedDate = Date().toShortString()
         let updatedBy = await AuthenticationManager.shared.userName ?? "Unknown User"
         
         let updatedValues: [[Any]] = [[
@@ -135,7 +135,7 @@ struct InventoryService {
             item.status,
             item.lastKnownRoom,
             updatedBy,
-            updatedDate.iso8601String(),
+            updatedDate,
             item.propertyTag ?? ""
         ]]
         

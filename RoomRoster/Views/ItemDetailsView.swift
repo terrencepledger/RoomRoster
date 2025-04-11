@@ -73,8 +73,8 @@ struct ItemDetailsView: View {
                         Text(item.lastKnownRoom)
                     }
                     
-                    if let date = item.lastUpdated {
-                        Text("Last Updated: \(date.description(with: .autoupdatingCurrent))")
+                    if let date = item.lastUpdated?.toShortString() {
+                        Text("Last Updated: \(date)")
                     }
                     
                     Divider()
@@ -139,7 +139,7 @@ struct ItemDetailsView_Previews: PreviewProvider {
             imageURL: "https://cataas.com/cat/says/Hello",
             name: "Wooden Chair",
             description: "A sturdy chair",
-            dateAdded: "2025-01-10",
+            dateAdded: "01/10/2025",
             estimatedPrice: 35.00,
             status: "Available",
             lastKnownRoom: "Sanctuary",
