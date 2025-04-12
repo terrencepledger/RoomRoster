@@ -101,7 +101,49 @@ struct InventoryService {
             print("History log append response: \(String(data: data, encoding: .utf8) ?? "nil")")
         }
     }
-
+    
+    func createItem(_ item: Item) async throws {
+        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Inventory:append?valueInputOption=USER_ENTERED"
+        guard let url = URL(string: urlString) else {
+            throw NetworkError.invalidURL
+        }
+        
+        let currentDate = Date()
+        let createdBy = await AuthenticationManager.shared.userName ?? "Unknown User"
+        
+        let rowValues: [[Any]] = [[
+            item.id,
+            item.imageURL,
+            item.name,
+            item.description,
+            item.dateAdded,
+            item.estimatedPrice ?? "",
+            item.status,
+            item.lastKnownRoom,
+            createdBy,
+            currentDate.toShortString(),
+            item.propertyTag ?? ""
+        ]]
+        
+        let payload: [String: Any] = ["values": rowValues]
+        let jsonData = try JSONSerialization.data(withJSONObject: payload, options: [])
+        
+        guard let accessToken = await AuthenticationManager.shared.accessToken else {
+            throw NSError(domain: "Auth", code: -1,
+                          userInfo: [NSLocalizedDescriptionKey: "User is not signed in"])
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        request.httpBody = jsonData
+        
+        let (data, _) = try await URLSession.shared.data(for: request)
+        print("Create item response: \(String(data: data, encoding: .utf8) ?? "nil")")
+        
+        try await appendHistoryLog(for: item, action: "Created")
+    }
     
     func getRowNumber(for id: String) async throws -> Int {
         let response = try await fetchInventory()

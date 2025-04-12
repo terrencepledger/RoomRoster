@@ -27,6 +27,7 @@
 		767E82D52D8F356500B48011 /* EditItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767E82D42D8F356500B48011 /* EditItemView.swift */; };
 		767E82D72D8F3ABE00B48011 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767E82D62D8F3ABE00B48011 /* AuthenticationManager.swift */; };
 		767E82DA2D8F3B4E00B48011 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 767E82D92D8F3B4E00B48011 /* GoogleSignIn */; };
+		B66016AF2DA9CEDC0012FDD0 /* CreateItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +72,7 @@
 		767E82D42D8F356500B48011 /* EditItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditItemView.swift; sourceTree = "<group>"; };
 		767E82D62D8F3ABE00B48011 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
 		767E82DF2D8F52FF00B48011 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateItemView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +104,7 @@
 		765183B92D8CD1F300FBA72E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */,
 				767E82D42D8F356500B48011 /* EditItemView.swift */,
 				767B05912D4C5DC000566C25 /* ContentView.swift */,
 				767B05C02D4C666F00566C25 /* ItemDetailsView.swift */,
@@ -348,6 +351,7 @@
 				767E82CB2D8F1B2C00B48011 /* ItemDetailsViewModel.swift in Sources */,
 				767B05922D4C5DC000566C25 /* ContentView.swift in Sources */,
 				767B05BD2D4C5E1700566C25 /* InventoryViewModel.swift in Sources */,
+				B66016AF2DA9CEDC0012FDD0 /* CreateItemView.swift in Sources */,
 				767E82D52D8F356500B48011 /* EditItemView.swift in Sources */,
 				767E82C52D8F19EE00B48011 /* AppConfig.swift in Sources */,
 				767E82D72D8F3ABE00B48011 /* AuthenticationManager.swift in Sources */,
