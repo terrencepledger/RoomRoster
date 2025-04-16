@@ -16,6 +16,7 @@ struct CreateItemView: View {
         imageURL: "",
         name: "",
         description: "",
+        quantity: 1,
         dateAdded: Date().toShortString(),
         estimatedPrice: nil,
         status: "Available",
@@ -73,6 +74,15 @@ struct CreateItemView: View {
                             .multilineTextAlignment(.trailing)
                     }
                     HStack {
+                        Text("Quantity")
+                        Spacer()
+                        TextField("Enter Quantity",
+                                  value: $newItem.quantity,
+                                  format: .number)
+                        .keyboardType(.numberPad)
+                        .textFieldStyle(.roundedBorder)
+                    }
+                    HStack {
                         Text("Property Tag")
                         Spacer()
                         TextField("Enter tag", text: Binding<String>(
@@ -84,12 +94,6 @@ struct CreateItemView: View {
                 }
 
                 Section(header: Text("Details")) {
-                    HStack {
-                        TextField("Image URL", text: $newItem.imageURL)
-                            .multilineTextAlignment(.trailing)
-                            .disabled(true)
-                    }
-
                     HStack {
                         Text("Estimated Price")
                         Spacer()

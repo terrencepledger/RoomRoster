@@ -83,6 +83,16 @@ struct EditItemView: View {
                             .textFieldStyle(.roundedBorder)
                     }
                     VStack(alignment: .leading, spacing: 4) {
+                        Text("Quantity")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                        TextField("Enter quantity",
+                                  value: $editableItem.quantity,
+                                  format: .number)
+                            .keyboardType(.numberPad)
+                            .textFieldStyle(.roundedBorder)
+                    }
+                    VStack(alignment: .leading, spacing: 4) {
                         Text("Property Tag")
                             .font(.caption)
                             .foregroundColor(.gray)

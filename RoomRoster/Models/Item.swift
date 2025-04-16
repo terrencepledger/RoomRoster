@@ -14,6 +14,7 @@ struct Item: Identifiable {
     var imageURL: String
     var name: String
     var description: String
+    var quantity: Int
     var dateAdded: String
     var estimatedPrice: Double?
     var status: String
@@ -43,6 +44,7 @@ extension Item {
         var imageURL: String = ""
         var name: String = ""
         var description: String = ""
+        var quantity: Int = 0
         var dateAdded: String = ""
         var estimatedPrice: Double? = nil
         var status: String = ""
@@ -62,6 +64,12 @@ extension Item {
                 name = value
             case .description:
                 description = value
+            case .quantity:
+                if let givenQuantity = Int(value) {
+                    quantity = givenQuantity
+                } else {
+                    break
+                }
             case .dateAdded:
                 dateAdded = value
             case .estimatedPrice:
@@ -87,6 +95,7 @@ extension Item {
                   imageURL: imageURL,
                   name: name,
                   description: description,
+                  quantity: quantity,
                   dateAdded: dateAdded,
                   estimatedPrice: estimatedPrice,
                   status: status,

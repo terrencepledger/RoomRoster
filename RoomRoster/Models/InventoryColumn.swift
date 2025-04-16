@@ -6,19 +6,18 @@
 //
 
 enum InventoryColumn: Int, CaseIterable {
-    case id            // Item ID
-    case imageURL      // Image URL
-    case name          // Name
-    case description   // Description
-    case dateAdded     // Date Added
-    case estimatedPrice// Estimated Price
-    case status        // Status
-    case lastKnownRoom // Last Known Room
-    case updatedBy     // Updated By
-    case lastUpdated   // Last Updated
-    case propertyTag   // Property Tag
+    case id            // A
+    case imageURL      // B
+    case name          // C
+    case description   // D
+    case quantity      // E
+    case dateAdded     // F
+    case estimatedPrice// G
+    case status        // H
+    case lastKnownRoom // I
+    case updatedBy     // J
+    case lastUpdated   // K
+    case propertyTag   // L
 
-    static var expectedCount: Int {
-        return Self.allCases.count
-    }
+    static var expectedCount: Int { allCases.count }
 }
