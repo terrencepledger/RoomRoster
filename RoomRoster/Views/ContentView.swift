@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import FirebaseCore
 
 struct ContentView: View {
     @StateObject private var viewModel = InventoryViewModel()
@@ -64,6 +65,7 @@ struct ContentView: View {
             }
         }
         .task {
+            FirebaseApp.configure()
             await viewModel.fetchInventory()
         }
     }
