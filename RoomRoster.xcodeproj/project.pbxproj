@@ -28,6 +28,7 @@
 		767E82D72D8F3ABE00B48011 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767E82D62D8F3ABE00B48011 /* AuthenticationManager.swift */; };
 		767E82DA2D8F3B4E00B48011 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 767E82D92D8F3B4E00B48011 /* GoogleSignIn */; };
 		B66016AF2DA9CEDC0012FDD0 /* CreateItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */; };
+		B66016B12DAB09150012FDD0 /* InventoryColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66016B02DAB09150012FDD0 /* InventoryColumn.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +74,7 @@
 		767E82D62D8F3ABE00B48011 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
 		767E82DF2D8F52FF00B48011 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateItemView.swift; sourceTree = "<group>"; };
+		B66016B02DAB09150012FDD0 /* InventoryColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryColumn.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +126,7 @@
 		765183BB2D8CD22300FBA72E /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B66016B02DAB09150012FDD0 /* InventoryColumn.swift */,
 				767B05932D4C5DC000566C25 /* Item.swift */,
 			);
 			path = Models;
@@ -358,6 +361,7 @@
 				767B05942D4C5DC000566C25 /* Item.swift in Sources */,
 				767E82C92D8F1AA500B48011 /* NetworkService.swift in Sources */,
 				767B05BF2D4C5F9E00566C25 /* GoogleSheetsResponse.swift in Sources */,
+				B66016B12DAB09150012FDD0 /* InventoryColumn.swift in Sources */,
 				767E82D32D8F34C800B48011 /* Extensions.swift in Sources */,
 				767B05902D4C5DC000566C25 /* RoomRosterApp.swift in Sources */,
 			);

@@ -25,3 +25,13 @@ extension Date {
         return Date.shortFormatter.date(from: dateString)
     }
 }
+
+extension Array where Element == String {
+    func padded(to count: Int) -> [String] {
+        var paddedArray = self
+        while paddedArray.count < count {
+            paddedArray.append("")
+        }
+        return paddedArray
+    }
+}

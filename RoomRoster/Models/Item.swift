@@ -34,3 +34,66 @@ extension Item {
         }
     }
 }
+
+extension Item {
+    init?(from row: [String]) {
+        let paddedRow = row.padded(to: InventoryColumn.expectedCount)
+
+        var id: String = ""
+        var imageURL: String = ""
+        var name: String = ""
+        var description: String = ""
+        var dateAdded: String = ""
+        var estimatedPrice: Double? = nil
+        var status: String = ""
+        var lastKnownRoom: String = ""
+        var updatedBy: String = ""
+        var lastUpdated: Date? = nil
+        var propertyTag: String? = nil
+
+        for column in InventoryColumn.allCases {
+            let value = paddedRow[column.rawValue]
+            switch column {
+            case .id:
+                id = value
+            case .imageURL:
+                imageURL = value
+            case .name:
+                name = value
+            case .description:
+                description = value
+            case .dateAdded:
+                dateAdded = value
+            case .estimatedPrice:
+                estimatedPrice = Double(value)
+            case .status:
+                status = value
+            case .lastKnownRoom:
+                lastKnownRoom = value
+            case .updatedBy:
+                updatedBy = value
+            case .lastUpdated:
+                lastUpdated = ISO8601DateFormatter().date(from: value)
+            case .propertyTag:
+                propertyTag = value.isEmpty ? nil : value
+            }
+        }
+
+        guard !id.isEmpty, !name.isEmpty else {
+            return nil
+        }
+
+        self.init(id: id,
+                  imageURL: imageURL,
+                  name: name,
+                  description: description,
+                  dateAdded: dateAdded,
+                  estimatedPrice: estimatedPrice,
+                  status: status,
+                  lastKnownRoom: lastKnownRoom,
+                  updatedBy: updatedBy,
+                  lastUpdated: lastUpdated,
+                  propertyTag: propertyTag)
+    }
+}
+

@@ -2,7 +2,7 @@
 //  CreateItemView.swift
 //  RoomRoster
 //
-//  Created by Terrence - Personal on 4/11/25.
+//  Created by Terrence Pledger on 4/11/25.
 //
 
 import SwiftUI
