@@ -33,18 +33,6 @@ struct CreateItemView: View {
         NavigationView {
             Form {
                 Section(header: Text("Photo")) {
-                    if let url = URL(string: newItem.imageURL),
-                       !newItem.imageURL.isEmpty {
-                        AsyncImage(url: url) { img in
-                            img.resizable()
-                               .scaledToFit()
-                               .frame(height: 120)
-                               .cornerRadius(8)
-                        } placeholder: {
-                            ProgressView().frame(height: 120)
-                        }
-                    }
-
                     CombinedImagePickerButton(image: $pickedImage)
                         .onChange(of: pickedImage) { _,_ in
                             Task { await uploadPickedImage() }
