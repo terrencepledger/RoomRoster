@@ -30,6 +30,7 @@
 		B612436C2DB03BA000B9098B /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B612436B2DB03BA000B9098B /* ImagePickerView.swift */; };
 		B66016AF2DA9CEDC0012FDD0 /* CreateItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */; };
 		B66016B12DAB09150012FDD0 /* InventoryColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66016B02DAB09150012FDD0 /* InventoryColumn.swift */; };
+		B6E684CC2DCFB10400EE608B /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = B6E684CB2DCFB10400EE608B /* FirebaseCrashlytics */; };
 		B6F964902DB021CD0093089A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B6F9648F2DB021CD0093089A /* GoogleService-Info.plist */; };
 		B6F964922DB028E80093089A /* ImageUploadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F964912DB028E80093089A /* ImageUploadService.swift */; };
 		B6F964952DB02B4C0093089A /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964942DB02B4C0093089A /* FirebaseAnalytics */; };
@@ -103,6 +104,7 @@
 				767E82DA2D8F3B4E00B48011 /* GoogleSignIn in Frameworks */,
 				B6F964972DB02BB60093089A /* FirebaseAnalytics in Frameworks */,
 				B6F9649D2DB02BB60093089A /* FirebaseAppCheck in Frameworks */,
+				B6E684CC2DCFB10400EE608B /* FirebaseCrashlytics in Frameworks */,
 				B6F964992DB02BB60093089A /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
 				B6F964A12DB02C470093089A /* FirebaseAuth in Frameworks */,
 			);
@@ -780,6 +782,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 767E82D82D8F3B4E00B48011 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignIn;
+		};
+		B6E684CB2DCFB10400EE608B /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B6F964932DB02B4C0093089A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
 		};
 		B6F964942DB02B4C0093089A /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
