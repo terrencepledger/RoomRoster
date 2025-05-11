@@ -31,6 +31,8 @@
 		B66016AF2DA9CEDC0012FDD0 /* CreateItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */; };
 		B66016B12DAB09150012FDD0 /* InventoryColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66016B02DAB09150012FDD0 /* InventoryColumn.swift */; };
 		B6E684CC2DCFB10400EE608B /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = B6E684CB2DCFB10400EE608B /* FirebaseCrashlytics */; };
+		B6E684D02DD03A6400EE608B /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = B6E684CF2DD03A6400EE608B /* Sentry */; };
+		B6E684D32DD03D2400EE608B /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = B6E684D22DD03D2400EE608B /* FirebaseStorage */; };
 		B6F964902DB021CD0093089A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B6F9648F2DB021CD0093089A /* GoogleService-Info.plist */; };
 		B6F964922DB028E80093089A /* ImageUploadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F964912DB028E80093089A /* ImageUploadService.swift */; };
 		B6F964952DB02B4C0093089A /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964942DB02B4C0093089A /* FirebaseAnalytics */; };
@@ -102,6 +104,8 @@
 				B6F964A32DB02C470093089A /* FirebaseStorage in Frameworks */,
 				B6F9649B2DB02BB60093089A /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				767E82DA2D8F3B4E00B48011 /* GoogleSignIn in Frameworks */,
+				B6E684D32DD03D2400EE608B /* FirebaseStorage in Frameworks */,
+				B6E684D02DD03A6400EE608B /* Sentry in Frameworks */,
 				B6F964972DB02BB60093089A /* FirebaseAnalytics in Frameworks */,
 				B6F9649D2DB02BB60093089A /* FirebaseAppCheck in Frameworks */,
 				B6E684CC2DCFB10400EE608B /* FirebaseCrashlytics in Frameworks */,
@@ -332,7 +336,8 @@
 			mainGroup = 767B05832D4C5DC000566C25;
 			packageReferences = (
 				767E82D82D8F3B4E00B48011 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
-				B6F964932DB02B4C0093089A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				B6E684CE2DD03A6400EE608B /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
+				B6E684D12DD03D2400EE608B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = 767B058D2D4C5DC000566C25 /* Products */;
 			projectDirPath = "";
@@ -767,6 +772,22 @@
 				minimumVersion = 8.0.0;
 			};
 		};
+		B6E684CE2DD03A6400EE608B /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/sentry-cocoa";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.50.1;
+			};
+		};
+		B6E684D12DD03D2400EE608B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.12.0;
+			};
+		};
 		B6F964932DB02B4C0093089A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
@@ -787,6 +808,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B6F964932DB02B4C0093089A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCrashlytics;
+		};
+		B6E684CF2DD03A6400EE608B /* Sentry */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B6E684CE2DD03A6400EE608B /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = Sentry;
+		};
+		B6E684D22DD03D2400EE608B /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B6E684D12DD03D2400EE608B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
 		};
 		B6F964942DB02B4C0093089A /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
