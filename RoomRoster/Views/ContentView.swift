@@ -7,7 +7,7 @@
 
 import SwiftUI
 import SwiftData
-import FirebaseCore
+import Sentry
 
 struct ContentView: View {
     @StateObject private var viewModel = InventoryViewModel()
@@ -31,15 +31,13 @@ struct ContentView: View {
                     }
                 }
                 .navigationTitle("Inventory")
-                .task {
-                    await viewModel.fetchInventory()
-                }
                 .refreshable {
                     await viewModel.fetchInventory()
                 }
                 
                 Button(action: {
                     showCreateItemView.toggle()
+                    Logger.action("Pressed Add Item")
                 }) {
                     Image(systemName: "plus")
                         .font(.system(size: 24))
@@ -65,8 +63,10 @@ struct ContentView: View {
             }
         }
         .task {
-            FirebaseApp.configure()
             await viewModel.fetchInventory()
+        }
+        .onAppear {
+            Logger.page("ContentView")
         }
     }
 }

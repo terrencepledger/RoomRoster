@@ -16,6 +16,7 @@ class AuthenticationManager: ObservableObject {
     @Published private(set) var isSignedIn: Bool = false
     @Published private(set) var accessToken: String?
     @Published private(set) var userName: String?
+    @Published private(set) var email: String?
 
     private init() {
         if let user = GIDSignIn.sharedInstance.currentUser {
@@ -61,6 +62,7 @@ class AuthenticationManager: ObservableObject {
         let user = result.user
         self.accessToken = user.accessToken.tokenString
         self.userName = user.profile?.name
+        self.email = user.profile?.email
         self.isSignedIn = true
     }
 }

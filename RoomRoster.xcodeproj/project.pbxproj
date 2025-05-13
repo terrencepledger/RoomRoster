@@ -33,6 +33,7 @@
 		B6E684CC2DCFB10400EE608B /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = B6E684CB2DCFB10400EE608B /* FirebaseCrashlytics */; };
 		B6E684D02DD03A6400EE608B /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = B6E684CF2DD03A6400EE608B /* Sentry */; };
 		B6E684D32DD03D2400EE608B /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = B6E684D22DD03D2400EE608B /* FirebaseStorage */; };
+		B6E684D52DD176DA00EE608B /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E684D42DD176D900EE608B /* Logger.swift */; };
 		B6F964902DB021CD0093089A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B6F9648F2DB021CD0093089A /* GoogleService-Info.plist */; };
 		B6F964922DB028E80093089A /* ImageUploadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F964912DB028E80093089A /* ImageUploadService.swift */; };
 		B6F964952DB02B4C0093089A /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964942DB02B4C0093089A /* FirebaseAnalytics */; };
@@ -90,6 +91,7 @@
 		B612436B2DB03BA000B9098B /* ImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
 		B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateItemView.swift; sourceTree = "<group>"; };
 		B66016B02DAB09150012FDD0 /* InventoryColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryColumn.swift; sourceTree = "<group>"; };
+		B6E684D42DD176D900EE608B /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		B6F9648F2DB021CD0093089A /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B6F964912DB028E80093089A /* ImageUploadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -240,6 +242,7 @@
 		767E82D12D8F34B900B48011 /* Utitlities */ = {
 			isa = PBXGroup;
 			children = (
+				B6E684D42DD176D900EE608B /* Logger.swift */,
 				767E82D62D8F3ABE00B48011 /* AuthenticationManager.swift */,
 				767E82D22D8F34C800B48011 /* Extensions.swift */,
 			);
@@ -398,6 +401,7 @@
 				767B05BF2D4C5F9E00566C25 /* GoogleSheetsResponse.swift in Sources */,
 				B66016B12DAB09150012FDD0 /* InventoryColumn.swift in Sources */,
 				767E82D32D8F34C800B48011 /* Extensions.swift in Sources */,
+				B6E684D52DD176DA00EE608B /* Logger.swift in Sources */,
 				767B05902D4C5DC000566C25 /* RoomRosterApp.swift in Sources */,
 				B612436C2DB03BA000B9098B /* ImagePickerView.swift in Sources */,
 			);
