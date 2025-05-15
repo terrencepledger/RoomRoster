@@ -52,6 +52,7 @@ struct CombinedImagePickerButton: View {
 
     var body: some View {
         Button {
+            Logger.action("Selected Image Picker")
             showSourceDialog = true
         } label: {
             if let img = image {

@@ -36,8 +36,8 @@ struct ContentView: View {
                 }
                 
                 Button(action: {
+                    Logger.action("Pressed Add Item Button")
                     showCreateItemView.toggle()
-                    Logger.action("Pressed Add Item")
                 }) {
                     Image(systemName: "plus")
                         .font(.system(size: 24))
@@ -57,7 +57,7 @@ struct ContentView: View {
                         try await InventoryService().createItem(newItem)
                         await viewModel.fetchInventory()
                     } catch {
-                        print("Error creating item: \(error)")
+                        Logger.log(error, extra: ["description": "Error fetching inventory"])
                     }
                 }
             }

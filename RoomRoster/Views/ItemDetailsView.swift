@@ -101,6 +101,7 @@ struct ItemDetailsView: View {
                 .padding()
 
                 Button(action: {
+                    Logger.action("Pressed Edit Button")
                     isEditing = true
                 }) {
                     Text("Edit Item")
@@ -114,10 +115,6 @@ struct ItemDetailsView: View {
             }
         }
         .navigationTitle("Item Details")
-        .task {
-            try? await AuthenticationManager.shared.signIn()
-            await viewModel.fetchItemHistory(for: item.id)
-        }
         .sheet(isPresented: $isEditing) {
             EditItemView(editableItem: item) { updatedItem in
                 self.item = updatedItem
@@ -126,10 +123,20 @@ struct ItemDetailsView: View {
                     do {
                         try await InventoryService().updateItem(updatedItem)
                     } catch {
-                        print("Error updating item: \(error)")
+                        Logger.log(error, extra: [
+                            "description": "Error updating item",
+                            "item": String(describing: updatedItem),
+                        ])
                     }
                 }
             }
+        }
+        .task {
+            await AuthenticationManager.shared.signIn()
+            await viewModel.fetchItemHistory(for: item.id)
+        }
+        .onAppear {
+            Logger.page("ItemDetailsView")
         }
     }
 }

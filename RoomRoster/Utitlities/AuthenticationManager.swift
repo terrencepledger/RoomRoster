@@ -26,14 +26,20 @@ class AuthenticationManager: ObservableObject {
         }
     }
 
-    func signIn() async throws {
+    func signIn() async {
         if let user = GIDSignIn.sharedInstance.currentUser {
             self.isSignedIn = true
             self.accessToken = user.accessToken.tokenString
             self.userName = user.profile?.name
             return
         }
-        try await triggerSignIn()
+        do {
+            try await triggerSignIn()
+        } catch {
+            Logger.log(error, extra: [
+                "description": "Failed signing in"
+            ])
+        }
     }
 
     func signOut() {

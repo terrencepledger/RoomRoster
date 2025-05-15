@@ -129,7 +129,10 @@ struct CreateItemView: View {
                 }
             }
             .task {
-                try? await AuthenticationManager.shared.signIn()
+                await AuthenticationManager.shared.signIn()
+            }
+            .onAppear {
+                Logger.page("CreateItemView")
             }
         }
     }
@@ -146,6 +149,9 @@ struct CreateItemView: View {
             )
             newItem.imageURL = url.absoluteString
         } catch {
+            Logger.log(error, extra: [
+                "description": "Upload Image Failed"
+            ])
             uploadError = "Upload failed: \(error.localizedDescription)"
         }
 

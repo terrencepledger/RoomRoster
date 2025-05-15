@@ -47,9 +47,8 @@ struct InventoryService {
             
             let unicodeA = Int(("A" as UnicodeScalar).value)
             guard let uniCodeScalar = UnicodeScalar(unicodeA + nextColIndex - 1) else {
-                //TODO: Handle error when appending history log
-                print("Error retrieving unicode scalar when appending to history log for item \(item.id)")
-                return
+                throw NSError(domain: "InventoryService", code: -1,
+                              userInfo: [NSLocalizedDescriptionKey: "Unable to retrieve unicode scalar"])
             }
             let colLetter = String(uniCodeScalar)
             
@@ -75,8 +74,7 @@ struct InventoryService {
             updateRequest.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
             updateRequest.httpBody = jsonData
             
-            let (data, _) = try await URLSession.shared.data(for: updateRequest)
-            print("History log update response: \(String(data: data, encoding: .utf8) ?? "nil")")
+            _ = try await URLSession.shared.data(for: updateRequest)
         } else {
             let appendURLString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/HistoryLog:append?valueInputOption=USER_ENTERED"
             guard let appendURL = URL(string: appendURLString) else {
@@ -97,8 +95,7 @@ struct InventoryService {
             appendRequest.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
             appendRequest.httpBody = jsonData
             
-            let (data, _) = try await URLSession.shared.data(for: appendRequest)
-            print("History log append response: \(String(data: data, encoding: .utf8) ?? "nil")")
+            _ = try await URLSession.shared.data(for: appendRequest)
         }
     }
     
@@ -140,9 +137,7 @@ struct InventoryService {
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         request.httpBody = jsonData
         
-        let (data, _) = try await URLSession.shared.data(for: request)
-        print("Create item response: \(String(data: data, encoding: .utf8) ?? "nil")")
-        
+        _ = try await URLSession.shared.data(for: request)
         try await appendHistoryLog(for: item, action: "Created")
     }
     
@@ -196,9 +191,7 @@ struct InventoryService {
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         request.httpBody = jsonData
         
-        let (data, _) = try await URLSession.shared.data(for: request)
-        print("Update response: \(String(data: data, encoding: .utf8) ?? "")")
-        
+        _ = try await URLSession.shared.data(for: request)
         try await appendHistoryLog(for: item, action: "Updated")
     }
 }

@@ -150,6 +150,7 @@ struct EditItemView: View {
                 Section {
                     Button("Save") {
                         Task {
+                            Logger.action("Pressed Save Button")
                             await uploadPickedImage()
                             if let newURL = temporaryImageURL {
                                 editableItem.imageURL = newURL
@@ -168,6 +169,7 @@ struct EditItemView: View {
                 }
             }
             .onAppear {
+                Logger.page("EditItemView")
                 if let parsed = Date.fromShortString(editableItem.dateAdded) {
                     dateAddedDate = parsed
                 }
@@ -178,21 +180,22 @@ struct EditItemView: View {
     private func uploadPickedImage() async {
         guard let uiImage = pickedImage else {
             uploadError = "No image was selected."
-            print("uploadPickedImage: pickedImage is nil")
             return
         }
 
         isUploading = true
         uploadError = nil
-        defer { isUploading = false }
 
+        defer { isUploading = false }
         do {
             let url = try await ImageUploadService()
                 .uploadImageAsync(image: uiImage, forItemId: editableItem.id)
             temporaryImageURL = url.absoluteString
         } catch {
+            Logger.log(error, extra: [
+                "description": "Upload Image Failed"
+            ])
             uploadError = "Upload failed: \(error.localizedDescription)"
-            print("uploadPickedImage: Firebase upload error –", error)
         }
     }
 }

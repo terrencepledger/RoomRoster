@@ -16,8 +16,10 @@ class ItemDetailsViewModel: ObservableObject {
         do {
             self.historyLogs = try await service.fetchItemHistory(itemId: itemId)
         } catch {
-            // Handle error appropriately
-            print("Error fetching item history: \(error)")
+            // TODO: Handle error appropriately
+            Logger.log(error, extra: [
+                "description": "Error fetching item history"
+            ])
         }
     }
 }

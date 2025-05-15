@@ -18,7 +18,9 @@ class InventoryViewModel: ObservableObject {
             self.items = response.toItems()
         } catch {
             // TODO: Handle error appropriately (e.g., update UI or show an alert)
-            print("Error fetching inventory: \(error)")
+            Logger.log(error, extra: [
+                "description": "Error fetching inventory"
+            ])
         }
     }
 }

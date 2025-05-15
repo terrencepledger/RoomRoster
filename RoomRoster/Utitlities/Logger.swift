@@ -74,6 +74,11 @@ struct Logger {
     ) {
         SentrySDK.capture(error: error) { scope in
             scope.setLevel(level.sentryLevel)
+            if let nsError = error as NSError? {
+                for (key, value) in nsError.userInfo {
+                    scope.setExtra(value: "\(value)", key: "userInfo.\(key)")
+                }
+            }
             tags?.forEach { scope.setTag(value: $0.value, key: $0.key) }
             extra?.forEach { scope.setExtra(value: $0.value, key: $0.key) }
         }
