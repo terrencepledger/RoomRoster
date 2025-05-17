@@ -18,100 +18,109 @@ struct ItemDetailsView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                if let url = URL(string: item.imageURL) {
-                    AsyncImage(url: url) { image in
-                        image.resizable().scaledToFit()
-                    } placeholder: {
-                        ProgressView()
-                    }
-                    .frame(height: 250)
-                    .cornerRadius(12)
-                }
-
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(item.name)
-                        .font(.title)
-                        .fontWeight(.bold)
-
-                    Text(item.description)
-                        .font(.body)
-                        .foregroundColor(.gray)
-
-                    HStack {
-                        Text("Quantity:").bold()
-                        Text(String(describing: item.quantity))
-                    }
-
-                    if let tag = item.propertyTag {
-                        HStack {
-                            Text("Property Tag:")
-                                .font(.headline)
-
-                            Text(tag)
+        ZStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    if let url = URL(string: item.imageURL) {
+                        AsyncImage(url: url) { image in
+                            image.resizable().scaledToFit()
+                        } placeholder: {
+                            ProgressView()
                         }
+                        .frame(height: 250)
+                        .cornerRadius(12)
                     }
-
-                    Divider()
-
-                    HStack {
-                        Text("Date Added:").bold()
-                        Text(item.dateAdded)
-                    }
-
-                    if let price = item.estimatedPrice {
-                        HStack {
-                            Text("Estimated Price:").bold()
-                            Text("$\(price, specifier: "%.2f")")
-                        }
-                    }
-
-                    HStack {
-                        Text("Status:").bold()
-                        Text(item.status)
-                            .foregroundColor(item.statusColor)
-                    }
-
-                    HStack {
-                        Text("Last Known Room:").bold()
-                        Text(item.lastKnownRoom)
-                    }
-
-                    if let date = item.lastUpdated?.toShortString() {
-                        Text("Last Updated: \(date)")
-                    }
-
-                    Divider()
-
-                    Text("History Log")
-                        .font(.headline)
-
-                    if viewModel.historyLogs.isEmpty {
-                        Text("No history available")
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(item.name)
+                            .font(.title)
+                            .fontWeight(.bold)
+                        
+                        Text(item.description)
+                            .font(.body)
                             .foregroundColor(.gray)
-                    } else {
-                        ForEach(viewModel.historyLogs, id: \.self) { log in
-                            Text(log)
-                                .font(.subheadline)
+                        
+                        HStack {
+                            Text("Quantity:").bold()
+                            Text(String(describing: item.quantity))
+                        }
+                        
+                        if let tag = item.propertyTag {
+                            HStack {
+                                Text("Property Tag:")
+                                    .font(.headline)
+                                
+                                Text(tag)
+                            }
+                        }
+                        
+                        Divider()
+                        
+                        HStack {
+                            Text("Date Added:").bold()
+                            Text(item.dateAdded)
+                        }
+                        
+                        if let price = item.estimatedPrice {
+                            HStack {
+                                Text("Estimated Price:").bold()
+                                Text("$\(price, specifier: "%.2f")")
+                            }
+                        }
+                        
+                        HStack {
+                            Text("Status:").bold()
+                            Text(item.status)
+                                .foregroundColor(item.statusColor)
+                        }
+                        
+                        HStack {
+                            Text("Last Known Room:").bold()
+                            Text(item.lastKnownRoom)
+                        }
+                        
+                        if let date = item.lastUpdated?.toShortString() {
+                            Text("Last Updated: \(date)")
+                        }
+                        
+                        Divider()
+                        
+                        Text("History Log")
+                            .font(.headline)
+                        
+                        if viewModel.historyLogs.isEmpty {
+                            Text("No history available")
                                 .foregroundColor(.gray)
+                        } else {
+                            ForEach(viewModel.historyLogs, id: \.self) { log in
+                                Text(log)
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                            }
                         }
                     }
+                    .padding()
                 }
-                .padding()
+            }
+            
+            VStack {
+                Spacer()
 
-                Button(action: {
-                    Logger.action("Pressed Edit Button")
-                    isEditing = true
-                }) {
-                    Text("Edit Item")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                HStack {
+                    Spacer()
+
+                    Button(action: {
+                        Logger.action("Pressed Edit Button")
+                        isEditing = true
+                    }) {
+                        Text("Edit Item")
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                    .padding()
                 }
-                .padding()
             }
         }
         .navigationTitle("Item Details")
