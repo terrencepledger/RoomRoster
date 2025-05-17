@@ -31,22 +31,12 @@ struct InventoryService {
             throw NetworkError.invalidURL
         }
         
-        let rowValues: [[Any]] = [item.toRow()]
-        let payload: [String: Any] = ["values": rowValues]
-        let jsonData = try JSONSerialization.data(withJSONObject: payload, options: [])
-        
-        guard let accessToken = await AuthenticationManager.shared.accessToken else {
-            throw NSError(domain: "Auth", code: -1,
-                          userInfo: [NSLocalizedDescriptionKey: "User is not signed in"])
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        request.httpBody = jsonData
-        
-        _ = try await URLSession.shared.data(for: request)
+        let request = try await NetworkService.shared.authorizedRequest(
+            url: url,
+            method: "POST",
+            jsonBody: ["values": [item.toRow()]]
+        )
+        try await NetworkService.shared.sendRequest(request)
     }
     
     func getRowNumber(for id: String) async throws -> Int {
@@ -63,29 +53,16 @@ struct InventoryService {
         let rowNumber = try await getRowNumber(for: item.id)
         let range = "Inventory!A\(rowNumber):L\(rowNumber)"
         let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/\(range)?valueInputOption=USER_ENTERED"
-        
+
         guard let url = URL(string: urlString) else {
             throw NetworkError.invalidURL
         }
-        
-        let updatedDate = Date().toShortString()
-        let updatedBy = await AuthenticationManager.shared.userName ?? "Unknown User"
-        
-        let updatedValues: [[Any]] = [item.toRow()]
-        
-        let payload: [String: Any] = ["values": updatedValues]
-        let jsonData = try JSONSerialization.data(withJSONObject: payload, options: [])
-        
-        guard let accessToken = await AuthenticationManager.shared.accessToken else {
-            throw NSError(domain: "Auth", code: -1, userInfo: [NSLocalizedDescriptionKey: "User is not signed in"])
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        request.httpBody = jsonData
-        
-        _ = try await URLSession.shared.data(for: request)
+
+        let request = try await NetworkService.shared.authorizedRequest(
+            url: url,
+            method: "PUT",
+            jsonBody: ["values": [item.toRow()]]
+        )
+        try await NetworkService.shared.sendRequest(request)
     }
 }

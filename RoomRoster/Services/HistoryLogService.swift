@@ -88,39 +88,22 @@ final class HistoryLogService {
             let updateURLString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/\(updateRange)?valueInputOption=USER_ENTERED"
             guard let updateURL = URL(string: updateURLString) else { throw NetworkError.invalidURL }
 
-            let payload: [String: Any] = ["values": [logEntries]]
-            let jsonData = try JSONSerialization.data(withJSONObject: payload)
-
-            guard let accessToken = await AuthenticationManager.shared.accessToken else {
-                throw NSError(domain: "Auth", code: -1, userInfo: [NSLocalizedDescriptionKey: "Not signed in"])
-            }
-
-            var request = URLRequest(url: updateURL)
-            request.httpMethod = "PUT"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-            request.httpBody = jsonData
-
-            _ = try await URLSession.shared.data(for: request)
-
+            let request = try await NetworkService.shared.authorizedRequest(
+                url: updateURL,
+                method: "PUT",
+                jsonBody: ["values": [logEntries]]
+            )
+            try await NetworkService.shared.sendRequest(request)
         } else {
             let appendURLString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/HistoryLog:append?valueInputOption=USER_ENTERED"
             guard let appendURL = URL(string: appendURLString) else { throw NetworkError.invalidURL }
 
-            let payload: [String: Any] = ["values": [[itemId] + logEntries]]
-            let jsonData = try JSONSerialization.data(withJSONObject: payload)
-
-            guard let accessToken = await AuthenticationManager.shared.accessToken else {
-                throw NSError(domain: "Auth", code: -1, userInfo: [NSLocalizedDescriptionKey: "Not signed in"])
-            }
-
-            var request = URLRequest(url: appendURL)
-            request.httpMethod = "POST"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-            request.httpBody = jsonData
-
-            _ = try await URLSession.shared.data(for: request)
+            let request = try await NetworkService.shared.authorizedRequest(
+                url: appendURL,
+                method: "POST",
+                jsonBody: ["values": [[itemId] + logEntries]]
+            )
+            try await NetworkService.shared.sendRequest(request)
         }
     }
 

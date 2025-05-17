@@ -59,7 +59,7 @@ struct ContentView: View {
                         await HistoryLogService().logCreation(for: newItem, createdBy: createdBy)
                         await viewModel.fetchInventory()
                     } catch {
-                        Logger.log(error, extra: ["description": "Error fetching inventory"])
+                        Logger.log(error, extra: ["description": "Error creating item, updating log, or re-fetching"])
                     }
                 }
             }

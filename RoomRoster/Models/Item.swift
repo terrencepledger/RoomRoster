@@ -50,10 +50,10 @@ extension Item {
         .updatedBy: FieldBinding(field: .updatedBy, label: "Updated By", keyPath: \.updatedBy, encode: { $0 }, decode: { $0 }),
         .lastUpdated: FieldBinding(field: .lastUpdated, label: "Last Updated", keyPath: \.lastUpdated, encode: {
             if let date = $0 {
-                ISO8601DateFormatter().string(from: date)
+                date.toShortString()
             } else {
                 ""
-            }}, decode: { ISO8601DateFormatter().date(from: $0) }),
+            }}, decode: { Date.fromShortString($0) }),
         .propertyTag: FieldBinding(field: .propertyTag, label: "Property Tag", keyPath: \.propertyTag, encode: { $0 ?? "" }, decode: { $0.isEmpty ? nil : $0 })
     ]
 
