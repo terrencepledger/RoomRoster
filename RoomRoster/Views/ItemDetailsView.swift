@@ -117,11 +117,16 @@ struct ItemDetailsView: View {
         .navigationTitle("Item Details")
         .sheet(isPresented: $isEditing) {
             EditItemView(editableItem: item) { updatedItem in
-                self.item = updatedItem
+                let oldItem = item
 
                 Task {
                     do {
                         try await InventoryService().updateItem(updatedItem)
+                        self.item = updatedItem
+                        let updatedBy = AuthenticationManager.shared.userName
+                        await HistoryLogService()
+                            .logChanges(old: oldItem, new: updatedItem, updatedBy: updatedBy)
+                        await viewModel.fetchItemHistory(for: item.id)
                     } catch {
                         Logger.log(error, extra: [
                             "description": "Error updating item",
@@ -137,6 +142,10 @@ struct ItemDetailsView: View {
         }
         .onAppear {
             Logger.page("ItemDetailsView")
+        }
+        .refreshable {
+            Logger.action("Refreshing")
+            await viewModel.fetchItemHistory(for: item.id)
         }
     }
 }

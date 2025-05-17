@@ -55,6 +55,8 @@ struct ContentView: View {
                 Task {
                     do {
                         try await InventoryService().createItem(newItem)
+                        let createdBy = AuthenticationManager.shared.userName
+                        await HistoryLogService().logCreation(for: newItem, createdBy: createdBy)
                         await viewModel.fetchInventory()
                     } catch {
                         Logger.log(error, extra: ["description": "Error fetching inventory"])

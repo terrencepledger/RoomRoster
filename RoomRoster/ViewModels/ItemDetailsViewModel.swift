@@ -11,7 +11,7 @@ import SwiftUI
 class ItemDetailsViewModel: ObservableObject {
     @Published var historyLogs: [String] = []
     private let service = InventoryService()
-    
+
     func fetchItemHistory(for itemId: String) async {
         do {
             self.historyLogs = try await service.fetchItemHistory(itemId: itemId)
