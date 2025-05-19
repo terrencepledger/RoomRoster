@@ -11,6 +11,7 @@ struct ItemDetailsView: View {
     @State var item: Item
     @State private var historyLogs: [String] = []
     @State private var isEditing = false
+    @State private var errorMessage: String? = nil
     @StateObject private var viewModel = ItemDetailsViewModel()
 
     init(item: Item) {
@@ -21,6 +22,9 @@ struct ItemDetailsView: View {
         ZStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
+                    if let error = errorMessage {
+                        ErrorBanner(message: error)
+                    }
                     if let url = URL(string: item.imageURL) {
                         AsyncImage(url: url) { image in
                             image.resizable().scaledToFit()
@@ -141,6 +145,14 @@ struct ItemDetailsView: View {
                             "description": "Error updating item",
                             "item": String(describing: updatedItem),
                         ])
+                        withAnimation {
+                            errorMessage = "Failed to update item. Please try again."
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                            withAnimation {
+                                errorMessage = nil
+                            }
+                        }
                     }
                 }
             }

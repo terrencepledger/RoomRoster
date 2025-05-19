@@ -12,10 +12,18 @@ import Sentry
 struct ContentView: View {
     @StateObject private var viewModel = InventoryViewModel()
     @State private var showCreateItemView = false
-    
+    @State private var errorMessage: String? = nil
+
     var body: some View {
         NavigationView {
             ZStack(alignment: .bottomTrailing) {
+                VStack {
+                    if let error = errorMessage {
+                        ErrorBanner(message: error)
+                    }
+                    Spacer()
+                }
+
                 List(viewModel.items) { item in
                     NavigationLink(destination: ItemDetailsView(item: item)) {
                         VStack(alignment: .leading) {
@@ -34,7 +42,7 @@ struct ContentView: View {
                 .refreshable {
                     await viewModel.fetchInventory()
                 }
-                
+
                 Button(action: {
                     Logger.action("Pressed Add Item Button")
                     showCreateItemView.toggle()
@@ -60,6 +68,14 @@ struct ContentView: View {
                         await viewModel.fetchInventory()
                     } catch {
                         Logger.log(error, extra: ["description": "Error creating item, updating log, or re-fetching"])
+                        withAnimation {
+                            errorMessage = "Failed to save item. Please try again."
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                            withAnimation {
+                                errorMessage = nil
+                            }
+                        }
                     }
                 }
             }
