@@ -132,10 +132,14 @@ struct EditItemView: View {
                     }
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Status")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                        TextField("Enter status", text: $editableItem.status)
-                            .textFieldStyle(.roundedBorder)
+                             .font(.caption)
+                             .foregroundColor(.gray)
+                        Picker("Status", selection: $editableItem.status) {
+                            ForEach(Status.allCases, id: \.self) { status in
+                                Text(status.label).tag(status)
+                            }
+                        }
+                        .pickerStyle(.menu)
                     }
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Last Known Room")
@@ -155,6 +159,7 @@ struct EditItemView: View {
                             if let newURL = temporaryImageURL {
                                 editableItem.imageURL = newURL
                             }
+                            editableItem.lastUpdated = Date()
                             onSave(editableItem)
                             dismiss()
                         }

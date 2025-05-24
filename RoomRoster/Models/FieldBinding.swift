@@ -35,7 +35,7 @@ struct FieldBinding<Value: Equatable>: AnyFieldBinding {
     func diff(old: Item, new: Item, by: String, at: Date) -> HistoryAction? {
         let oldValue = old[keyPath: keyPath]
         let newValue = new[keyPath: keyPath]
-        guard oldValue != newValue else { return nil }
+        guard oldValue != newValue, field != .lastUpdated else { return nil }
 
         return .edited(
             field: label,

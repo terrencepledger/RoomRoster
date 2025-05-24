@@ -17,23 +17,11 @@ struct Item: Identifiable {
     var quantity: Int
     var dateAdded: String
     var estimatedPrice: Double?
-    var status: String
+    var status: Status
     var lastKnownRoom: String
     var updatedBy: String
     var lastUpdated: Date?
     var propertyTag: String?
-}
-
-extension Item {
-    var statusColor: Color {
-        switch status {
-        case "Available": return .green
-        case "Checked Out": return .orange
-        case "Discarded": return .red
-        case "Sold": return .blue
-        default: return .gray
-        }
-    }
 }
 
 extension Item {
@@ -45,7 +33,7 @@ extension Item {
         .quantity: FieldBinding(field: .quantity, label: "Quantity", keyPath: \.quantity, encode: { "\($0)" }, decode: { Int($0) }),
         .dateAdded: FieldBinding(field: .dateAdded, label: "Date Added", keyPath: \.dateAdded, encode: { $0 }, decode: { $0 }),
         .estimatedPrice: FieldBinding(field: .estimatedPrice, label: "Estimated Price", keyPath: \.estimatedPrice, encode: { $0.map { "\($0)" } ?? "" }, decode: { Double($0) }),
-        .status: FieldBinding(field: .status, label: "Status", keyPath: \.status, encode: { $0 }, decode: { $0 }),
+        .status: FieldBinding(field: .status, label: "Status", keyPath: \.status, encode: { $0.rawValue }, decode: { Status(rawValue: $0) ?? .available }),
         .lastKnownRoom: FieldBinding(field: .lastKnownRoom, label: "Last Known Room", keyPath: \.lastKnownRoom, encode: { $0 }, decode: { $0 }),
         .updatedBy: FieldBinding(field: .updatedBy, label: "Updated By", keyPath: \.updatedBy, encode: { $0 }, decode: { $0 }),
         .lastUpdated: FieldBinding(field: .lastUpdated, label: "Last Updated", keyPath: \.lastUpdated, encode: {
@@ -77,7 +65,7 @@ extension Item {
 
     static func empty() -> Item {
         .init(id: "", imageURL: "", name: "", description: "", quantity: 0,
-              dateAdded: "", estimatedPrice: nil, status: "",
+              dateAdded: "", estimatedPrice: nil, status: .available,
               lastKnownRoom: "", updatedBy: "", lastUpdated: nil, propertyTag: nil)
     }
 }

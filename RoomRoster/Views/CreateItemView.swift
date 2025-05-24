@@ -19,7 +19,7 @@ struct CreateItemView: View {
         quantity: 1,
         dateAdded: Date().toShortString(),
         estimatedPrice: nil,
-        status: "Available",
+        status: .available,
         lastKnownRoom: "",
         updatedBy: "",
         lastUpdated: nil,
@@ -101,18 +101,10 @@ struct CreateItemView: View {
                             .multilineTextAlignment(.trailing)
                     }
 
-                    HStack {
-                        Text("Status")
-                        Spacer()
-                        TextField("Enter status", text: $newItem.status)
-                            .multilineTextAlignment(.trailing)
-                    }
-
-                    HStack {
-                        Text("Last Known Room")
-                        Spacer()
-                        TextField("Enter room", text: $newItem.lastKnownRoom)
-                            .multilineTextAlignment(.trailing)
+                    Picker("Status", selection: $newItem.status) {
+                        ForEach(Status.allCases, id: \.self) { status in
+                            Text(status.label).tag(status)
+                        }
                     }
                 }
                 

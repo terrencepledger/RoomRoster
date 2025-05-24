@@ -28,7 +28,7 @@ struct ContentView: View {
                     NavigationLink(destination: ItemDetailsView(item: item)) {
                         VStack(alignment: .leading) {
                             Text(item.name).font(.headline)
-                            Text("Status: \(item.status)")
+                            Text("Status: \(item.status.label)")
                             Text("Room: \(item.lastKnownRoom)")
                             if let tag = item.propertyTag {
                                 Text("Tag: \(tag)")
