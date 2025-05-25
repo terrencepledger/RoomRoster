@@ -13,6 +13,8 @@ struct EditItemView: View {
     @State var editableItem: Item
     var onSave: (Item) -> Void
 
+    let viewModel: InventoryViewModel = InventoryViewModel()
+
     @State private var pickedImage: UIImage?
     @State private var isUploading = false
     @State private var uploadError: String?
@@ -20,6 +22,9 @@ struct EditItemView: View {
     @State private var temporaryImageURL: String?
 
     @State private var dateAddedDate: Date = Date()
+    @State private var propertyTagInput: String = ""
+    @FocusState private var tagFieldFocused: Bool
+    @State private var tagError: String? = nil
 
     var body: some View {
         NavigationView {
@@ -96,12 +101,35 @@ struct EditItemView: View {
                         Text("Property Tag")
                             .font(.caption)
                             .foregroundColor(.gray)
-                        TextField("Enter tag", text: Binding(
-                            get: { editableItem.propertyTag ?? "" },
-                            set: { editableItem.propertyTag = $0 }
-                        ))
-                        .textFieldStyle(.roundedBorder)
+                        TextField("Enter tag", text: $propertyTagInput)
+                            .focused($tagFieldFocused)
+                            .textFieldStyle(.roundedBorder)
+                            .onChange(of: tagFieldFocused) { _,focused in
+                                if !focused {
+                                    withAnimation {
+                                        validateTag()
+                                    }
+                                }
+                            }
+                        if let error = tagError {
+                            Text(error)
+                                .foregroundColor(.red)
+                                .font(.caption)
+                                .onAppear {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                        withAnimation {
+                                            if tagError != nil {
+                                                if !tagFieldFocused {
+                                                    propertyTagInput = editableItem.propertyTag?.label ?? ""
+                                                }
+                                                validateTag()
+                                            }
+                                        }
+                                    }
+                                }
+                        }
                     }
+                    
                 }
 
                 // MARK: – Details
@@ -153,18 +181,23 @@ struct EditItemView: View {
                 // MARK: – Save Button
                 Section {
                     Button("Save") {
+                        withAnimation {
+                            validateTag()
+                        }
+                        guard tagError == nil else { return }
+
                         Task {
                             Logger.action("Pressed Save Button")
                             await uploadPickedImage()
                             if let newURL = temporaryImageURL {
                                 editableItem.imageURL = newURL
                             }
-                            editableItem.lastUpdated = Date()
+                            editableItem.propertyTag = PropertyTag(rawValue: propertyTagInput)
                             onSave(editableItem)
                             dismiss()
                         }
                     }
-                    .disabled(editableItem.name.isEmpty || editableItem.description.isEmpty)
+                    .disabled(editableItem.name.isEmpty || editableItem.description.isEmpty || tagError != nil)
                 }
             }
             .navigationTitle("Edit Item")
@@ -175,11 +208,39 @@ struct EditItemView: View {
             }
             .onAppear {
                 Logger.page("EditItemView")
+                propertyTagInput = editableItem.propertyTag?.rawValue ?? ""
                 if let parsed = Date.fromShortString(editableItem.dateAdded) {
                     dateAddedDate = parsed
                 }
             }
+            .task {
+                await viewModel.fetchInventory()
+            }
         }
+    }
+
+    private func validateTag() {
+        if propertyTagInput.isEmpty || propertyTagInput == editableItem.propertyTag?.label {
+            tagError = nil
+            return
+        }
+
+        guard let tag = PropertyTag(rawValue: propertyTagInput) else {
+            tagError = "Invalid format. Use format like A1234."
+            return
+        }
+
+        let isDuplicate = viewModel.items.contains {
+            $0.id != editableItem.id &&
+            $0.propertyTag?.rawValue == tag.rawValue
+        }
+
+        if isDuplicate {
+            tagError = "That tag already exists."
+            return
+        }
+
+        tagError = nil
     }
 
     private func uploadPickedImage() async {

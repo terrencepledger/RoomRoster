@@ -31,7 +31,7 @@ struct ContentView: View {
                             Text("Status: \(item.status.label)")
                             Text("Room: \(item.lastKnownRoom)")
                             if let tag = item.propertyTag {
-                                Text("Tag: \(tag)")
+                                Text("Tag: \(tag.label)")
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
                             }
@@ -59,7 +59,7 @@ struct ContentView: View {
             }
         }
         .sheet(isPresented: $showCreateItemView) {
-            CreateItemView { newItem in
+            CreateItemView(viewModel: viewModel) { newItem in
                 Task {
                     do {
                         try await InventoryService().createItem(newItem)

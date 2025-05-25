@@ -29,6 +29,7 @@
 		767E82DA2D8F3B4E00B48011 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 767E82D92D8F3B4E00B48011 /* GoogleSignIn */; };
 		B612436C2DB03BA000B9098B /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B612436B2DB03BA000B9098B /* ImagePickerView.swift */; };
 		B615ED1C2DE12A16009BE623 /* Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = B615ED1B2DE12A16009BE623 /* Status.swift */; };
+		B615ED1E2DE226E1009BE623 /* PropertyTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = B615ED1D2DE226E1009BE623 /* PropertyTag.swift */; };
 		B61A9BD42DD65FE900D04E9A /* HistoryLogService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61A9BD32DD65FE900D04E9A /* HistoryLogService.swift */; };
 		B61A9BD82DD6650000D04E9A /* SheetsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61A9BD72DD6650000D04E9A /* SheetsUtils.swift */; };
 		B66016AF2DA9CEDC0012FDD0 /* CreateItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */; };
@@ -96,6 +97,7 @@
 		767E82DF2D8F52FF00B48011 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		B612436B2DB03BA000B9098B /* ImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
 		B615ED1B2DE12A16009BE623 /* Status.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Status.swift; sourceTree = "<group>"; };
+		B615ED1D2DE226E1009BE623 /* PropertyTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyTag.swift; sourceTree = "<group>"; };
 		B61A9BD32DD65FE900D04E9A /* HistoryLogService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryLogService.swift; sourceTree = "<group>"; };
 		B61A9BD72DD6650000D04E9A /* SheetsUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetsUtils.swift; sourceTree = "<group>"; };
 		B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateItemView.swift; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 		765183BB2D8CD22300FBA72E /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B615ED1D2DE226E1009BE623 /* PropertyTag.swift */,
 				B615ED1B2DE12A16009BE623 /* Status.swift */,
 				B6A6D6D72DD7AB3800378BFF /* FieldBinding.swift */,
 				767B05BE2D4C5F9E00566C25 /* GoogleSheetsResponse.swift */,
@@ -426,6 +429,7 @@
 				B6A6D6D82DD7AB3800378BFF /* FieldBinding.swift in Sources */,
 				767E82D32D8F34C800B48011 /* Extensions.swift in Sources */,
 				B6E684D52DD176DA00EE608B /* Logger.swift in Sources */,
+				B615ED1E2DE226E1009BE623 /* PropertyTag.swift in Sources */,
 				767B05902D4C5DC000566C25 /* RoomRosterApp.swift in Sources */,
 				B612436C2DB03BA000B9098B /* ImagePickerView.swift in Sources */,
 			);

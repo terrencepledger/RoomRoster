@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CreateItemView: View {
     @Environment(\.dismiss) var dismiss
+    var viewModel: InventoryViewModel
     var onSave: (Item) -> Void
     
     @State private var newItem = Item(
@@ -29,6 +30,10 @@ struct CreateItemView: View {
     @State private var pickedImage: UIImage? = nil
     @State private var isUploading = false
     @State private var uploadError: String? = nil
+    @State private var tagError: String?
+    @State private var propertyTagInput: String = ""
+    @State private var showTagError: Bool = false
+    @FocusState private var tagFieldFocused: Bool
 
     var body: some View {
         NavigationView {
@@ -85,11 +90,36 @@ struct CreateItemView: View {
                     HStack {
                         Text("Property Tag")
                         Spacer()
-                        TextField("Enter tag", text: Binding<String>(
-                            get: { newItem.propertyTag ?? "" },
-                            set: { newItem.propertyTag = $0 }
-                        ))
-                        .multilineTextAlignment(.trailing)
+                        TextField("Enter tag", text: $propertyTagInput)
+                            .focused($tagFieldFocused)
+                            .multilineTextAlignment(.trailing)
+                            .onChange(of: tagFieldFocused) { _, focused in
+                                if !focused {
+                                    withAnimation {
+                                        validateTag()
+                                    }
+                                }
+                            }
+                    }
+                    if showTagError, let error = tagError {
+                        HStack {
+                            Spacer()
+                            Text(error)
+                                .foregroundColor(.red)
+                                .font(.caption)
+                                .onAppear {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                        withAnimation {
+                                            if (tagError?.count ?? 0) > 0 {
+                                                if !tagFieldFocused {
+                                                    propertyTagInput = ""
+                                                }
+                                                validateTag()
+                                            }
+                                        }
+                                    }
+                                }
+                        }
                     }
                 }
 
@@ -107,12 +137,15 @@ struct CreateItemView: View {
                         }
                     }
                 }
-                
+
                 Button("Save") {
+                    validateTag()
+                    guard tagError == nil else { return }
+
                     onSave(newItem)
                     dismiss()
                 }
-                .disabled(newItem.name.isEmpty || newItem.description.isEmpty)
+                .disabled(newItem.name.isEmpty || newItem.description.isEmpty || tagError != nil)
             }
             .navigationTitle("Create Item")
             .toolbar {
@@ -127,6 +160,40 @@ struct CreateItemView: View {
                 Logger.page("CreateItemView")
             }
         }
+    }
+
+    private func validateTag() {
+        if propertyTagInput.isEmpty {
+            withAnimation {
+                showTagError = false
+                tagError = nil
+            }
+            newItem.propertyTag = nil
+            return
+        }
+
+        guard let tag = PropertyTag(rawValue: propertyTagInput) else {
+            withAnimation {
+                tagError = "Invalid tag format. Use formatting like A1234."
+                showTagError = true
+            }
+            newItem.propertyTag = nil
+            return
+        }
+
+        let isDuplicate = viewModel.items.contains { $0.propertyTag?.rawValue == tag.rawValue }
+        if isDuplicate {
+            withAnimation {
+                tagError = "That tag already exists."
+                showTagError = true
+            }
+            newItem.propertyTag = nil
+            return
+        }
+
+        showTagError = false
+        tagError = nil
+        newItem.propertyTag = tag
     }
 
     private func uploadPickedImage() async {

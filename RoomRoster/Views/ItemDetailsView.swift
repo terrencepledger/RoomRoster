@@ -54,7 +54,7 @@ struct ItemDetailsView: View {
                                 Text("Property Tag:")
                                     .font(.headline)
                                 
-                                Text(tag)
+                                Text(tag.label)
                             }
                         }
 
@@ -188,7 +188,7 @@ struct ItemDetailsView_Previews: PreviewProvider {
             lastKnownRoom: "Sanctuary",
             updatedBy: "John Doe",
             lastUpdated: Date.now,
-            propertyTag: "0000"
+            propertyTag: .empty()
         ))
     }
 }
