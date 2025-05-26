@@ -9,9 +9,10 @@ import SwiftUI
 
 struct CreateItemView: View {
     @Environment(\.dismiss) var dismiss
+
     var viewModel: InventoryViewModel
     var onSave: (Item) -> Void
-    
+
     @State private var newItem = Item(
         id: UUID().uuidString,
         imageURL: "",
@@ -21,7 +22,7 @@ struct CreateItemView: View {
         dateAdded: Date().toShortString(),
         estimatedPrice: nil,
         status: .available,
-        lastKnownRoom: "",
+        lastKnownRoom: .placeholder(),
         updatedBy: "",
         lastUpdated: nil,
         propertyTag: nil
@@ -33,6 +34,8 @@ struct CreateItemView: View {
     @State private var tagError: String?
     @State private var propertyTagInput: String = ""
     @State private var showTagError: Bool = false
+    @State private var showingAddRoomPrompt = false
+    @State private var newRoomName = ""
     @FocusState private var tagFieldFocused: Bool
 
     var body: some View {
@@ -136,6 +139,23 @@ struct CreateItemView: View {
                             Text(status.label).tag(status)
                         }
                     }
+
+                    Picker("Last Known Room", selection: $newItem.lastKnownRoom) {
+                        if newItem.lastKnownRoom == Room.placeholder() {
+                            Text("Select a Room").tag(Room.placeholder())
+                        }
+                        ForEach(viewModel.rooms, id: \.self) { room in
+                            Text(room.label).tag(room)
+                        }
+                        Text("Add Room…")
+                            .foregroundColor(.blue)
+                            .tag(Room(name: "__add_new__"))
+                    }
+                    .onChange(of: newItem.lastKnownRoom) { _,newValue in
+                        if newValue.name == "__add_new__" {
+                            showingAddRoomPrompt = true
+                        }
+                    }
                 }
 
                 Button("Save") {
@@ -145,8 +165,21 @@ struct CreateItemView: View {
                     onSave(newItem)
                     dismiss()
                 }
-                .disabled(newItem.name.isEmpty || newItem.description.isEmpty || tagError != nil)
+                .disabled(newItem.name.isEmpty || newItem.description.isEmpty || tagError != nil || newItem.lastKnownRoom == Room.placeholder())
             }
+            .alert("Add New Room", isPresented: $showingAddRoomPrompt, actions: {
+                TextField("Room Name", text: $newRoomName)
+                Button("Add") {
+                    Logger.action("Pressed Add Room Button")
+                    Task {
+                        if let newRoom = await viewModel.addRoom(name: newRoomName) {
+                            newItem.lastKnownRoom = newRoom
+                        }
+                        newRoomName = ""
+                    }
+                }
+                Button("Cancel", role: .cancel) { }
+            })
             .navigationTitle("Create Item")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -154,7 +187,12 @@ struct CreateItemView: View {
                 }
             }
             .task {
-                await AuthenticationManager.shared.signIn()
+                Task {
+                    await AuthenticationManager.shared.signIn()
+                }
+                Task {
+                    await viewModel.loadRooms()
+                }
             }
             .onAppear {
                 Logger.page("CreateItemView")

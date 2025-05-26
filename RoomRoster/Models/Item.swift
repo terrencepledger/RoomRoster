@@ -18,7 +18,7 @@ struct Item: Identifiable {
     var dateAdded: String
     var estimatedPrice: Double?
     var status: Status
-    var lastKnownRoom: String
+    var lastKnownRoom: Room
     var updatedBy: String
     var lastUpdated: Date?
     var propertyTag: PropertyTag?
@@ -49,7 +49,11 @@ extension Item {
             decode: { Status(rawValue: $0) ?? .available }
         ),
         .lastKnownRoom: FieldBinding(
-            field: .lastKnownRoom, label: "Last Known Room", keyPath: \.lastKnownRoom, encode: { $0 }, decode: { $0 }
+            field: .lastKnownRoom,
+            label: "Room",
+            keyPath: \.lastKnownRoom,
+            encode: { $0.name },
+            decode: { Room(name: $0) }
         ),
         .updatedBy: FieldBinding(
             field: .updatedBy, label: "Updated By", keyPath: \.updatedBy, encode: { $0 }, decode: { $0 }
@@ -95,6 +99,6 @@ extension Item {
     static func empty() -> Item {
         .init(id: "", imageURL: "", name: "", description: "", quantity: 0,
               dateAdded: "", estimatedPrice: nil, status: .available,
-              lastKnownRoom: "", updatedBy: "", lastUpdated: nil, propertyTag: nil)
+              lastKnownRoom: .empty(), updatedBy: "", lastUpdated: nil, propertyTag: nil)
     }
 }

@@ -13,18 +13,19 @@ struct EditItemView: View {
     @State var editableItem: Item
     var onSave: (Item) -> Void
 
-    let viewModel: InventoryViewModel = InventoryViewModel()
+    @EnvironmentObject var viewModel: InventoryViewModel
 
     @State private var pickedImage: UIImage?
     @State private var isUploading = false
     @State private var uploadError: String?
-
     @State private var temporaryImageURL: String?
-
     @State private var dateAddedDate: Date = Date()
     @State private var propertyTagInput: String = ""
-    @FocusState private var tagFieldFocused: Bool
     @State private var tagError: String? = nil
+    @State private var showingAddRoomPrompt = false
+    @State private var newRoomName = ""
+//    @State private var roomsLoaded = false
+    @FocusState private var tagFieldFocused: Bool
 
     var body: some View {
         NavigationView {
@@ -173,8 +174,30 @@ struct EditItemView: View {
                         Text("Last Known Room")
                             .font(.caption)
                             .foregroundColor(.gray)
-                        TextField("Enter room", text: $editableItem.lastKnownRoom)
-                            .textFieldStyle(.roundedBorder)
+                        if !viewModel.rooms.isEmpty {
+                            Picker("Room", selection: $editableItem.lastKnownRoom) {
+                                ForEach(viewModel.rooms, id: \.id) { room in
+                                    Text(room.label).tag(room)
+                                }
+                                Text("Add Room…").tag(Room(name: "__add_new__"))
+                            }
+                            .onChange(of: editableItem.lastKnownRoom) { _,newValue in
+                                if newValue.name == "__add_new__" {
+                                    showingAddRoomPrompt = true
+                                }
+                            }
+                        } else {
+                            ProgressView("Loading Rooms...")
+                                .onAppear {
+                                    //                                    if !roomsLoaded {
+                                        Task {
+                                            await viewModel.loadRooms()
+//                                            withAnimation {
+//                                                roomsLoaded = true
+//                                            }
+                                        }
+                                }
+                        }
                     }
                 }
 
@@ -200,6 +223,18 @@ struct EditItemView: View {
                     .disabled(editableItem.name.isEmpty || editableItem.description.isEmpty || tagError != nil)
                 }
             }
+            .alert("Add New Room", isPresented: $showingAddRoomPrompt, actions: {
+                TextField("Room Name", text: $newRoomName)
+                Button("Add") {
+                    Task {
+                        if let newRoom = await viewModel.addRoom(name: newRoomName) {
+                            editableItem.lastKnownRoom = newRoom
+                        }
+                        newRoomName = ""
+                    }
+                }
+                Button("Cancel", role: .cancel) { }
+            })
             .navigationTitle("Edit Item")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

@@ -30,6 +30,8 @@
 		B612436C2DB03BA000B9098B /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B612436B2DB03BA000B9098B /* ImagePickerView.swift */; };
 		B615ED1C2DE12A16009BE623 /* Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = B615ED1B2DE12A16009BE623 /* Status.swift */; };
 		B615ED1E2DE226E1009BE623 /* PropertyTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = B615ED1D2DE226E1009BE623 /* PropertyTag.swift */; };
+		B615ED202DE2BB15009BE623 /* Room.swift in Sources */ = {isa = PBXBuildFile; fileRef = B615ED1F2DE2BB15009BE623 /* Room.swift */; };
+		B615ED222DE2BB4E009BE623 /* RoomService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B615ED212DE2BB4B009BE623 /* RoomService.swift */; };
 		B61A9BD42DD65FE900D04E9A /* HistoryLogService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61A9BD32DD65FE900D04E9A /* HistoryLogService.swift */; };
 		B61A9BD82DD6650000D04E9A /* SheetsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61A9BD72DD6650000D04E9A /* SheetsUtils.swift */; };
 		B66016AF2DA9CEDC0012FDD0 /* CreateItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */; };
@@ -98,6 +100,8 @@
 		B612436B2DB03BA000B9098B /* ImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
 		B615ED1B2DE12A16009BE623 /* Status.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Status.swift; sourceTree = "<group>"; };
 		B615ED1D2DE226E1009BE623 /* PropertyTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyTag.swift; sourceTree = "<group>"; };
+		B615ED1F2DE2BB15009BE623 /* Room.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Room.swift; sourceTree = "<group>"; };
+		B615ED212DE2BB4B009BE623 /* RoomService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomService.swift; sourceTree = "<group>"; };
 		B61A9BD32DD65FE900D04E9A /* HistoryLogService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryLogService.swift; sourceTree = "<group>"; };
 		B61A9BD72DD6650000D04E9A /* SheetsUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetsUtils.swift; sourceTree = "<group>"; };
 		B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateItemView.swift; sourceTree = "<group>"; };
@@ -173,6 +177,7 @@
 		765183BB2D8CD22300FBA72E /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B615ED1F2DE2BB15009BE623 /* Room.swift */,
 				B615ED1D2DE226E1009BE623 /* PropertyTag.swift */,
 				B615ED1B2DE12A16009BE623 /* Status.swift */,
 				B6A6D6D72DD7AB3800378BFF /* FieldBinding.swift */,
@@ -186,6 +191,7 @@
 		765183BC2D8CD25300FBA72E /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				B615ED212DE2BB4B009BE623 /* RoomService.swift */,
 				767E82C82D8F1AA500B48011 /* NetworkService.swift */,
 				B61A9BD32DD65FE900D04E9A /* HistoryLogService.swift */,
 				767E82C62D8F1A2B00B48011 /* InventoryService.swift */,
@@ -422,6 +428,7 @@
 				767E82C52D8F19EE00B48011 /* AppConfig.swift in Sources */,
 				767E82D72D8F3ABE00B48011 /* AuthenticationManager.swift in Sources */,
 				767B05942D4C5DC000566C25 /* Item.swift in Sources */,
+				B615ED222DE2BB4E009BE623 /* RoomService.swift in Sources */,
 				767E82C92D8F1AA500B48011 /* NetworkService.swift in Sources */,
 				767B05BF2D4C5F9E00566C25 /* GoogleSheetsResponse.swift in Sources */,
 				B6A6D6DC2DD8FD4E00378BFF /* ErrorBanner.swift in Sources */,
@@ -432,6 +439,7 @@
 				B615ED1E2DE226E1009BE623 /* PropertyTag.swift in Sources */,
 				767B05902D4C5DC000566C25 /* RoomRosterApp.swift in Sources */,
 				B612436C2DB03BA000B9098B /* ImagePickerView.swift in Sources */,
+				B615ED202DE2BB15009BE623 /* Room.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

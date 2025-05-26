@@ -14,6 +14,8 @@ struct ItemDetailsView: View {
     @State private var errorMessage: String? = nil
     @StateObject private var viewModel = ItemDetailsViewModel()
 
+    let inventoryVM = InventoryViewModel()
+
     init(item: Item) {
         _item = State(initialValue: item)
     }
@@ -80,7 +82,7 @@ struct ItemDetailsView: View {
 
                         HStack {
                             Text("Last Known Room:").bold()
-                            Text(item.lastKnownRoom)
+                            Text(item.lastKnownRoom.name)
                         }
 
                         if let date = item.lastUpdated?.toShortString() {
@@ -147,6 +149,7 @@ struct ItemDetailsView: View {
                         ])
                         withAnimation {
                             errorMessage = "Failed to update item. Please try again."
+                            
                         }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
                             withAnimation {
@@ -156,6 +159,7 @@ struct ItemDetailsView: View {
                     }
                 }
             }
+            .environmentObject(inventoryVM)
         }
         .task {
             await AuthenticationManager.shared.signIn()
@@ -185,7 +189,7 @@ struct ItemDetailsView_Previews: PreviewProvider {
             dateAdded: "01/10/2025",
             estimatedPrice: 35.00,
             status: .available,
-            lastKnownRoom: "Sanctuary",
+            lastKnownRoom: .empty(),
             updatedBy: "John Doe",
             lastUpdated: Date.now,
             propertyTag: .empty()

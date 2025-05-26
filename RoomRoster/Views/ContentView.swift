@@ -29,7 +29,7 @@ struct ContentView: View {
                         VStack(alignment: .leading) {
                             Text(item.name).font(.headline)
                             Text("Status: \(item.status.label)")
-                            Text("Room: \(item.lastKnownRoom)")
+                            Text("Room: \(item.lastKnownRoom.label)")
                             if let tag = item.propertyTag {
                                 Text("Tag: \(tag.label)")
                                     .font(.subheadline)
