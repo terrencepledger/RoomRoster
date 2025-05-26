@@ -6,7 +6,7 @@
 //
 
 struct Room: Identifiable, Hashable, Codable, Equatable {
-    var id: String { name.lowercased() }
+    var id: String { name.lowercased().trimmingCharacters(in: .whitespacesAndNewlines) }
     var name: String
     var label: String {
         name.capitalized
