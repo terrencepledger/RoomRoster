@@ -24,7 +24,6 @@ struct EditItemView: View {
     @State private var tagError: String? = nil
     @State private var showingAddRoomPrompt = false
     @State private var newRoomName = ""
-//    @State private var roomsLoaded = false
     @FocusState private var tagFieldFocused: Bool
 
     var body: some View {
@@ -188,15 +187,6 @@ struct EditItemView: View {
                             }
                         } else {
                             ProgressView("Loading Rooms...")
-                                .onAppear {
-                                    //                                    if !roomsLoaded {
-                                        Task {
-                                            await viewModel.loadRooms()
-//                                            withAnimation {
-//                                                roomsLoaded = true
-//                                            }
-                                        }
-                                }
                         }
                     }
                 }
@@ -229,6 +219,8 @@ struct EditItemView: View {
                     Task {
                         if let newRoom = await viewModel.addRoom(name: newRoomName) {
                             editableItem.lastKnownRoom = newRoom
+                        } else {
+                            editableItem.lastKnownRoom = Room.placeholder()
                         }
                         newRoomName = ""
                     }
@@ -250,6 +242,9 @@ struct EditItemView: View {
             }
             .task {
                 await viewModel.fetchInventory()
+            }
+            .task {
+                await viewModel.loadRooms()
             }
         }
     }

@@ -20,7 +20,7 @@ struct RoomService {
     }
 
     func addRoom(name: String) async throws {
-        let url = "https://sheets.googleapi.com/v4/spreadsheets/\(sheetId)/values/Rooms:append?valueInputOption=USER_ENTERED"
+        let url = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Rooms:append?valueInputOption=USER_ENTERED"
         let payload: [String: Any] = ["values": [[name]]]
         Logger.network("RoomService-addRoom")
         let request = try await NetworkService.shared.authorizedRequest(

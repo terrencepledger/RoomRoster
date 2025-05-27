@@ -161,11 +161,12 @@ struct ItemDetailsView: View {
         }
         .onAppear {
             Logger.page("ItemDetailsView")
-            Task {
-                await AuthenticationManager.shared.signIn()
-                await viewModel.fetchItemHistory(for: item.id)
-                print(String(describing: viewModel.historyLogs))
-            }
+        }
+        .task {
+            await AuthenticationManager.shared.signIn()
+        }
+        .task {
+            await viewModel.fetchItemHistory(for: item.id)
         }
         .refreshable {
             Logger.action("Refreshing")

@@ -174,6 +174,8 @@ struct CreateItemView: View {
                     Task {
                         if let newRoom = await viewModel.addRoom(name: newRoomName) {
                             newItem.lastKnownRoom = newRoom
+                        } else {
+                            newItem.lastKnownRoom = Room.placeholder()
                         }
                         newRoomName = ""
                     }
