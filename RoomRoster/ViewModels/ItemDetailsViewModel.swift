@@ -10,15 +10,21 @@ import SwiftUI
 @MainActor
 class ItemDetailsViewModel: ObservableObject {
     @Published var historyLogs: [String] = []
+    @Published var isLoadingHistory: Bool = false
+
     private let service = InventoryService()
 
     func fetchItemHistory(for itemId: String) async {
+        isLoadingHistory = true
+        defer { isLoadingHistory = false }
         do {
-            self.historyLogs = try await service.fetchItemHistory(itemId: itemId)
+            let logs = try await service.fetchItemHistory(itemId: itemId)
+            historyLogs = logs
         } catch {
             Logger.log(error, extra: [
                 "description": "Error fetching item history"
             ])
+            historyLogs = []
         }
     }
 }

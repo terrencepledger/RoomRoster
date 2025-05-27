@@ -14,10 +14,15 @@ struct ContentView: View {
     @State private var showCreateItemView = false
     @State private var errorMessage: String? = nil
     @State private var expandedRooms: Set<Room> = []
+    @State private var searchText: String = ""
+    @State private var includeHistoryInSearch: Bool = false
+    @State private var logVersion = 0
 
-    var groupedItems: [(room: Room, items: [Item])] {
-        Dictionary(grouping: viewModel.items, by: \.lastKnownRoom)
-            .map { (key: Room, value: [Item]) in (room: key, items: value) }
+    var groupedItems: [(room: Room, items: [(Item, String)])] {
+        let filtered = filteredItemsWithContext
+        let grouped = Dictionary(grouping: filtered, by: { $0.0.lastKnownRoom })
+        return grouped
+            .map { (key, value) in (room: key, items: value) }
             .sorted { $0.room.label < $1.room.label }
     }
 
@@ -32,10 +37,26 @@ struct ContentView: View {
                 }
 
                 List {
+                    Section {
+                        TextField("Search...", text: $searchText)
+                            .textFieldStyle(.roundedBorder)
+
+                        Toggle("Include History", isOn: $includeHistoryInSearch)
+                            .font(.subheadline)
+                            .padding(.top, 4)
+                    }
+                    .padding(.horizontal)
+                    .task {
+                        await viewModel.fetchInventory()
+                        await viewModel.loadRecentLogs(for: viewModel.items)
+                    }
+                    Text("Logs loaded: \(viewModel.recentLogs.count)")
+                    Text("Include: \(String(describing: includeHistoryInSearch))")
+
                     ForEach(groupedItems, id: \.room) { group in
                         Section(header: sectionHeader(for: group.room)) {
                             if expandedRooms.contains(group.room) {
-                                ForEach(group.items) { item in
+                                ForEach(group.items, id: \.0.id) { (item, context) in
                                     NavigationLink(destination: ItemDetailsView(item: item)) {
                                         VStack(alignment: .leading) {
                                             Text(item.name).font(.headline)
@@ -44,6 +65,12 @@ struct ContentView: View {
                                                 Text("Tag: \(tag.label)")
                                                     .font(.subheadline)
                                                     .foregroundColor(.gray)
+                                            }
+                                            if !context.isEmpty {
+                                                Text("Matched in: \(context)")
+                                                    .font(.caption)
+                                                    .italic()
+                                                    .foregroundColor(.secondary)
                                             }
                                         }
                                     }
@@ -55,6 +82,10 @@ struct ContentView: View {
                 .navigationTitle("Inventory")
                 .refreshable {
                     await viewModel.fetchInventory()
+                    await viewModel.loadRecentLogs(for: viewModel.items)
+                }
+                .onAppear {
+                    Logger.page("ContentView")
                 }
 
                 Button(action: {
@@ -94,12 +125,53 @@ struct ContentView: View {
                 }
             }
         }
-        .task {
-            await viewModel.fetchInventory()
+    }
+
+    var filteredItemsWithContext: [(Item, String)] {
+        let query = searchText.lowercased().trimmingCharacters(in: .whitespaces)
+        guard !query.isEmpty else {
+            return viewModel.items.map { ($0, "") }
         }
-        .onAppear {
-            Logger.page("ContentView")
+
+        return viewModel.items.compactMap { item in
+            if item.name.lowercased().contains(query) {
+                return (item, "name")
+            } else if item.description.lowercased().contains(query) {
+                return (item, "description")
+            } else if let tag = item.propertyTag?.label.lowercased(), tag.contains(query) {
+                return (item, "property tag")
+            } else if item.status.label.lowercased().contains(query) {
+                return (item, "status")
+            } else if item.updatedBy.lowercased().contains(query) {
+                return (item, "updated by")
+            } else if item.dateAdded.lowercased().contains(query) {
+                return (item, "date added")
+            }
+
+            if includeHistoryInSearch {
+                let logs = viewModel.recentLogs[item.id] ?? []
+                for log in logs {
+                    let lower = log.lowercased()
+                    print("Query: \(query), log: \(lower)")
+                    if lower.contains(query) {
+                        if let field = extractFieldName(from: log) {
+                            return (item, "history (\(field))")
+                        } else {
+                            return (item, "history")
+                        }
+                    }
+                }
+            }
+
+            return nil
         }
+    }
+
+    private func extractFieldName(from log: String) -> String? {
+        if let range = log.range(of: "Edited '"), let end = log[range.upperBound...].firstIndex(of: "'") {
+            return String(log[range.upperBound..<end])
+        }
+        return nil
     }
 
     @ViewBuilder

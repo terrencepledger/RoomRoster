@@ -24,7 +24,7 @@ class ImageUploadService {
         let imageRef = storage.reference().child("images/\(itemId).jpg")
         let metadata = StorageMetadata()
         metadata.contentType = "image/jpeg"
-        
+        Logger.network("ImageUploadService-uploadImageAsync")
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             imageRef.putData(imageData, metadata: metadata) { _, error in
                 if let error = error {

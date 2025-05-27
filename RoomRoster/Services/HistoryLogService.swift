@@ -75,6 +75,7 @@ final class HistoryLogService {
 
     private func appendHistoryEntries(for itemId: String, logEntries: [String]) async throws {
         let historyURLString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/HistoryLog?key=\(apiKey)"
+        Logger.network("HistoryLogService-appendHistoryEntries")
         let historyResponse: GoogleSheetsResponse = try await NetworkService.shared.fetchData(from: historyURLString)
 
         if let existingRowIndex = historyResponse.values.firstIndex(where: { $0.first == itemId }) {

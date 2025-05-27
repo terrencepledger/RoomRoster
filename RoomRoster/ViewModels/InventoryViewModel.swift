@@ -11,6 +11,7 @@ import SwiftUI
 class InventoryViewModel: ObservableObject {
     @Published var items: [Item] = []
     @Published var rooms: [Room] = []
+    @Published var recentLogs: [String: [String]] = [:]
     private let service = InventoryService()
 
     func loadRooms() async {
@@ -40,6 +41,24 @@ class InventoryViewModel: ObservableObject {
             Logger.log(error, extra: [
                 "description": "Error fetching inventory"
             ])
+        }
+    }
+
+    func loadRecentLogs(for items: [Item], maxPerItem: Int = 5) async {
+        do {
+            let sheet = try await service.fetchAllHistory()
+            
+            var newLogs: [String: [String]] = [:]
+            for item in items {
+                if let row = sheet.values.first(where: { $0.first == item.id }) {
+                    newLogs[item.id] = Array(row.dropFirst()).prefix(maxPerItem).map { $0 }
+                } else {
+                    newLogs[item.id] = []
+                }
+            }
+            recentLogs = newLogs
+        } catch {
+            Logger.log(error, extra: ["context": "Failed to load item logs"])
         }
     }
 }

@@ -63,6 +63,9 @@ struct Logger {
     private static func breadcrumb(_ message: String, category: LogCategory, level: LogLevel = .info) {
         let crumb = Breadcrumb(level: level.sentryLevel, category: category.rawValue)
         crumb.message = message
+        #if DEBUG
+        print(message)
+        #endif
         SentrySDK.addBreadcrumb(crumb)
     }
 
@@ -72,6 +75,20 @@ struct Logger {
         tags: [String: String]? = nil,
         extra: [String: Any]? = nil
     ) {
+        #if DEBUG
+        print(String(describing: extra))
+        if let nsError = error as NSError? {
+            var errorString = [String: String]()
+            for (key, value) in nsError.userInfo {
+                if let value = value as? String {
+                    errorString[value] = "userInfo.\(key)"
+                }
+            }
+            print(String(describing: errorString))
+        } else {
+            print(error)
+        }
+        #endif
         SentrySDK.capture(error: error) { scope in
             scope.setLevel(level.sentryLevel)
             if let nsError = error as NSError? {

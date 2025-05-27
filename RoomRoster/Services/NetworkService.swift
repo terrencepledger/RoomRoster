@@ -15,11 +15,19 @@ struct NetworkService {
     static let shared = NetworkService()
 
     func fetchData<T: Codable>(from urlString: String) async throws -> T {
+        Logger.network(urlString)
         guard let url = URL(string: urlString) else {
             throw NetworkError.invalidURL
         }
         let (data, _) = try await URLSession.shared.data(from: url)
-        return try JSONDecoder().decode(T.self, from: data)
+        do {
+            return try JSONDecoder().decode(T.self, from: data)
+        } catch {
+            if let dataString = String(data: data, encoding: .utf8) {
+                Logger.network(dataString)
+            }
+            throw error
+        }
     }
 
     func authorizedRequest(
@@ -40,6 +48,7 @@ struct NetworkService {
     }
 
     func sendRequest(_ request: URLRequest) async throws {
+        Logger.network(request.debugDescription)
         let (_, response) = try await URLSession.shared.data(for: request)
         guard let httpResponse = response as? HTTPURLResponse,
               (200..<300).contains(httpResponse.statusCode) else {
