@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		767B05902D4C5DC000566C25 /* RoomRosterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B058F2D4C5DC000566C25 /* RoomRosterApp.swift */; };
-		767B05922D4C5DC000566C25 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05912D4C5DC000566C25 /* ContentView.swift */; };
+		767B05922D4C5DC000566C25 /* InventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05912D4C5DC000566C25 /* InventoryView.swift */; };
 		767B05942D4C5DC000566C25 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05932D4C5DC000566C25 /* Item.swift */; };
 		767B05962D4C5DC400566C25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 767B05952D4C5DC400566C25 /* Assets.xcassets */; };
 		767B059A2D4C5DC400566C25 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 767B05992D4C5DC400566C25 /* Preview Assets.xcassets */; };
@@ -34,6 +34,10 @@
 		B615ED222DE2BB4E009BE623 /* RoomService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B615ED212DE2BB4B009BE623 /* RoomService.swift */; };
 		B61A9BD42DD65FE900D04E9A /* HistoryLogService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61A9BD32DD65FE900D04E9A /* HistoryLogService.swift */; };
 		B61A9BD82DD6650000D04E9A /* SheetsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61A9BD72DD6650000D04E9A /* SheetsUtils.swift */; };
+		B65F71252DE6491700310D40 /* MainMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F71242DE6491700310D40 /* MainMenuView.swift */; };
+		B65F71272DE6493600310D40 /* ReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F71262DE6493600310D40 /* ReportsView.swift */; };
+		B65F71292DE6494A00310D40 /* SheetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F71282DE6494A00310D40 /* SheetsView.swift */; };
+		B65F712B2DE6495900310D40 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F712A2DE6495900310D40 /* SettingsView.swift */; };
 		B66016AF2DA9CEDC0012FDD0 /* CreateItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */; };
 		B6A6D6D62DD7AAEE00378BFF /* ItemField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A6D6D52DD7AAEE00378BFF /* ItemField.swift */; };
 		B6A6D6D82DD7AB3800378BFF /* FieldBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A6D6D72DD7AB3800378BFF /* FieldBinding.swift */; };
@@ -75,7 +79,7 @@
 /* Begin PBXFileReference section */
 		767B058C2D4C5DC000566C25 /* RoomRoster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RoomRoster.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		767B058F2D4C5DC000566C25 /* RoomRosterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomRosterApp.swift; sourceTree = "<group>"; };
-		767B05912D4C5DC000566C25 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		767B05912D4C5DC000566C25 /* InventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryView.swift; sourceTree = "<group>"; };
 		767B05932D4C5DC000566C25 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		767B05952D4C5DC400566C25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		767B05972D4C5DC400566C25 /* RoomRoster.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoomRoster.entitlements; sourceTree = "<group>"; };
@@ -104,6 +108,10 @@
 		B615ED212DE2BB4B009BE623 /* RoomService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomService.swift; sourceTree = "<group>"; };
 		B61A9BD32DD65FE900D04E9A /* HistoryLogService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryLogService.swift; sourceTree = "<group>"; };
 		B61A9BD72DD6650000D04E9A /* SheetsUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetsUtils.swift; sourceTree = "<group>"; };
+		B65F71242DE6491700310D40 /* MainMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuView.swift; sourceTree = "<group>"; };
+		B65F71262DE6493600310D40 /* ReportsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportsView.swift; sourceTree = "<group>"; };
+		B65F71282DE6494A00310D40 /* SheetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetsView.swift; sourceTree = "<group>"; };
+		B65F712A2DE6495900310D40 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateItemView.swift; sourceTree = "<group>"; };
 		B6A6D6D52DD7AAEE00378BFF /* ItemField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemField.swift; sourceTree = "<group>"; };
 		B6A6D6D72DD7AB3800378BFF /* FieldBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldBinding.swift; sourceTree = "<group>"; };
@@ -154,7 +162,11 @@
 		765183B92D8CD1F300FBA72E /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				767B05912D4C5DC000566C25 /* ContentView.swift */,
+				B65F712A2DE6495900310D40 /* SettingsView.swift */,
+				B65F71282DE6494A00310D40 /* SheetsView.swift */,
+				B65F71262DE6493600310D40 /* ReportsView.swift */,
+				B65F71242DE6491700310D40 /* MainMenuView.swift */,
+				767B05912D4C5DC000566C25 /* InventoryView.swift */,
 				B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */,
 				767E82D42D8F356500B48011 /* EditItemView.swift */,
 				B6A6D6DB2DD8FD4E00378BFF /* ErrorBanner.swift */,
@@ -419,15 +431,17 @@
 				767E82CB2D8F1B2C00B48011 /* ItemDetailsViewModel.swift in Sources */,
 				B6A6D6D62DD7AAEE00378BFF /* ItemField.swift in Sources */,
 				B6F964922DB028E80093089A /* ImageUploadService.swift in Sources */,
-				767B05922D4C5DC000566C25 /* ContentView.swift in Sources */,
+				767B05922D4C5DC000566C25 /* InventoryView.swift in Sources */,
 				B61A9BD42DD65FE900D04E9A /* HistoryLogService.swift in Sources */,
 				767B05BD2D4C5E1700566C25 /* InventoryViewModel.swift in Sources */,
 				B61A9BD82DD6650000D04E9A /* SheetsUtils.swift in Sources */,
 				B66016AF2DA9CEDC0012FDD0 /* CreateItemView.swift in Sources */,
+				B65F71272DE6493600310D40 /* ReportsView.swift in Sources */,
 				767E82D52D8F356500B48011 /* EditItemView.swift in Sources */,
 				767E82C52D8F19EE00B48011 /* AppConfig.swift in Sources */,
 				767E82D72D8F3ABE00B48011 /* AuthenticationManager.swift in Sources */,
 				767B05942D4C5DC000566C25 /* Item.swift in Sources */,
+				B65F712B2DE6495900310D40 /* SettingsView.swift in Sources */,
 				B615ED222DE2BB4E009BE623 /* RoomService.swift in Sources */,
 				767E82C92D8F1AA500B48011 /* NetworkService.swift in Sources */,
 				767B05BF2D4C5F9E00566C25 /* GoogleSheetsResponse.swift in Sources */,
@@ -435,9 +449,11 @@
 				B615ED1C2DE12A16009BE623 /* Status.swift in Sources */,
 				B6A6D6D82DD7AB3800378BFF /* FieldBinding.swift in Sources */,
 				767E82D32D8F34C800B48011 /* Extensions.swift in Sources */,
+				B65F71252DE6491700310D40 /* MainMenuView.swift in Sources */,
 				B6E684D52DD176DA00EE608B /* Logger.swift in Sources */,
 				B615ED1E2DE226E1009BE623 /* PropertyTag.swift in Sources */,
 				767B05902D4C5DC000566C25 /* RoomRosterApp.swift in Sources */,
+				B65F71292DE6494A00310D40 /* SheetsView.swift in Sources */,
 				B612436C2DB03BA000B9098B /* ImagePickerView.swift in Sources */,
 				B615ED202DE2BB15009BE623 /* Room.swift in Sources */,
 			);

@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  InventoryView.swift
 //  RoomRoster
 //
 //  Created by Terrence Pledger on 1/30/25.
@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 import Sentry
 
-struct ContentView: View {
+struct InventoryView: View {
     @StateObject private var viewModel = InventoryViewModel()
     @State private var showCreateItemView = false
     @State private var errorMessage: String? = nil
@@ -46,12 +46,6 @@ struct ContentView: View {
                             .padding(.top, 4)
                     }
                     .padding(.horizontal)
-                    .task {
-                        await viewModel.fetchInventory()
-                        await viewModel.loadRecentLogs(for: viewModel.items)
-                    }
-                    Text("Logs loaded: \(viewModel.recentLogs.count)")
-                    Text("Include: \(String(describing: includeHistoryInSearch))")
 
                     ForEach(groupedItems, id: \.room) { group in
                         Section(header: sectionHeader(for: group.room)) {
@@ -78,14 +72,6 @@ struct ContentView: View {
                             }
                         }
                     }
-                }
-                .navigationTitle("Inventory")
-                .refreshable {
-                    await viewModel.fetchInventory()
-                    await viewModel.loadRecentLogs(for: viewModel.items)
-                }
-                .onAppear {
-                    Logger.page("ContentView")
                 }
 
                 Button(action: {
@@ -125,6 +111,18 @@ struct ContentView: View {
                 }
             }
         }
+        .navigationTitle("Inventory")
+        .onAppear {
+            Logger.page("InventoryView")
+        }
+        .task {
+            await viewModel.fetchInventory()
+            await viewModel.loadRecentLogs(for: viewModel.items)
+        }
+        .refreshable {
+            await viewModel.fetchInventory()
+            await viewModel.loadRecentLogs(for: viewModel.items)
+        }
     }
 
     var filteredItemsWithContext: [(Item, String)] {
@@ -152,7 +150,6 @@ struct ContentView: View {
                 let logs = viewModel.recentLogs[item.id] ?? []
                 for log in logs {
                     let lower = log.lowercased()
-                    print("Query: \(query), log: \(lower)")
                     if lower.contains(query) {
                         if let field = extractFieldName(from: log) {
                             return (item, "history (\(field))")
@@ -202,8 +199,3 @@ struct ContentView: View {
         }
     }
 }
-
-//#Preview {
-//    ContentView()
-//        .modelContainer(for: Item.self, inMemory: true)
-//}

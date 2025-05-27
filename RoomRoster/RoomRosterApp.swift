@@ -17,7 +17,7 @@ struct RoomRosterApp: App {
     }
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainMenuView()
         }
     }
 }
