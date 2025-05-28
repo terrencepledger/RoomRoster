@@ -8,6 +8,8 @@
 import SwiftUI
 import PhotosUI
 
+private typealias l10n = Strings.editItem
+
 struct EditItemView: View {
     @Environment(\.dismiss) private var dismiss
     @State var editableItem: Item
@@ -30,7 +32,7 @@ struct EditItemView: View {
         NavigationView {
             Form {
                 // MARK: – Photo Section
-                Section(header: Text("Photo")) {
+                Section(header: Text(l10n.photo.title)) {
                     if let url = URL(string: editableItem.imageURL),
                             !editableItem.imageURL.isEmpty {
                         AsyncImage(url: url) { img in
@@ -46,12 +48,12 @@ struct EditItemView: View {
                             .fill(Color.secondary.opacity(0.1))
                             .frame(height: 120)
                             .cornerRadius(8)
-                            .overlay(Text("No Image").foregroundColor(.gray))
+                            .overlay(Text(l10n.photo.emptyState).foregroundColor(.gray))
                     }
 
                     // Picker button
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Select or Take Photo")
+                        Text(l10n.photo.enter)
                             .font(.caption)
                             .foregroundColor(.gray)
                         CombinedImagePickerButton(image: $pickedImage)
@@ -61,7 +63,7 @@ struct EditItemView: View {
                     if isUploading {
                         HStack {
                             ProgressView()
-                            Text("Uploading Image…")
+                            Text(l10n.photo.loading)
                         }
                     }
                     if let error = uploadError {
@@ -72,36 +74,36 @@ struct EditItemView: View {
                 }
 
                 // MARK: – Basic Information
-                Section(header: Text("Basic Information")) {
+                Section(header: Text(l10n.basicInfo.title)) {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Name")
+                        Text(l10n.basicInfo.name)
                             .font(.caption)
                             .foregroundColor(.gray)
-                        TextField("Enter name", text: $editableItem.name)
+                        TextField(l10n.basicInfo.enter.name, text: $editableItem.name)
                             .textFieldStyle(.roundedBorder)
                     }
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Description")
+                        Text(l10n.basicInfo.description)
                             .font(.caption)
                             .foregroundColor(.gray)
-                        TextField("Enter description", text: $editableItem.description)
+                        TextField(l10n.basicInfo.enter.description, text: $editableItem.description)
                             .textFieldStyle(.roundedBorder)
                     }
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Quantity")
+                        Text(l10n.basicInfo.quantity)
                             .font(.caption)
                             .foregroundColor(.gray)
-                        TextField("Enter quantity",
+                        TextField(l10n.basicInfo.enter.quantity,
                                   value: $editableItem.quantity,
                                   format: .number)
                             .keyboardType(.numberPad)
                             .textFieldStyle(.roundedBorder)
                     }
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Property Tag")
+                        Text(l10n.basicInfo.tag)
                             .font(.caption)
                             .foregroundColor(.gray)
-                        TextField("Enter tag", text: $propertyTagInput)
+                        TextField(l10n.basicInfo.enter.tag, text: $propertyTagInput)
                             .focused($tagFieldFocused)
                             .textFieldStyle(.roundedBorder)
                             .onChange(of: tagFieldFocused) { _,focused in
@@ -133,36 +135,22 @@ struct EditItemView: View {
                 }
 
                 // MARK: – Details
-                Section(header: Text("Details")) {
+                Section(header: Text(l10n.details.title)) {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Date Added")
+                        Text(l10n.details.price)
                             .font(.caption)
                             .foregroundColor(.gray)
-
-                        DatePicker("", selection: $dateAddedDate, displayedComponents: .date)
-                            .datePickerStyle(CompactDatePickerStyle())
-                            .clipped()
-                            .labelsHidden()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .onChange(of: dateAddedDate) { _, newDate in
-                                editableItem.dateAdded = newDate.toShortString()
-                            }
-                    }
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Estimated Price")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                        TextField("Enter price",
+                        TextField(l10n.details.enter.price,
                                   value: $editableItem.estimatedPrice,
                                   format: .number)
                             .keyboardType(.decimalPad)
                             .textFieldStyle(.roundedBorder)
                     }
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Status")
+                        Text(l10n.details.status)
                              .font(.caption)
                              .foregroundColor(.gray)
-                        Picker("Status", selection: $editableItem.status) {
+                        Picker(l10n.details.enter.status, selection: $editableItem.status) {
                             ForEach(Status.allCases, id: \.self) { status in
                                 Text(status.label).tag(status)
                             }
@@ -170,15 +158,15 @@ struct EditItemView: View {
                         .pickerStyle(.menu)
                     }
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Last Known Room")
+                        Text(l10n.details.room.title)
                             .font(.caption)
                             .foregroundColor(.gray)
                         if !viewModel.rooms.isEmpty {
-                            Picker("Room", selection: $editableItem.lastKnownRoom) {
+                            Picker(l10n.details.room.subtitle, selection: $editableItem.lastKnownRoom) {
                                 ForEach(viewModel.rooms, id: \.id) { room in
                                     Text(room.label).tag(room)
                                 }
-                                Text("Add Room…").tag(Room(name: "__add_new__"))
+                                Text(l10n.details.room.add).tag(Room(name: "__add_new__"))
                             }
                             .onChange(of: editableItem.lastKnownRoom) { _,newValue in
                                 if newValue.name == "__add_new__" {
@@ -186,14 +174,14 @@ struct EditItemView: View {
                                 }
                             }
                         } else {
-                            ProgressView("Loading Rooms...")
+                            ProgressView(l10n.details.room.loading)
                         }
                     }
                 }
 
                 // MARK: – Save Button
                 Section {
-                    Button("Save") {
+                    Button(Strings.general.save) {
                         withAnimation {
                             validateTag()
                         }
@@ -213,9 +201,9 @@ struct EditItemView: View {
                     .disabled(editableItem.name.isEmpty || editableItem.description.isEmpty || tagError != nil)
                 }
             }
-            .alert("Add New Room", isPresented: $showingAddRoomPrompt, actions: {
-                TextField("Room Name", text: $newRoomName)
-                Button("Add") {
+            .alert(l10n.addRoomAlert.title, isPresented: $showingAddRoomPrompt, actions: {
+                TextField(l10n.addRoomAlert.placeholder, text: $newRoomName)
+                Button(l10n.addRoomAlert.add) {
                     Task {
                         if let newRoom = await viewModel.addRoom(name: newRoomName) {
                             editableItem.lastKnownRoom = newRoom
@@ -225,12 +213,12 @@ struct EditItemView: View {
                         newRoomName = ""
                     }
                 }
-                Button("Cancel", role: .cancel) { }
+                Button(Strings.general.cancel, role: .cancel) { }
             })
-            .navigationTitle("Edit Item")
+            .navigationTitle(l10n.title)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
+                    Button(Strings.general.cancel) { dismiss() }
                 }
             }
             .onAppear {
@@ -256,7 +244,7 @@ struct EditItemView: View {
         }
 
         guard let tag = PropertyTag(rawValue: propertyTagInput) else {
-            tagError = "Invalid format. Use format like A1234."
+            tagError = l10n.errors.tag.format
             return
         }
 
@@ -266,7 +254,7 @@ struct EditItemView: View {
         }
 
         if isDuplicate {
-            tagError = "That tag already exists."
+            tagError = l10n.errors.tag.duplicate
             return
         }
 
@@ -274,10 +262,7 @@ struct EditItemView: View {
     }
 
     private func uploadPickedImage() async {
-        guard let uiImage = pickedImage else {
-            uploadError = "No image was selected."
-            return
-        }
+        guard let uiImage = pickedImage else { return }
 
         isUploading = true
         uploadError = nil
@@ -291,7 +276,7 @@ struct EditItemView: View {
             Logger.log(error, extra: [
                 "description": "Upload Image Failed"
             ])
-            uploadError = "Upload failed: \(error.localizedDescription)"
+            uploadError = l10n.errors.imageUpload(error.localizedDescription)
         }
     }
 }

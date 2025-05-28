@@ -9,6 +9,8 @@ import SwiftUI
 import SwiftData
 import Sentry
 
+private typealias l10n = Strings.inventory
+
 struct InventoryView: View {
     @StateObject private var viewModel = InventoryViewModel()
     @State private var showCreateItemView = false
@@ -38,10 +40,10 @@ struct InventoryView: View {
 
                 List {
                     Section {
-                        TextField("Search...", text: $searchText)
+                        TextField(l10n.searchPlaceholder, text: $searchText)
                             .textFieldStyle(.roundedBorder)
 
-                        Toggle("Include History", isOn: $includeHistoryInSearch)
+                        Toggle(l10n.includeHistoryToggle, isOn: $includeHistoryInSearch)
                             .font(.subheadline)
                             .padding(.top, 4)
                     }
@@ -54,14 +56,14 @@ struct InventoryView: View {
                                     NavigationLink(destination: ItemDetailsView(item: item)) {
                                         VStack(alignment: .leading) {
                                             Text(item.name).font(.headline)
-                                            Text("Status: \(item.status.label)")
+                                            Text(l10n.status(item.status.label))
                                             if let tag = item.propertyTag {
-                                                Text("Tag: \(tag.label)")
+                                                Text(l10n.tag(tag.label))
                                                     .font(.subheadline)
                                                     .foregroundColor(.gray)
                                             }
                                             if !context.isEmpty {
-                                                Text("Matched in: \(context)")
+                                                Text(l10n.matchedLabel(context))
                                                     .font(.caption)
                                                     .italic()
                                                     .foregroundColor(.secondary)
@@ -100,7 +102,7 @@ struct InventoryView: View {
                     } catch {
                         Logger.log(error, extra: ["description": "Error creating item, updating log, or re-fetching"])
                         withAnimation {
-                            errorMessage = "Failed to save item. Please try again."
+                            errorMessage = l10n.failedToSave
                         }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
                             withAnimation {
@@ -111,7 +113,7 @@ struct InventoryView: View {
                 }
             }
         }
-        .navigationTitle("Inventory")
+        .navigationTitle(l10n.title)
         .onAppear {
             Logger.page("InventoryView")
         }
@@ -133,17 +135,17 @@ struct InventoryView: View {
 
         return viewModel.items.compactMap { item in
             if item.name.lowercased().contains(query) {
-                return (item, "name")
+                return (item, l10n.query.name)
             } else if item.description.lowercased().contains(query) {
-                return (item, "description")
+                return (item, l10n.query.description)
             } else if let tag = item.propertyTag?.label.lowercased(), tag.contains(query) {
-                return (item, "property tag")
+                return (item, l10n.query.tag)
             } else if item.status.label.lowercased().contains(query) {
-                return (item, "status")
+                return (item, l10n.query.status)
             } else if item.updatedBy.lowercased().contains(query) {
-                return (item, "updated by")
+                return (item, l10n.query.updatedBy)
             } else if item.dateAdded.lowercased().contains(query) {
-                return (item, "date added")
+                return (item, l10n.query.dateAdded)
             }
 
             if includeHistoryInSearch {
@@ -152,9 +154,9 @@ struct InventoryView: View {
                     let lower = log.lowercased()
                     if lower.contains(query) {
                         if let field = extractFieldName(from: log) {
-                            return (item, "history (\(field))")
+                            return (item, l10n.query.historyField(field))
                         } else {
-                            return (item, "history")
+                            return (item, l10n.query.history)
                         }
                     }
                 }
@@ -165,7 +167,8 @@ struct InventoryView: View {
     }
 
     private func extractFieldName(from log: String) -> String? {
-        if let range = log.range(of: "Edited '"), let end = log[range.upperBound...].firstIndex(of: "'") {
+        let delimiter = "Edited '"
+        if let range = log.range(of: delimiter), let end = log[range.upperBound...].firstIndex(of: "'") {
             return String(log[range.upperBound..<end])
         }
         return nil

@@ -8,6 +8,8 @@
 import SwiftUI
 import PhotosUI
 
+private typealias l10n = Strings.imagePicker
+
 struct UIKitImagePicker: UIViewControllerRepresentable {
     @Environment(\.presentationMode) private var presentationMode
     @Binding var image: UIImage?
@@ -62,21 +64,21 @@ struct CombinedImagePickerButton: View {
                     .frame(height: 120)
                     .cornerRadius(8)
             } else {
-                Label("Choose or Take Photo", systemImage: "photo.on.rectangle")
+                Label(l10n.title, systemImage: "photo.on.rectangle")
             }
         }
-        .confirmationDialog("Select Photo Source", isPresented: $showSourceDialog) {
+        .confirmationDialog(l10n.dialog.title, isPresented: $showSourceDialog) {
             if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                Button("Take Photo") {
+                Button(l10n.dialog.capture) {
                     sourceType = .camera
                     showPicker = true
                 }
             }
-            Button("Photo Library") {
+            Button(l10n.dialog.library) {
                 sourceType = .photoLibrary
                 showPicker = true
             }
-            Button("Cancel", role: .cancel) {}
+            Button(Strings.general.cancel, role: .cancel) {}
         }
         .sheet(isPresented: $showPicker) {
             UIKitImagePicker(image: $image, sourceType: sourceType)

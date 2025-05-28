@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+private typealias l10n = Strings.createItem
+
 struct CreateItemView: View {
     @Environment(\.dismiss) var dismiss
 
@@ -41,7 +43,7 @@ struct CreateItemView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Photo")) {
+                Section(header: Text(l10n.photo)) {
                     CombinedImagePickerButton(image: $pickedImage)
                         .onChange(of: pickedImage) { _,_ in
                             Task { await uploadPickedImage() }
@@ -50,7 +52,7 @@ struct CreateItemView: View {
                     if isUploading {
                         HStack {
                             ProgressView()
-                            Text("Uploading Image…")
+                            Text(l10n.uploadingImage)
                         }
                     }
                     if let error = uploadError {
@@ -60,7 +62,7 @@ struct CreateItemView: View {
                     }
 
                     HStack {
-                        Text("Image URL").foregroundColor(.gray)
+                        Text(l10n.imageURL).foregroundColor(.gray)
                         Spacer()
                         Text(newItem.imageURL)
                             .font(.caption)
@@ -68,32 +70,32 @@ struct CreateItemView: View {
                     }
                 }
 
-                Section(header: Text("Basic Information")) {
+                Section(header: Text(l10n.basicInfo.title)) {
                     HStack {
-                        Text("Name")
+                        Text(l10n.basicInfo.name)
                         Spacer()
-                        TextField("Enter name", text: $newItem.name)
+                        TextField(l10n.basicInfo.enter.name, text: $newItem.name)
                             .multilineTextAlignment(.trailing)
                     }
                     HStack {
-                        Text("Description")
+                        Text(l10n.basicInfo.description)
                         Spacer()
-                        TextField("Enter description", text: $newItem.description)
+                        TextField(l10n.basicInfo.enter.description, text: $newItem.description)
                             .multilineTextAlignment(.trailing)
                     }
                     HStack {
-                        Text("Quantity")
+                        Text(l10n.basicInfo.quantity)
                         Spacer()
-                        TextField("Enter Quantity",
+                        TextField(l10n.basicInfo.enter.quantity,
                                   value: $newItem.quantity,
                                   format: .number)
                         .keyboardType(.numberPad)
                         .textFieldStyle(.roundedBorder)
                     }
                     HStack {
-                        Text("Property Tag")
+                        Text(l10n.basicInfo.tag)
                         Spacer()
-                        TextField("Enter tag", text: $propertyTagInput)
+                        TextField(l10n.basicInfo.enter.tag, text: $propertyTagInput)
                             .focused($tagFieldFocused)
                             .multilineTextAlignment(.trailing)
                             .onChange(of: tagFieldFocused) { _, focused in
@@ -126,28 +128,28 @@ struct CreateItemView: View {
                     }
                 }
 
-                Section(header: Text("Details")) {
+                Section(header: Text(l10n.details.title)) {
                     HStack {
-                        Text("Estimated Price")
+                        Text(l10n.details.price)
                         Spacer()
-                        TextField("Enter price", value: $newItem.estimatedPrice, format: .number)
+                        TextField(l10n.details.enter.price, value: $newItem.estimatedPrice, format: .number)
                             .multilineTextAlignment(.trailing)
                     }
 
-                    Picker("Status", selection: $newItem.status) {
+                    Picker(l10n.details.status, selection: $newItem.status) {
                         ForEach(Status.allCases, id: \.self) { status in
                             Text(status.label).tag(status)
                         }
                     }
 
-                    Picker("Last Known Room", selection: $newItem.lastKnownRoom) {
+                    Picker(l10n.details.room.title, selection: $newItem.lastKnownRoom) {
                         if newItem.lastKnownRoom == Room.placeholder() {
-                            Text("Select a Room").tag(Room.placeholder())
+                            Text(l10n.details.enter.room).tag(Room.placeholder())
                         }
                         ForEach(viewModel.rooms, id: \.self) { room in
                             Text(room.label).tag(room)
                         }
-                        Text("Add Room…")
+                        Text(l10n.details.room.add)
                             .foregroundColor(.blue)
                             .tag(Room(name: "__add_new__"))
                     }
@@ -158,7 +160,7 @@ struct CreateItemView: View {
                     }
                 }
 
-                Button("Save") {
+                Button(Strings.general.save) {
                     validateTag()
                     guard tagError == nil else { return }
 
@@ -167,9 +169,9 @@ struct CreateItemView: View {
                 }
                 .disabled(newItem.name.isEmpty || newItem.description.isEmpty || tagError != nil || newItem.lastKnownRoom == Room.placeholder())
             }
-            .alert("Add New Room", isPresented: $showingAddRoomPrompt, actions: {
-                TextField("Room Name", text: $newRoomName)
-                Button("Add") {
+            .alert(l10n.addRoom.title, isPresented: $showingAddRoomPrompt, actions: {
+                TextField(l10n.addRoom.placeholder, text: $newRoomName)
+                Button(l10n.addRoom.button) {
                     Logger.action("Pressed Add Room Button")
                     Task {
                         if let newRoom = await viewModel.addRoom(name: newRoomName) {
@@ -180,12 +182,12 @@ struct CreateItemView: View {
                         newRoomName = ""
                     }
                 }
-                Button("Cancel", role: .cancel) { }
+                Button(Strings.general.cancel, role: .cancel) { }
             })
-            .navigationTitle("Create Item")
+            .navigationTitle(l10n.title)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
+                    Button(Strings.general.cancel) { dismiss() }
                 }
             }
             .task {
@@ -214,7 +216,7 @@ struct CreateItemView: View {
 
         guard let tag = PropertyTag(rawValue: propertyTagInput) else {
             withAnimation {
-                tagError = "Invalid tag format. Use formatting like A1234."
+                tagError = l10n.errors.tag.format
                 showTagError = true
             }
             newItem.propertyTag = nil
@@ -224,7 +226,7 @@ struct CreateItemView: View {
         let isDuplicate = viewModel.items.contains { $0.propertyTag?.rawValue == tag.rawValue }
         if isDuplicate {
             withAnimation {
-                tagError = "That tag already exists."
+                tagError = l10n.errors.tag.duplicate
                 showTagError = true
             }
             newItem.propertyTag = nil
@@ -251,7 +253,7 @@ struct CreateItemView: View {
             Logger.log(error, extra: [
                 "description": "Upload Image Failed"
             ])
-            uploadError = "Upload failed: \(error.localizedDescription)"
+            uploadError = l10n.errors.imageUpload(error.localizedDescription)
         }
 
         isUploading = false

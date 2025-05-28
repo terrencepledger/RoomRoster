@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+private typealias l10n = Strings.itemDetails
+
 struct ItemDetailsView: View {
     @State var item: Item
     @State private var isEditing = false
@@ -46,13 +48,13 @@ struct ItemDetailsView: View {
                             .foregroundColor(.gray)
 
                         HStack {
-                            Text("Quantity:").bold()
+                            Text(l10n.quantity).bold()
                             Text(String(describing: item.quantity))
                         }
 
                         if let tag = item.propertyTag {
                             HStack {
-                                Text("Property Tag:")
+                                Text(l10n.tag)
                                     .font(.headline)
                                 
                                 Text(tag.label)
@@ -62,50 +64,48 @@ struct ItemDetailsView: View {
                         Divider()
 
                         HStack {
-                            Text("Date Added:").bold()
+                            Text(l10n.dateAdded).bold()
                             Text(item.dateAdded)
                         }
 
                         if let price = item.estimatedPrice {
                             HStack {
-                                Text("Estimated Price:").bold()
+                                Text(l10n.priceTitle).bold()
                                 Text("$\(price, specifier: "%.2f")")
                             }
                         }
 
                         HStack {
-                            Text("Status:").bold()
+                            Text(l10n.status).bold()
                             Text(item.status.label)
                                 .foregroundColor(item.status.color)
                         }
 
                         HStack {
-                            Text("Last Known Room:").bold()
+                            Text(l10n.room).bold()
                             Text(item.lastKnownRoom.name)
                         }
 
                         if let date = item.lastUpdated?.toShortString() {
-                            Text("Last Updated: \(date)")
+                            Text(l10n.dateUpdated(date))
                         }
 
                         Divider()
 
-                        Text("History Log")
+                        Text(l10n.logs.title)
                             .font(.headline)
 
-                        // Show a spinner while history logs are loading
                         if viewModel.isLoadingHistory {
-                            ProgressView("Loading history…")
+                            ProgressView(l10n.logs.loading)
                                 .padding(.vertical)
                         }
-                        // Then show no-history or the logs
                         else if viewModel.historyLogs.isEmpty {
-                            Text("No history available")
+                            Text(l10n.logs.emptyState)
                                 .foregroundColor(.gray)
                             Text(String(describing: viewModel.historyLogs))
                         } else {
                             ForEach(viewModel.historyLogs, id: \.self) { log in
-                                Text("* \(log)")
+                                Text(l10n.logs.row(log))
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
                             }
@@ -119,7 +119,7 @@ struct ItemDetailsView: View {
                 Spacer()
                 HStack {
                     Spacer()
-                    Button("Edit Item") {
+                    Button(l10n.editItem) {
                         Logger.action("Pressed Edit Button")
                         isEditing = true
                     }
@@ -131,7 +131,7 @@ struct ItemDetailsView: View {
                 }
             }
         }
-        .navigationTitle("Item Details")
+        .navigationTitle(l10n.title)
         .sheet(isPresented: $isEditing) {
             EditItemView(editableItem: item) { updatedItem in
                 let oldItem = item
@@ -149,7 +149,7 @@ struct ItemDetailsView: View {
                             "item": String(describing: updatedItem)
                         ])
                         withAnimation {
-                            errorMessage = "Failed to update item. Please try again."
+                            errorMessage = l10n.failedToUpdate
                         }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
                             withAnimation { errorMessage = nil }

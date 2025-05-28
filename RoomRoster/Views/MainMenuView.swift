@@ -5,30 +5,31 @@
 //  Created by Terrence Pledger on 5/27/25.
 //
 
-
 import SwiftUI
+
+private typealias l10n = Strings.mainMenu
 
 struct MainMenuView: View {
     var body: some View {
         TabView {
             InventoryView()
                 .tabItem {
-                    Label("Inventory", systemImage: "archivebox")
+                    Label(l10n.inventory, systemImage: "archivebox")
                 }
 
             ReportsView()
                 .tabItem {
-                    Label("Reports", systemImage: "chart.bar")
+                    Label(l10n.reports, systemImage: "chart.bar")
                 }
 
             SheetsView()
                 .tabItem {
-                    Label("Sheets", systemImage: "tablecells")
+                    Label(l10n.sheets, systemImage: "tablecells")
                 }
 
             SettingsView()
                 .tabItem {
-                    Label("Settings", systemImage: "gearshape")
+                    Label(l10n.settings, systemImage: "gearshape")
                 }
         }
     }

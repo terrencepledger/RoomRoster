@@ -38,6 +38,7 @@
 		B65F71272DE6493600310D40 /* ReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F71262DE6493600310D40 /* ReportsView.swift */; };
 		B65F71292DE6494A00310D40 /* SheetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F71282DE6494A00310D40 /* SheetsView.swift */; };
 		B65F712B2DE6495900310D40 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F712A2DE6495900310D40 /* SettingsView.swift */; };
+		B65F712D2DE64F8500310D40 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F712C2DE64F8500310D40 /* Strings.swift */; };
 		B66016AF2DA9CEDC0012FDD0 /* CreateItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */; };
 		B6A6D6D62DD7AAEE00378BFF /* ItemField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A6D6D52DD7AAEE00378BFF /* ItemField.swift */; };
 		B6A6D6D82DD7AB3800378BFF /* FieldBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A6D6D72DD7AB3800378BFF /* FieldBinding.swift */; };
@@ -112,6 +113,7 @@
 		B65F71262DE6493600310D40 /* ReportsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportsView.swift; sourceTree = "<group>"; };
 		B65F71282DE6494A00310D40 /* SheetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetsView.swift; sourceTree = "<group>"; };
 		B65F712A2DE6495900310D40 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		B65F712C2DE64F8500310D40 /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateItemView.swift; sourceTree = "<group>"; };
 		B6A6D6D52DD7AAEE00378BFF /* ItemField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemField.swift; sourceTree = "<group>"; };
 		B6A6D6D72DD7AB3800378BFF /* FieldBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldBinding.swift; sourceTree = "<group>"; };
@@ -162,16 +164,16 @@
 		765183B92D8CD1F300FBA72E /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				B65F712A2DE6495900310D40 /* SettingsView.swift */,
-				B65F71282DE6494A00310D40 /* SheetsView.swift */,
-				B65F71262DE6493600310D40 /* ReportsView.swift */,
-				B65F71242DE6491700310D40 /* MainMenuView.swift */,
-				767B05912D4C5DC000566C25 /* InventoryView.swift */,
+				B65F712E2DE64FBE00310D40 /* Components */,
 				B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */,
 				767E82D42D8F356500B48011 /* EditItemView.swift */,
-				B6A6D6DB2DD8FD4E00378BFF /* ErrorBanner.swift */,
 				B612436B2DB03BA000B9098B /* ImagePickerView.swift */,
+				767B05912D4C5DC000566C25 /* InventoryView.swift */,
 				767B05C02D4C666F00566C25 /* ItemDetailsView.swift */,
+				B65F71242DE6491700310D40 /* MainMenuView.swift */,
+				B65F71262DE6493600310D40 /* ReportsView.swift */,
+				B65F712A2DE6495900310D40 /* SettingsView.swift */,
+				B65F71282DE6494A00310D40 /* SheetsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -280,12 +282,21 @@
 		767E82D12D8F34B900B48011 /* Utitlities */ = {
 			isa = PBXGroup;
 			children = (
+				B65F712C2DE64F8500310D40 /* Strings.swift */,
 				767E82D62D8F3ABE00B48011 /* AuthenticationManager.swift */,
 				767E82D22D8F34C800B48011 /* Extensions.swift */,
 				B6E684D42DD176D900EE608B /* Logger.swift */,
 				B61A9BD72DD6650000D04E9A /* SheetsUtils.swift */,
 			);
 			path = Utitlities;
+			sourceTree = "<group>";
+		};
+		B65F712E2DE64FBE00310D40 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				B6A6D6DB2DD8FD4E00378BFF /* ErrorBanner.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -437,6 +448,7 @@
 				B61A9BD82DD6650000D04E9A /* SheetsUtils.swift in Sources */,
 				B66016AF2DA9CEDC0012FDD0 /* CreateItemView.swift in Sources */,
 				B65F71272DE6493600310D40 /* ReportsView.swift in Sources */,
+				B65F712D2DE64F8500310D40 /* Strings.swift in Sources */,
 				767E82D52D8F356500B48011 /* EditItemView.swift in Sources */,
 				767E82C52D8F19EE00B48011 /* AppConfig.swift in Sources */,
 				767E82D72D8F3ABE00B48011 /* AuthenticationManager.swift in Sources */,
