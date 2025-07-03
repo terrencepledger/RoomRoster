@@ -92,26 +92,31 @@ struct InventoryView: View {
             }
         }
         .sheet(isPresented: $showCreateItemView) {
-            CreateItemView(viewModel: viewModel) { newItem in
-                Task {
-                    do {
-                        try await InventoryService().createItem(newItem)
-                        let createdBy = AuthenticationManager.shared.userName
-                        await HistoryLogService().logCreation(for: newItem, createdBy: createdBy)
-                        await viewModel.fetchInventory()
-                    } catch {
-                        Logger.log(error, extra: ["description": "Error creating item, updating log, or re-fetching"])
-                        withAnimation {
-                            errorMessage = l10n.failedToSave
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                            withAnimation {
-                                errorMessage = nil
+            CreateItemView(
+                viewModel: CreateItemViewModel(
+                    inventoryService: InventoryService(),
+                    roomService: RoomService(),
+                    itemsProvider: { viewModel.items },
+                    onSave: { newItem in
+                        Task {
+                            do {
+                                try await InventoryService().createItem(newItem)
+                                let createdBy = AuthenticationManager.shared.userName
+                                await HistoryLogService().logCreation(for: newItem, createdBy: createdBy)
+                                await viewModel.fetchInventory()
+                            } catch {
+                                Logger.log(error, extra: ["description": "Error creating item, updating log, or re-fetching"])
+                                withAnimation {
+                                    errorMessage = l10n.failedToSave
+                                }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                    withAnimation { errorMessage = nil }
+                                }
                             }
                         }
                     }
-                }
-            }
+                )
+            )
         }
         .navigationTitle(l10n.title)
         .onAppear {

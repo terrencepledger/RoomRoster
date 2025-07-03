@@ -94,6 +94,7 @@ struct Strings {
             struct tag {
                 static let format = "Invalid tag format. Use formatting like A1234."
                 static let duplicate = "That tag already exists."
+                static let other = "Unknown tag error."
             }
             static func imageUpload(_ error: String) -> String {
                 "Upload failed: \(error)"

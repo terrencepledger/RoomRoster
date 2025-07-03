@@ -11,102 +11,79 @@ private typealias l10n = Strings.createItem
 
 struct CreateItemView: View {
     @Environment(\.dismiss) var dismiss
+    @ObservedObject var viewModel: CreateItemViewModel
 
-    var viewModel: InventoryViewModel
-    var onSave: (Item) -> Void
-
-    @State private var newItem = Item(
-        id: UUID().uuidString,
-        imageURL: "",
-        name: "",
-        description: "",
-        quantity: 1,
-        dateAdded: Date().toShortString(),
-        estimatedPrice: nil,
-        status: .available,
-        lastKnownRoom: .placeholder(),
-        updatedBy: "",
-        lastUpdated: nil,
-        propertyTag: nil
-    )
-
-    @State private var pickedImage: UIImage? = nil
-    @State private var isUploading = false
-    @State private var uploadError: String? = nil
-    @State private var tagError: String?
-    @State private var propertyTagInput: String = ""
-    @State private var showTagError: Bool = false
-    @State private var showingAddRoomPrompt = false
-    @State private var newRoomName = ""
     @FocusState private var tagFieldFocused: Bool
 
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text(l10n.photo)) {
-                    CombinedImagePickerButton(image: $pickedImage)
-                        .onChange(of: pickedImage) { _,_ in
-                            Task { await uploadPickedImage() }
+                Section {
+                    CombinedImagePickerButton(image: $viewModel.pickedImage)
+                        .onChange(of: viewModel.pickedImage) { _, img in
+                            viewModel.onImagePicked(img)
                         }
-
-                    if isUploading {
+                    
+                    if viewModel.isUploading {
                         HStack {
                             ProgressView()
                             Text(l10n.uploadingImage)
                         }
                     }
-                    if let error = uploadError {
+                    if let error = viewModel.uploadError {
                         Text(error)
                             .foregroundColor(.red)
                             .font(.caption)
                     }
-
+                    
                     HStack {
                         Text(l10n.imageURL).foregroundColor(.gray)
                         Spacer()
-                        Text(newItem.imageURL)
+                        Text(viewModel.newItem.imageURL)
                             .font(.caption)
                             .multilineTextAlignment(.trailing)
                     }
+                } header: {
+                    Text(l10n.photo)
                 }
-
-                Section(header: Text(l10n.basicInfo.title)) {
+                
+                Section(content: {
                     HStack {
                         Text(l10n.basicInfo.name)
                         Spacer()
-                        TextField(l10n.basicInfo.enter.name, text: $newItem.name)
+                        TextField(l10n.basicInfo.enter.name, text: $viewModel.newItem.name)
                             .multilineTextAlignment(.trailing)
                     }
                     HStack {
                         Text(l10n.basicInfo.description)
                         Spacer()
-                        TextField(l10n.basicInfo.enter.description, text: $newItem.description)
+                        TextField(l10n.basicInfo.enter.description, text: $viewModel.newItem.description)
                             .multilineTextAlignment(.trailing)
                     }
                     HStack {
                         Text(l10n.basicInfo.quantity)
                         Spacer()
-                        TextField(l10n.basicInfo.enter.quantity,
-                                  value: $newItem.quantity,
-                                  format: .number)
+                        TextField(
+                            l10n.basicInfo.enter.quantity,
+                            value: $viewModel.newItem.quantity,
+                            format: .number
+                        )
                         .keyboardType(.numberPad)
                         .textFieldStyle(.roundedBorder)
                     }
                     HStack {
                         Text(l10n.basicInfo.tag)
                         Spacer()
-                        TextField(l10n.basicInfo.enter.tag, text: $propertyTagInput)
+                        TextField(l10n.basicInfo.enter.tag, text: $viewModel.propertyTagInput)
                             .focused($tagFieldFocused)
                             .multilineTextAlignment(.trailing)
                             .onChange(of: tagFieldFocused) { _, focused in
                                 if !focused {
-                                    withAnimation {
-                                        validateTag()
-                                    }
+                                    withAnimation { viewModel.validateTag() }
                                 }
                             }
                     }
-                    if showTagError, let error = tagError {
+                    if viewModel.showTagError, let error = viewModel.tagError {
                         HStack {
                             Spacer()
                             Text(error)
@@ -115,35 +92,38 @@ struct CreateItemView: View {
                                 .onAppear {
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
                                         withAnimation {
-                                            if (tagError?.count ?? 0) > 0 {
+                                            if (viewModel.tagError?.count ?? 0) > 0 {
                                                 if !tagFieldFocused {
-                                                    propertyTagInput = ""
+                                                    viewModel.propertyTagInput = ""
                                                 }
-                                                validateTag()
+                                                viewModel.validateTag()
                                             }
                                         }
                                     }
                                 }
                         }
                     }
-                }
+                }, header: { Text(l10n.basicInfo.title) })
 
-                Section(header: Text(l10n.details.title)) {
+                Section {
                     HStack {
                         Text(l10n.details.price)
                         Spacer()
-                        TextField(l10n.details.enter.price, value: $newItem.estimatedPrice, format: .number)
-                            .multilineTextAlignment(.trailing)
+                        TextField(
+                            l10n.details.enter.price,
+                            value: $viewModel.newItem.estimatedPrice,
+                            format: .number
+                        ).multilineTextAlignment(.trailing)
                     }
 
-                    Picker(l10n.details.status, selection: $newItem.status) {
+                    Picker(l10n.details.status, selection: $viewModel.newItem.status) {
                         ForEach(Status.allCases, id: \.self) { status in
                             Text(status.label).tag(status)
                         }
                     }
 
-                    Picker(l10n.details.room.title, selection: $newItem.lastKnownRoom) {
-                        if newItem.lastKnownRoom == Room.placeholder() {
+                    Picker(l10n.details.room.title, selection: $viewModel.newItem.lastKnownRoom) {
+                        if viewModel.newItem.lastKnownRoom == Room.placeholder() {
                             Text(l10n.details.enter.room).tag(Room.placeholder())
                         }
                         ForEach(viewModel.rooms, id: \.self) { room in
@@ -153,37 +133,35 @@ struct CreateItemView: View {
                             .foregroundColor(.blue)
                             .tag(Room(name: "__add_new__"))
                     }
-                    .onChange(of: newItem.lastKnownRoom) { _,newValue in
+                    .onChange(of: viewModel.newItem.lastKnownRoom) { _, newValue in
                         if newValue.name == "__add_new__" {
-                            showingAddRoomPrompt = true
+                            viewModel.showingAddRoomPrompt = true
                         }
                     }
+                } header: {
+                    Text(l10n.details.title)
                 }
 
                 Button(Strings.general.save) {
-                    validateTag()
-                    guard tagError == nil else { return }
-
-                    onSave(newItem)
+                    Task { await viewModel.saveItem() }
                     dismiss()
                 }
-                .disabled(newItem.name.isEmpty || newItem.description.isEmpty || tagError != nil || newItem.lastKnownRoom == Room.placeholder())
+                .disabled(viewModel.newItem.name.isEmpty || viewModel.newItem.description.isEmpty || viewModel.tagError != nil || viewModel.newItem.lastKnownRoom == Room.placeholder())
             }
-            .alert(l10n.addRoom.title, isPresented: $showingAddRoomPrompt, actions: {
-                TextField(l10n.addRoom.placeholder, text: $newRoomName)
-                Button(l10n.addRoom.button) {
-                    Logger.action("Pressed Add Room Button")
-                    Task {
-                        if let newRoom = await viewModel.addRoom(name: newRoomName) {
-                            newItem.lastKnownRoom = newRoom
-                        } else {
-                            newItem.lastKnownRoom = Room.placeholder()
-                        }
-                        newRoomName = ""
+            .alert(
+                l10n.addRoom.title,
+                isPresented: $viewModel.showingAddRoomPrompt,
+                actions: {
+                    TextField(
+                        l10n.addRoom.placeholder,
+                        text: $viewModel.newRoomName
+                    )
+                    Button(l10n.addRoom.button) {
+                        Task { await viewModel.addRoom() }
                     }
+                    Button(Strings.general.cancel, role: .cancel) { }
                 }
-                Button(Strings.general.cancel, role: .cancel) { }
-            })
+            )
             .navigationTitle(l10n.title)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -191,71 +169,13 @@ struct CreateItemView: View {
                 }
             }
             .task {
-                Task {
-                    await AuthenticationManager.shared.signIn()
-                }
-                Task {
-                    await viewModel.loadRooms()
-                }
+                Task { await viewModel.signIn() }
+                Task { await viewModel.loadRooms() }
             }
             .onAppear {
                 Logger.page("CreateItemView")
             }
         }
     }
-
-    private func validateTag() {
-        if propertyTagInput.isEmpty {
-            withAnimation {
-                showTagError = false
-                tagError = nil
-            }
-            newItem.propertyTag = nil
-            return
-        }
-
-        guard let tag = PropertyTag(rawValue: propertyTagInput) else {
-            withAnimation {
-                tagError = l10n.errors.tag.format
-                showTagError = true
-            }
-            newItem.propertyTag = nil
-            return
-        }
-
-        let isDuplicate = viewModel.items.contains { $0.propertyTag?.rawValue == tag.rawValue }
-        if isDuplicate {
-            withAnimation {
-                tagError = l10n.errors.tag.duplicate
-                showTagError = true
-            }
-            newItem.propertyTag = nil
-            return
-        }
-
-        showTagError = false
-        tagError = nil
-        newItem.propertyTag = tag
-    }
-
-    private func uploadPickedImage() async {
-        guard let image = pickedImage else { return }
-        isUploading = true
-        uploadError = nil
-
-        do {
-            let url = try await ImageUploadService().uploadImageAsync(
-                image: image,
-                forItemId: newItem.id
-            )
-            newItem.imageURL = url.absoluteString
-        } catch {
-            Logger.log(error, extra: [
-                "description": "Upload Image Failed"
-            ])
-            uploadError = l10n.errors.imageUpload(error.localizedDescription)
-        }
-
-        isUploading = false
-    }
 }
+

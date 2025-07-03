@@ -24,9 +24,7 @@ class InventoryViewModel: ObservableObject {
 
     func addRoom(name: String) async -> Room? {
         do {
-            try await RoomService().addRoom(name: name)
-            await loadRooms()
-            return Room(name: name)
+            return try await RoomService().addRoom(name: name)
         } catch {
             Logger.log(error, extra: ["description": "Failed to add room"])
             return nil

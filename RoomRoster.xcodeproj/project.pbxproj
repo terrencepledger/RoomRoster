@@ -39,7 +39,9 @@
 		B65F71292DE6494A00310D40 /* SheetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F71282DE6494A00310D40 /* SheetsView.swift */; };
 		B65F712B2DE6495900310D40 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F712A2DE6495900310D40 /* SettingsView.swift */; };
 		B65F712D2DE64F8500310D40 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F712C2DE64F8500310D40 /* Strings.swift */; };
+		B65F71302DEB5C5200310D40 /* ItemValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F712F2DEB5C4D00310D40 /* ItemValidator.swift */; };
 		B66016AF2DA9CEDC0012FDD0 /* CreateItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */; };
+		B67560442DF0D231001A5D9D /* CreateItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67560432DF0D231001A5D9D /* CreateItemViewModel.swift */; };
 		B6A6D6D62DD7AAEE00378BFF /* ItemField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A6D6D52DD7AAEE00378BFF /* ItemField.swift */; };
 		B6A6D6D82DD7AB3800378BFF /* FieldBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A6D6D72DD7AB3800378BFF /* FieldBinding.swift */; };
 		B6A6D6DA2DD84F5000378BFF /* EditItemViewModel.swift in Resources */ = {isa = PBXBuildFile; fileRef = B6A6D6D92DD84F5000378BFF /* EditItemViewModel.swift */; };
@@ -114,7 +116,9 @@
 		B65F71282DE6494A00310D40 /* SheetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetsView.swift; sourceTree = "<group>"; };
 		B65F712A2DE6495900310D40 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B65F712C2DE64F8500310D40 /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
+		B65F712F2DEB5C4D00310D40 /* ItemValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemValidator.swift; sourceTree = "<group>"; };
 		B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateItemView.swift; sourceTree = "<group>"; };
+		B67560432DF0D231001A5D9D /* CreateItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateItemViewModel.swift; sourceTree = "<group>"; };
 		B6A6D6D52DD7AAEE00378BFF /* ItemField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemField.swift; sourceTree = "<group>"; };
 		B6A6D6D72DD7AB3800378BFF /* FieldBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldBinding.swift; sourceTree = "<group>"; };
 		B6A6D6D92DD84F5000378BFF /* EditItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditItemViewModel.swift; sourceTree = "<group>"; };
@@ -181,6 +185,7 @@
 		765183BA2D8CD20800FBA72E /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				B67560432DF0D231001A5D9D /* CreateItemViewModel.swift */,
 				B6A6D6D92DD84F5000378BFF /* EditItemViewModel.swift */,
 				767E82CA2D8F1B2C00B48011 /* ItemDetailsViewModel.swift */,
 				767B05BC2D4C5E1700566C25 /* InventoryViewModel.swift */,
@@ -246,7 +251,7 @@
 				765183BC2D8CD25300FBA72E /* Services */,
 				765183BA2D8CD20800FBA72E /* ViewModels */,
 				765183B92D8CD1F300FBA72E /* Views */,
-				767E82D12D8F34B900B48011 /* Utitlities */,
+				767E82D12D8F34B900B48011 /* Utilities */,
 				767B05952D4C5DC400566C25 /* Assets.xcassets */,
 				767B05972D4C5DC400566C25 /* RoomRoster.entitlements */,
 				767B05982D4C5DC400566C25 /* Preview Content */,
@@ -279,16 +284,17 @@
 			path = RoomRosterUITests;
 			sourceTree = "<group>";
 		};
-		767E82D12D8F34B900B48011 /* Utitlities */ = {
+		767E82D12D8F34B900B48011 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				B65F712F2DEB5C4D00310D40 /* ItemValidator.swift */,
 				B65F712C2DE64F8500310D40 /* Strings.swift */,
 				767E82D62D8F3ABE00B48011 /* AuthenticationManager.swift */,
 				767E82D22D8F34C800B48011 /* Extensions.swift */,
 				B6E684D42DD176D900EE608B /* Logger.swift */,
 				B61A9BD72DD6650000D04E9A /* SheetsUtils.swift */,
 			);
-			path = Utitlities;
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 		B65F712E2DE64FBE00310D40 /* Components */ = {
@@ -440,6 +446,7 @@
 				767E82C72D8F1A2B00B48011 /* InventoryService.swift in Sources */,
 				767B05C12D4C666F00566C25 /* ItemDetailsView.swift in Sources */,
 				767E82CB2D8F1B2C00B48011 /* ItemDetailsViewModel.swift in Sources */,
+				B65F71302DEB5C5200310D40 /* ItemValidator.swift in Sources */,
 				B6A6D6D62DD7AAEE00378BFF /* ItemField.swift in Sources */,
 				B6F964922DB028E80093089A /* ImageUploadService.swift in Sources */,
 				767B05922D4C5DC000566C25 /* InventoryView.swift in Sources */,
@@ -453,6 +460,7 @@
 				767E82C52D8F19EE00B48011 /* AppConfig.swift in Sources */,
 				767E82D72D8F3ABE00B48011 /* AuthenticationManager.swift in Sources */,
 				767B05942D4C5DC000566C25 /* Item.swift in Sources */,
+				B67560442DF0D231001A5D9D /* CreateItemViewModel.swift in Sources */,
 				B65F712B2DE6495900310D40 /* SettingsView.swift in Sources */,
 				B615ED222DE2BB4E009BE623 /* RoomService.swift in Sources */,
 				767E82C92D8F1AA500B48011 /* NetworkService.swift in Sources */,
@@ -562,6 +570,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -615,6 +624,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
