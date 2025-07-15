@@ -57,7 +57,7 @@ struct Logger {
     }
 
     static func network(_ name: String) {
-        breadcrumb("Network: \(name)", category: .action)
+        breadcrumb("Network: \(name)", category: .network)
     }
 
     private static func breadcrumb(_ message: String, category: LogCategory, level: LogLevel = .info) {

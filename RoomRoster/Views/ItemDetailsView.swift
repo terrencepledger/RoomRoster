@@ -102,7 +102,6 @@ struct ItemDetailsView: View {
                         else if viewModel.historyLogs.isEmpty {
                             Text(l10n.logs.emptyState)
                                 .foregroundColor(.gray)
-                            Text(String(describing: viewModel.historyLogs))
                         } else {
                             ForEach(viewModel.historyLogs, id: \.self) { log in
                                 Text(l10n.logs.row(log))
