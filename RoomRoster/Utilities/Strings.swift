@@ -206,7 +206,13 @@ struct Strings {
     // MARK: - ReportsView
     struct reports {
         static let title = "Reports"
-        static let comingSoon = "Reports - Coming Soon"
+        static let inventorySummary = "Inventory Summary"
+        static let roomsSummary = "Items by Room"
+        static let totalValue = "Total Estimated Value"
+        static let recentActivity = "Recent Activity"
+        static let exportCSV = "Export CSV"
+        static let searchPlaceholder = "Search items..."
+        static let searchResults = "Results"
     }
 
     // MARK: - SheetsView
