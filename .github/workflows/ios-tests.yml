@@ -1,5 +1,12 @@
 name: iOS Tests
 
+on:
+  pull_request:
+    branches:
+      - main
+      - staging
+  workflow_dispatch:
+
 jobs:
   test:
     runs-on: macos-14
