@@ -2,12 +2,20 @@ name: iOS Tests
 
 jobs:
   test:
-    runs-on: macos-latest
+    runs-on: macos-14
+
     steps:
       - uses: actions/checkout@v3
+
+      # Optional: Cache CocoaPods/SwiftPM here
+
+      - name: Install xcpretty
+        run: gem install xcpretty
+
       - name: Run unit tests
         run: |
-          xcodebuild -project RoomRoster.xcodeproj \
+          set -o pipefail && xcodebuild -project RoomRoster.xcodeproj \
             -scheme RoomRoster \
             -destination 'platform=iOS Simulator,name=iPhone 14' \
-            clean test
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO \
+            test | xcpretty
