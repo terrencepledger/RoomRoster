@@ -8,15 +8,39 @@
 import SwiftUI
 
 @MainActor
-class ItemDetailsViewModel: ObservableObject {
+final class EditItemViewModel: ObservableObject {
     @Published var editableItem: Item
-    private let service = InventoryService()
+    @Published var isSaving: Bool = false
 
-    func refreshItemData() async {
+    private let inventoryService: InventoryService
+    private let historyService: HistoryLogService
+
+    init(
+        item: Item,
+        inventoryService: InventoryService = .init(),
+        historyService: HistoryLogService = .init()
+    ) {
+        self.editableItem = item
+        self.inventoryService = inventoryService
+        self.historyService = historyService
+    }
+
+    func loadItemData() async {
         do {
-            historyLogs = try await InventoryService().fetchItem(withId: editableItem.id)
+            if let item = try await inventoryService.fetchItem(withId: editableItem.id) {
+                editableItem = item
+            }
         } catch {
             Logger.log(error, extra: ["description": "Failed to refresh item in edit view"])
         }
+    }
+
+    func saveUpdates(updatedBy: String?) async throws {
+        isSaving = true
+        defer { isSaving = false }
+
+        let previous = editableItem
+        try await inventoryService.updateItem(editableItem)
+        await historyService.logChanges(old: previous, new: editableItem, updatedBy: updatedBy)
     }
 }
