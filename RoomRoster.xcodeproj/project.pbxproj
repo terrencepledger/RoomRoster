@@ -17,10 +17,11 @@
 		4A41F16A7DFB4ABE9D824975 /* ItemValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71B5019D5A040FCBB81807B /* ItemValidatorTests.swift */; };
 		E9FBF450607D494DA1894333 /* MockNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF137618CD644A1997B55ED6 /* MockNetworkService.swift */; };
 		DE7D257232324BDDB96C6F37 /* RoomServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614508236AFA4269887FF35A /* RoomServiceTests.swift */; };
-		7DB3EA08C76F4E048B379677 /* ViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC01C73ED7A4FBC9EECB3D3 /* ViewModelTests.swift */; };
-		767B05AE2D4C5DC400566C25 /* RoomRosterUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05AD2D4C5DC400566C25 /* RoomRosterUITests.swift */; };
-		767B05B02D4C5DC400566C25 /* RoomRosterUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05AF2D4C5DC400566C25 /* RoomRosterUITestsLaunchTests.swift */; };
-		767B05BD2D4C5E1700566C25 /* InventoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05BC2D4C5E1700566C25 /* InventoryViewModel.swift */; };
+               7DB3EA08C76F4E048B379677 /* ViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC01C73ED7A4FBC9EECB3D3 /* ViewModelTests.swift */; };
+               767B05AE2D4C5DC400566C25 /* RoomRosterUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05AD2D4C5DC400566C25 /* RoomRosterUITests.swift */; };
+               767B05B02D4C5DC400566C25 /* RoomRosterUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05AF2D4C5DC400566C25 /* RoomRosterUITestsLaunchTests.swift */; };
+               1BF611EA9DCA414DB7F7B032 /* InventoryUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4280063F1BA4122A570E8B9 /* InventoryUITests.swift */; };
+               767B05BD2D4C5E1700566C25 /* InventoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05BC2D4C5E1700566C25 /* InventoryViewModel.swift */; };
 		767B05BF2D4C5F9E00566C25 /* GoogleSheetsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05BE2D4C5F9E00566C25 /* GoogleSheetsResponse.swift */; };
 		767B05C12D4C666F00566C25 /* ItemDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05C02D4C666F00566C25 /* ItemDetailsView.swift */; };
 		767E82C52D8F19EE00B48011 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767E82C42D8F19EE00B48011 /* AppConfig.swift */; };
@@ -96,8 +97,9 @@
 				767B05A32D4C5DC400566C25 /* RoomRosterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomRosterTests.swift; sourceTree = "<group>"; };
 		767B05A92D4C5DC400566C25 /* RoomRosterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RoomRosterUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		767B05AD2D4C5DC400566C25 /* RoomRosterUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomRosterUITests.swift; sourceTree = "<group>"; };
-		767B05AF2D4C5DC400566C25 /* RoomRosterUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomRosterUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		767B05BC2D4C5E1700566C25 /* InventoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryViewModel.swift; sourceTree = "<group>"; };
+               767B05AF2D4C5DC400566C25 /* RoomRosterUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomRosterUITestsLaunchTests.swift; sourceTree = "<group>"; };
+               A4280063F1BA4122A570E8B9 /* InventoryUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryUITests.swift; sourceTree = "<group>"; };
+               767B05BC2D4C5E1700566C25 /* InventoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryViewModel.swift; sourceTree = "<group>"; };
 		767B05BE2D4C5F9E00566C25 /* GoogleSheetsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleSheetsResponse.swift; sourceTree = "<group>"; };
 		767B05C02D4C666F00566C25 /* ItemDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailsView.swift; sourceTree = "<group>"; };
 		767E82C42D8F19EE00B48011 /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
@@ -290,15 +292,16 @@
 			path = RoomRosterTests;
 			sourceTree = "<group>";
 		};
-		767B05AC2D4C5DC400566C25 /* RoomRosterUITests */ = {
-			isa = PBXGroup;
-			children = (
-				767B05AD2D4C5DC400566C25 /* RoomRosterUITests.swift */,
-				767B05AF2D4C5DC400566C25 /* RoomRosterUITestsLaunchTests.swift */,
-			);
-			path = RoomRosterUITests;
-			sourceTree = "<group>";
-		};
+               767B05AC2D4C5DC400566C25 /* RoomRosterUITests */ = {
+                       isa = PBXGroup;
+                       children = (
+                               767B05AD2D4C5DC400566C25 /* RoomRosterUITests.swift */,
+                               767B05AF2D4C5DC400566C25 /* RoomRosterUITestsLaunchTests.swift */,
+                               A4280063F1BA4122A570E8B9 /* InventoryUITests.swift */,
+                       );
+                       path = RoomRosterUITests;
+                       sourceTree = "<group>";
+               };
 		767E82D12D8F34B900B48011 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -510,12 +513,13 @@
 		767B05A52D4C5DC400566C25 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
-			files = (
-				767B05B02D4C5DC400566C25 /* RoomRosterUITestsLaunchTests.swift in Sources */,
-				767B05AE2D4C5DC400566C25 /* RoomRosterUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
+                       files = (
+                               767B05B02D4C5DC400566C25 /* RoomRosterUITestsLaunchTests.swift in Sources */,
+                               767B05AE2D4C5DC400566C25 /* RoomRosterUITests.swift in Sources */,
+                               1BF611EA9DCA414DB7F7B032 /* InventoryUITests.swift in Sources */,
+                       );
+                       runOnlyForDeploymentPostprocessing = 0;
+               };
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
