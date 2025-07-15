@@ -16,3 +16,16 @@ RoomRoster is a SwiftUI-based inventory management application that integrates w
 - **View Inventory:** The app automatically fetches and displays inventory items from a configured Google Sheet.
 - **Item Details:** Tap on any item in the list to view its detailed information, including a history log and color-coded status.
 - **Edit Items:** Use the "Edit Item" button in the details view to modify item information. Changes are applied locally and can be extended to update remotely.
+
+## Configuration
+
+The project requires two pieces of private configuration that are not checked into source control:
+
+- **Firebase** – Copy `RoomRoster/GoogleService-Info-Example.plist` to `RoomRoster/GoogleService-Info.plist` and populate it with the credentials for your Firebase project. The resulting file is ignored by Git.
+- **Sentry** – Set the `SENTRY_DSN` environment variable before launching the app:
+
+```bash
+export SENTRY_DSN="https://examplePublicKey@o0.ingest.sentry.io/0"
+```
+
+If the variable is unset, Sentry will not send events.

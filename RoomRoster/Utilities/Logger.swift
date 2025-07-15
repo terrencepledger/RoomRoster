@@ -26,7 +26,7 @@ enum LogCategory: String {
 struct Logger {
     static func initialize() {
         SentrySDK.start { options in
-            options.dsn = "https://d2cb98bf29f371b5ef1db80869e2cd37@o4509301971550208.ingest.us.sentry.io/4509301976006656"
+            options.dsn = ProcessInfo.processInfo.environment["SENTRY_DSN"]
             options.enableAutoSessionTracking = true
         }
 
