@@ -19,10 +19,9 @@ RoomRoster is a SwiftUI-based inventory management application that integrates w
 
 ## Configuration
 
-The project requires three pieces of private configuration that are not checked into source control:
+The project requires two pieces of private configuration that are not checked into source control:
 
 - **Firebase** – Copy `RoomRoster/GoogleService-Info-Example.plist` to `RoomRoster/GoogleService-Info.plist` and populate it with the credentials for your Firebase project. The resulting file is ignored by Git.
-- **Google Sheets** – Copy `RoomRoster/Secrets-Example.plist` to `RoomRoster/Secrets.plist` and fill in your Google Sheets API key and Sheet ID. This file is also ignored by Git.
 - **Sentry** – Set the `SENTRY_DSN` environment variable before launching the app:
 
 ```bash
