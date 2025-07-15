@@ -12,7 +12,12 @@
 		767B05942D4C5DC000566C25 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05932D4C5DC000566C25 /* Item.swift */; };
 		767B05962D4C5DC400566C25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 767B05952D4C5DC400566C25 /* Assets.xcassets */; };
 		767B059A2D4C5DC400566C25 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 767B05992D4C5DC400566C25 /* Preview Assets.xcassets */; };
-		767B05A42D4C5DC400566C25 /* RoomRosterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05A32D4C5DC400566C25 /* RoomRosterTests.swift */; };
+               767B05A42D4C5DC400566C25 /* RoomRosterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05A32D4C5DC400566C25 /* RoomRosterTests.swift */; };
+               72BF4E5D2A924D36879BA797 /* InventoryServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9062D441F4874BA89C2A0A1E /* InventoryServiceTests.swift */; };
+               4A41F16A7DFB4ABE9D824975 /* ItemValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71B5019D5A040FCBB81807B /* ItemValidatorTests.swift */; };
+               E9FBF450607D494DA1894333 /* MockNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF137618CD644A1997B55ED6 /* MockNetworkService.swift */; };
+               DE7D257232324BDDB96C6F37 /* RoomServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614508236AFA4269887FF35A /* RoomServiceTests.swift */; };
+               7DB3EA08C76F4E048B379677 /* ViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC01C73ED7A4FBC9EECB3D3 /* ViewModelTests.swift */; };
 		767B05AE2D4C5DC400566C25 /* RoomRosterUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05AD2D4C5DC400566C25 /* RoomRosterUITests.swift */; };
 		767B05B02D4C5DC400566C25 /* RoomRosterUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05AF2D4C5DC400566C25 /* RoomRosterUITestsLaunchTests.swift */; };
 		767B05BD2D4C5E1700566C25 /* InventoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05BC2D4C5E1700566C25 /* InventoryViewModel.swift */; };
@@ -125,7 +130,12 @@
 		B6A6D6DB2DD8FD4E00378BFF /* ErrorBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorBanner.swift; sourceTree = "<group>"; };
 		B6E684D42DD176D900EE608B /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		B6F9648F2DB021CD0093089A /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		B6F964912DB028E80093089A /* ImageUploadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadService.swift; sourceTree = "<group>"; };
+                B6F964912DB028E80093089A /* ImageUploadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadService.swift; sourceTree = "<group>"; };
+               9062D441F4874BA89C2A0A1E /* InventoryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryServiceTests.swift; sourceTree = "<group>"; };
+               E71B5019D5A040FCBB81807B /* ItemValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemValidatorTests.swift; sourceTree = "<group>"; };
+               BF137618CD644A1997B55ED6 /* MockNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkService.swift; sourceTree = "<group>"; };
+               614508236AFA4269887FF35A /* RoomServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomServiceTests.swift; sourceTree = "<group>"; };
+               4AC01C73ED7A4FBC9EECB3D3 /* ViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -267,14 +277,19 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		767B05A22D4C5DC400566C25 /* RoomRosterTests */ = {
-			isa = PBXGroup;
-			children = (
-				767B05A32D4C5DC400566C25 /* RoomRosterTests.swift */,
-			);
-			path = RoomRosterTests;
-			sourceTree = "<group>";
-		};
+               767B05A22D4C5DC400566C25 /* RoomRosterTests */ = {
+                       isa = PBXGroup;
+                       children = (
+                               767B05A32D4C5DC400566C25 /* RoomRosterTests.swift */,
+                               9062D441F4874BA89C2A0A1E /* InventoryServiceTests.swift */,
+                               E71B5019D5A040FCBB81807B /* ItemValidatorTests.swift */,
+                               BF137618CD644A1997B55ED6 /* MockNetworkService.swift */,
+                               614508236AFA4269887FF35A /* RoomServiceTests.swift */,
+                               4AC01C73ED7A4FBC9EECB3D3 /* ViewModelTests.swift */,
+                       );
+                       path = RoomRosterTests;
+                       sourceTree = "<group>";
+               };
 		767B05AC2D4C5DC400566C25 /* RoomRosterUITests */ = {
 			isa = PBXGroup;
 			children = (
@@ -479,14 +494,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		767B059B2D4C5DC400566C25 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				767B05A42D4C5DC400566C25 /* RoomRosterTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
+               767B059B2D4C5DC400566C25 /* Sources */ = {
+                       isa = PBXSourcesBuildPhase;
+                       buildActionMask = 2147483647;
+                       files = (
+                               767B05A42D4C5DC400566C25 /* RoomRosterTests.swift in Sources */,
+                               72BF4E5D2A924D36879BA797 /* InventoryServiceTests.swift in Sources */,
+                               4A41F16A7DFB4ABE9D824975 /* ItemValidatorTests.swift in Sources */,
+                               E9FBF450607D494DA1894333 /* MockNetworkService.swift in Sources */,
+                               DE7D257232324BDDB96C6F37 /* RoomServiceTests.swift in Sources */,
+                               7DB3EA08C76F4E048B379677 /* ViewModelTests.swift in Sources */,
+                       );
+                       runOnlyForDeploymentPostprocessing = 0;
+               };
 		767B05A52D4C5DC400566C25 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
