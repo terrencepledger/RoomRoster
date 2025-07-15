@@ -7,6 +7,12 @@
 
 import Foundation
 
+protocol NetworkServiceProtocol {
+    func fetchData<T: Codable>(from urlString: String) async throws -> T
+    func authorizedRequest(url: URL, method: String, jsonBody: [String: Any]) async throws -> URLRequest
+    func sendRequest(_ request: URLRequest) async throws
+}
+
 enum NetworkError: Error {
     case invalidURL
 }
@@ -56,3 +62,5 @@ struct NetworkService {
         }
     }
 }
+
+extension NetworkService: NetworkServiceProtocol {}
