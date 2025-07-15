@@ -1,0 +1,19 @@
+name: iOS Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+      - staging
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run unit tests
+        run: |
+          xcodebuild -project RoomRoster.xcodeproj \
+            -scheme RoomRoster \
+            -destination 'platform=iOS Simulator,name=iPhone 14' \
+            clean test
