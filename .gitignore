@@ -1,3 +1,10 @@
 Secrets.plist
-GoogleService-Info.plist
 *.xcuserstate
+
+# macOS artifacts
+**/.DS_Store
+.DS_Store
+RoomRoster.xcodeproj/xcuserdata/
+RoomRoster.xcodeproj/project.xcworkspace/xcuserdata/
+# Firebase
+GoogleService-Info.plist
