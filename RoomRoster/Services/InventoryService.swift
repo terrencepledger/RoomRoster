@@ -28,6 +28,17 @@ actor InventoryService {
         return try await networkService.fetchData(from: urlString)
     }
 
+    /// Convenience method to fetch a single item from the inventory sheet.
+    /// - Parameter id: The unique identifier of the item.
+    /// - Returns: The matching ``Item`` if found, otherwise `nil`.
+    func fetchItem(withId id: String) async throws -> Item? {
+        let response = try await fetchInventory()
+        guard let row = response.values.dropFirst().first(where: { $0.first == id }) else {
+            return nil
+        }
+        return Item(from: row)
+    }
+
     func fetchAllHistory() async throws -> GoogleSheetsResponse {
         if let sheet = cachedHistory { return sheet }
         let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/HistoryLog!A:Z?key=\(apiKey)"
