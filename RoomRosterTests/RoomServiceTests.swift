@@ -18,4 +18,12 @@ final class RoomServiceTests: XCTestCase {
             XCTAssertEqual(error as? RoomServiceError, .invalidName)
         }
     }
+
+    func testAddRoomWithInvalidURLThrows() async throws {
+        // Provide an invalid sheet ID to produce an invalid URL
+        let service = RoomService(sheetId: "invalid sheet id", apiKey: "k", networkService: MockNetworkService())
+        await XCTAssertThrowsError(try await service.addRoom(name: "Room")) { error in
+            XCTAssertEqual(error as? NetworkError, .invalidURL)
+        }
+    }
 }

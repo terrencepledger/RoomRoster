@@ -42,8 +42,11 @@ struct RoomService {
         let url = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Rooms:append?valueInputOption=USER_ENTERED"
         let payload: [String: Any] = ["values": [[trimmed]]]
         Logger.network("RoomService-addRoom")
+        guard let url = URL(string: url) else {
+            throw NetworkError.invalidURL
+        }
         let request = try await networkService.authorizedRequest(
-            url: URL(string: url)!,
+            url: url,
             method: "POST",
             jsonBody: payload
         )
