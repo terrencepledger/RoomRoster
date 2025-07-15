@@ -17,30 +17,30 @@ jobs:
       - name: Create dummy Secrets.plist for CI
         run: |
           cat > RoomRoster/RoomRoster/RoomRoster/Secrets.plist <<EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>API_KEY</key>
-    <string>ci-fake-key</string>
-    <key>SHEET_ID</key>
-    <string>ci-fake-sheet-id</string>
-</dict>
-</plist>
-EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>API_KEY</key>
+              <string>ci-fake-key</string>
+              <key>SHEET_ID</key>
+              <string>ci-fake-sheet-id</string>
+          </dict>
+          </plist>
+          EOF
 
       - name: Create dummy GoogleService-Info.plist for CI
         run: |
           cat > RoomRoster/RoomRoster/RoomRoster/GoogleService-Info.plist <<EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>BUNDLE_ID</key>
-    <string>com.example.ci</string>
-</dict>
-</plist>
-EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>BUNDLE_ID</key>
+              <string>com.example.ci</string>
+          </dict>
+          </plist>
+          EOF
 
       - name: Install xcpretty
         run: gem install xcpretty
