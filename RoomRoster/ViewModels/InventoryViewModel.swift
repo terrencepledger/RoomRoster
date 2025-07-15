@@ -12,11 +12,20 @@ class InventoryViewModel: ObservableObject {
     @Published var items: [Item] = []
     @Published var rooms: [Room] = []
     @Published var recentLogs: [String: [String]] = [:]
-    private let service = InventoryService()
+    private let service: InventoryService
+    private let roomService: RoomService
+
+    init(
+        inventoryService: InventoryService = InventoryService(),
+        roomService: RoomService = RoomService()
+    ) {
+        self.service = inventoryService
+        self.roomService = roomService
+    }
 
     func loadRooms() async {
         do {
-            self.rooms = try await RoomService().fetchRooms()
+            self.rooms = try await roomService.fetchRooms()
         } catch {
             Logger.log(error, extra: ["description": "Failed to fetch rooms"])
         }
@@ -24,7 +33,7 @@ class InventoryViewModel: ObservableObject {
 
     func addRoom(name: String) async -> Room? {
         do {
-            return try await RoomService().addRoom(name: name)
+            return try await roomService.addRoom(name: name)
         } catch {
             Logger.log(error, extra: ["description": "Failed to add room"])
             return nil

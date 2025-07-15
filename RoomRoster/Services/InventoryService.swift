@@ -8,21 +8,31 @@
 import Foundation
 
 actor InventoryService {
-    private let sheetId = AppConfig.shared.sheetId
-    private let apiKey = AppConfig.shared.apiKey
+    private let sheetId: String
+    private let apiKey: String
     private var cachedHistory: GoogleSheetsResponse?
+    private let networkService: NetworkServiceProtocol
+    init(
+        sheetId: String = AppConfig.shared.sheetId,
+        apiKey: String = AppConfig.shared.apiKey,
+        networkService: NetworkServiceProtocol = NetworkService.shared
+    ) {
+        self.sheetId = sheetId
+        self.apiKey = apiKey
+        self.networkService = networkService
+    }
 
     func fetchInventory() async throws -> GoogleSheetsResponse {
         let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Inventory?key=\(apiKey)"
         Logger.network("InventoryService-fetchInventory")
-        return try await NetworkService.shared.fetchData(from: urlString)
+        return try await networkService.fetchData(from: urlString)
     }
 
     func fetchAllHistory() async throws -> GoogleSheetsResponse {
         if let sheet = cachedHistory { return sheet }
         let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/HistoryLog!A:Z?key=\(apiKey)"
         Logger.network("InventoryService-fetchHistory")
-        let sheet: GoogleSheetsResponse = try await NetworkService.shared.fetchData(from: urlString)
+        let sheet: GoogleSheetsResponse = try await networkService.fetchData(from: urlString)
         cachedHistory = sheet
         return sheet
     }
@@ -39,13 +49,13 @@ actor InventoryService {
             throw NetworkError.invalidURL
         }
 
-        let request = try await NetworkService.shared.authorizedRequest(
+        let request = try await networkService.authorizedRequest(
             url: url,
             method: "POST",
             jsonBody: ["values": [item.toRow()]]
         )
         Logger.network("InventoryService-createItem")
-        try await NetworkService.shared.sendRequest(request)
+        try await networkService.sendRequest(request)
     }
 
     func getRowNumber(for id: String) async throws -> Int {
@@ -67,12 +77,12 @@ actor InventoryService {
             throw NetworkError.invalidURL
         }
 
-        let request = try await NetworkService.shared.authorizedRequest(
+        let request = try await networkService.authorizedRequest(
             url: url,
             method: "PUT",
             jsonBody: ["values": [item.toRow()]]
         )
         Logger.network("InventoryService-updateItem")
-        try await NetworkService.shared.sendRequest(request)
+        try await networkService.sendRequest(request)
     }
 }
