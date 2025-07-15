@@ -1,11 +1,5 @@
 name: iOS Tests
 
-on:
-  pull_request:
-    branches:
-      - main
-      - staging
-
 jobs:
   test:
     runs-on: macos-latest
