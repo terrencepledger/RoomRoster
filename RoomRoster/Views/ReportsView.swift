@@ -102,6 +102,7 @@ struct ReportsView: View {
             }
         }
         .task { await viewModel.loadData() }
+        .refreshable { await viewModel.loadData() }
         .onAppear { Logger.page("ReportsView") }
     }
 
