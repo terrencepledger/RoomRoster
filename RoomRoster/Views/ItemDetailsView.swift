@@ -26,7 +26,7 @@ struct ItemDetailsView: View {
         ZStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    if let error = errorMessage {
+                    if let error = viewModel.errorMessage {
                         ErrorBanner(message: error)
                     }
                     if let url = URL(string: item.imageURL) {
@@ -159,10 +159,10 @@ struct ItemDetailsView: View {
                             "item": String(describing: updatedItem)
                         ])
                         withAnimation {
-                            errorMessage = l10n.failedToUpdate
+                            viewModel.errorMessage = l10n.failedToUpdate
                         }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                            withAnimation { errorMessage = nil }
+                            withAnimation { viewModel.errorMessage = nil }
                         }
                     }
                 }

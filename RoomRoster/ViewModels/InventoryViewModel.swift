@@ -12,6 +12,7 @@ class InventoryViewModel: ObservableObject {
     @Published var items: [Item] = []
     @Published var rooms: [Room] = []
     @Published var recentLogs: [String: [String]] = [:]
+    @Published var errorMessage: String?
     private let service: InventoryService
     private let roomService: RoomService
 
@@ -28,6 +29,7 @@ class InventoryViewModel: ObservableObject {
             self.rooms = try await roomService.fetchRooms()
         } catch {
             Logger.log(error, extra: ["description": "Failed to fetch rooms"])
+            errorMessage = Strings.inventory.failedToLoadRooms
         }
     }
 
@@ -36,6 +38,7 @@ class InventoryViewModel: ObservableObject {
             return try await roomService.addRoom(name: name)
         } catch {
             Logger.log(error, extra: ["description": "Failed to add room"])
+            errorMessage = Strings.inventory.failedToAddRoom
             return nil
         }
     }
@@ -48,6 +51,7 @@ class InventoryViewModel: ObservableObject {
             Logger.log(error, extra: [
                 "description": "Error fetching inventory"
             ])
+            errorMessage = Strings.inventory.failedToLoad
         }
     }
 
@@ -66,6 +70,7 @@ class InventoryViewModel: ObservableObject {
             recentLogs = newLogs
         } catch {
             Logger.log(error, extra: ["context": "Failed to load item logs"])
+            errorMessage = Strings.inventory.failedToLoadLogs
         }
     }
 }

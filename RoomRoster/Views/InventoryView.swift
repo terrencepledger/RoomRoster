@@ -14,7 +14,6 @@ private typealias l10n = Strings.inventory
 struct InventoryView: View {
     @StateObject private var viewModel = InventoryViewModel()
     @State private var showCreateItemView = false
-    @State private var errorMessage: String? = nil
     @State private var expandedRooms: Set<Room> = []
     @State private var searchText: String = ""
     @State private var includeHistoryInSearch: Bool = false
@@ -33,7 +32,7 @@ struct InventoryView: View {
         NavigationView {
             ZStack(alignment: .bottomTrailing) {
                 VStack {
-                    if let error = errorMessage {
+                    if let error = viewModel.errorMessage {
                         ErrorBanner(message: error)
                     }
                     Spacer()
@@ -110,10 +109,10 @@ struct InventoryView: View {
                             } catch {
                                 Logger.log(error, extra: ["description": "Error creating item, updating log, or re-fetching"])
                                 withAnimation {
-                                    errorMessage = l10n.failedToSave
+                                    viewModel.errorMessage = l10n.failedToSave
                                 }
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                                    withAnimation { errorMessage = nil }
+                                    withAnimation { viewModel.errorMessage = nil }
                                 }
                             }
                         }
