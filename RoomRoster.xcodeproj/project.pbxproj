@@ -126,7 +126,6 @@
 		B6E684D42DD176D900EE608B /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
                 B6F9648F2DB021CD0093089A /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
                 B6F964912DB028E80093089A /* ImageUploadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadService.swift; sourceTree = "<group>"; };
-                AFECF678F2D7DEA9599003B5 /* ci-test.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "ci-test.sh"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,7 +225,6 @@
 				767B058E2D4C5DC000566C25 /* RoomRoster */,
 				767B05A22D4C5DC400566C25 /* RoomRosterTests */,
                                 767B05AC2D4C5DC400566C25 /* RoomRosterUITests */,
-                                0626CDCAA207A625859D027F /* Scripts */,
                                 767B058D2D4C5DC000566C25 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -305,14 +303,6 @@
                                 B6A6D6DB2DD8FD4E00378BFF /* ErrorBanner.swift */,
                         );
                         path = Components;
-                        sourceTree = "<group>";
-                };
-                0626CDCAA207A625859D027F /* Scripts */ = {
-                        isa = PBXGroup;
-                        children = (
-                                AFECF678F2D7DEA9599003B5 /* ci-test.sh */,
-                        );
-                        path = Scripts;
                         sourceTree = "<group>";
                 };
 /* End PBXGroup section */
