@@ -37,11 +37,13 @@ actor SalesService {
         return sheet.values.dropFirst().compactMap { Sale(from: $0) }
     }
 
-    func sendReceipts(to buyerEmail: String, sellerEmail: String, sale: Sale) async {
+    func sendReceipts(to buyerEmail: String?, sellerEmail: String, sale: Sale) async {
         let subject = "Sale Receipt for \(sale.itemId)"
         let body = "Item sold on \(sale.date.toShortString()) for \(sale.price ?? 0)"
         let pdf = ReceiptPDFGenerator.generate(for: sale)
-        try? await gmailService.sendEmail(to: buyerEmail, subject: subject, body: body, attachment: pdf)
+        if let buyerEmail {
+            try? await gmailService.sendEmail(to: buyerEmail, subject: subject, body: body, attachment: pdf)
+        }
         try? await gmailService.sendEmail(to: sellerEmail, subject: subject, body: body, attachment: pdf)
     }
 }

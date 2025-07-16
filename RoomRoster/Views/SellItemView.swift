@@ -21,7 +21,10 @@ struct SellItemView: View {
                 }
                 Section(l10n.buyerSection) {
                     TextField(l10n.buyerName, text: $viewModel.sale.buyerName)
-                    TextField(l10n.buyerContact, text: $viewModel.sale.buyerContact)
+                    TextField(l10n.buyerContact, text: Binding(
+                        get: { viewModel.sale.buyerContact ?? "" },
+                        set: { viewModel.sale.buyerContact = $0.isEmpty ? nil : $0 }
+                    ))
                 }
                 Section(l10n.sellerSection) {
                     TextField(l10n.soldBy, text: $viewModel.sale.soldBy)

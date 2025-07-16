@@ -11,11 +11,11 @@ struct SalesDetailsView: View {
             Section {
                 row(l10n.date, sale.date.toShortString())
                 if let price = sale.price {
-                    row(l10n.price, "$\(price, specifier: \"%.2f\")")
+                    row(l10n.price, String(format: "$%.2f", price))
                 }
                 row(l10n.condition, sale.condition.label)
                 row(l10n.buyerName, sale.buyerName)
-                row(l10n.buyerContact, sale.buyerContact)
+                row(l10n.buyerContact, sale.buyerContact ?? "")
                 row(l10n.soldBy, sale.soldBy)
                 row(l10n.department, sale.department)
             }

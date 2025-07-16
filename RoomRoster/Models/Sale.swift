@@ -6,7 +6,7 @@ struct Sale {
     var price: Double?
     var condition: Condition
     var buyerName: String
-    var buyerContact: String
+    var buyerContact: String?
     var soldBy: String
     var department: String
 }
@@ -32,7 +32,7 @@ extension Sale {
             price.map { "\($0)" } ?? "",
             condition.rawValue,
             buyerName,
-            buyerContact,
+            buyerContact ?? "",
             soldBy,
             department
         ]
