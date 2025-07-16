@@ -2,59 +2,88 @@ name: iOS Tests
 
 on:
   pull_request:
-    branches:
-      - main
-      - staging
+    branches: [main, staging]
   workflow_dispatch:
 
 jobs:
   test:
+    name: Build & Test (iOS)
     runs-on: macos-14
+    timeout-minutes: 60
 
     steps:
-      - uses: actions/checkout@v3
+      # ──────────────── 1. Checkout code ────────────────
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Create dummy Secrets.plist for CI
+      # ──────────────── 2. Select an Xcode that understands Swift 6 / typed-throws ────────────────
+      - name: Select Xcode 16 (latest stable)
+        uses: maxim-lobanov/setup-xcode@v5
+        with:
+          xcode-version: "16.2"     # update when a newer stable ships
+
+      # ──────────────── 3. Create dummy plist files expected by the app ────────────────
+      - name: Create dummy Secrets.plist
         run: |
           mkdir -p RoomRoster/RoomRoster/RoomRoster
-          cat > RoomRoster/RoomRoster/RoomRoster/Secrets.plist <<EOF
+          cat > RoomRoster/RoomRoster/RoomRoster/Secrets.plist <<'EOF'
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
-          <dict>
-              <key>API_KEY</key>
-              <string>ci-fake-key</string>
-              <key>SHEET_ID</key>
-              <string>ci-fake-sheet-id</string>
-          </dict>
+            <dict>
+              <key>API_KEY</key>   <string>ci-fake-key</string>
+              <key>SHEET_ID</key>  <string>ci-fake-sheet-id</string>
+            </dict>
           </plist>
           EOF
 
-      - name: Create dummy GoogleService-Info.plist for CI
+      - name: Create dummy GoogleService-Info.plist
         run: |
           mkdir -p RoomRoster/RoomRoster/RoomRoster
-          cat > RoomRoster/RoomRoster/RoomRoster/GoogleService-Info.plist <<EOF
+          cat > RoomRoster/RoomRoster/RoomRoster/GoogleService-Info.plist <<'EOF'
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
-          <dict>
-              <key>BUNDLE_ID</key>
-              <string>com.example.ci</string>
-          </dict>
+            <dict>
+              <key>BUNDLE_ID</key> <string>com.example.ci</string>
+            </dict>
           </plist>
           EOF
 
+      # ──────────────── 4. Nice-looking build logs ────────────────
       - name: Install xcpretty
         run: gem install xcpretty
 
       - name: Show Xcode version
         run: xcodebuild -version
 
+      # ──────────────── 5. Pre-resolve SPM packages (optional but speeds things up) ────────────────
+      - name: Resolve Swift Package dependencies
+        run: xcodebuild -resolvePackageDependencies \
+              -project RoomRoster.xcodeproj \
+              -scheme RoomRoster
+
+      # ──────────────── 6. Build & run unit tests (iOS-only slice) ────────────────
       - name: Run unit tests
+        env:
+          NSUnbufferedIO: "YES"   # live log output
         run: |
-          set -o pipefail && xcodebuild -project RoomRoster.xcodeproj \
+          set -o pipefail
+          xcodebuild test \
+            -project RoomRoster.xcodeproj \
             -scheme RoomRoster \
-            -destination 'platform=iOS Simulator,name=iPhone 14' \
-            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO \
-            OTHER_SWIFT_FLAGS="-Xfrontend -enable-experimental-feature -Xfrontend AccessLevelOnImport" \
-            test | xcpretty
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
+            CODE_SIGNING_ALLOWED=NO \
+            OTHER_SWIFT_FLAGS="\
+              -Xfrontend -enable-experimental-feature -Xfrontend AccessLevelOnImport \
+              -Xfrontend -enable-experimental-feature -Xfrontend TypedThrows" \
+          | xcpretty
+
+      # ──────────────── 7. Upload DerivedData on failure to aid debugging ────────────────
+      - name: Upload DerivedData (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: DerivedData
+          path: ~/Library/Developer/Xcode/DerivedData
