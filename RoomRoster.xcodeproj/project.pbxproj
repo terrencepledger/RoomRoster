@@ -140,7 +140,8 @@
 				3D4E5379CA594554A6B22605 /* SalesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesService.swift; sourceTree = "<group>"; };
 				6624E3822EF84521B07B00F3 /* SalesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesView.swift; sourceTree = "<group>"; };
 				68CAB974B03A4708BB968FC8 /* SellItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellItemView.swift; sourceTree = "<group>"; };
-                               8BC8C5F5D40748AD93602E33 /* SalesServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesServiceTests.swift; sourceTree = "<group>"; };
+				F1DB1AD2C44D425AB9A59153 /* SellItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellItemViewModel.swift; sourceTree = "<group>"; };
+				8BC8C5F5D40748AD93602E33 /* SalesServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesServiceTests.swift; sourceTree = "<group>"; };
                                C01D35FCE10EB02BEFD65D29 /* GmailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GmailService.swift; sourceTree = "<group>"; };
                                013FD279BBA14C5E965646A5 /* ReceiptPDFGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptPDFGenerator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */

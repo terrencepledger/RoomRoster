@@ -215,7 +215,6 @@ struct Strings {
         static let title = "Sheets"
         static let comingSoon = "Sheets - Coming Soon"
     }
-}
 
     // MARK: - SalesView
     struct sales {
