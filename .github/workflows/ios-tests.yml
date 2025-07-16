@@ -6,25 +6,30 @@ on:
 
 jobs:
   test:
-    # macos-15 image ships with Xcode 16.x (Swift 6) pre-installed.
+    # macos-15 → Xcode 16.x / Swift 6
     runs-on: macos-15
     timeout-minutes: 30
 
+    # ──────────────── SINGLE source of dummy values ────────────────
+    # • Local devs can ‘export CI_FAKE_API_KEY=…’ and re-use ci-test.sh
+    # • The script keeps its own “ci-fake-key” fallback, so nothing breaks
+    env:
+      CI_FAKE_API_KEY:  ${{ secrets.CI_FAKE_API_KEY  || 'ci-fake-key' }}
+      CI_FAKE_SHEET_ID: ${{ secrets.CI_FAKE_SHEET_ID || 'ci-fake-sheet-id' }}
+      NSUnbufferedIO:   "YES"
+
     steps:
-    # ────────────────────────────── 1. Checkout ──────────────────────────────
-    - uses: actions/checkout@v4
+      # 1️⃣  Checkout
+      - uses: actions/checkout@v4
 
-    # ─────────────────────── 2. Run CI test script ───────────────────────────
-    - name: Run unit tests
-      run: |
-        CI_FAKE_API_KEY=${{ secrets.CI_FAKE_API_KEY || 'ci-fake-key' }} \
-        CI_FAKE_SHEET_ID=${{ secrets.CI_FAKE_SHEET_ID || 'ci-fake-sheet-id' }} \
-        NSUnbufferedIO=YES Scripts/ci-test.sh
+      # 2️⃣  Run the same Bash script you already have
+      - name: Run unit tests
+        run: Scripts/ci-test.sh
 
-    # ───────────── 3. Optional: capture DerivedData if the build fails ───────
-    - name: Upload DerivedData (on failure)
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: DerivedData
-        path: ~/Library/Developer/Xcode/DerivedData
+      # 3️⃣  Upload DerivedData (only if the build fails)
+      - name: Upload DerivedData (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: DerivedData
+          path: ~/Library/Developer/Xcode/DerivedData
