@@ -13,6 +13,7 @@ struct Strings {
         static let save = "Save"
         static let cancel = "Cancel"
         static let clear = "Clear"
+        static let loading = "Loading..."
     }
 
     // MARK: - MainMenu
