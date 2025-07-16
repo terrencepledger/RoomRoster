@@ -16,6 +16,12 @@ final class SellItemViewModel: ObservableObject {
     private let salesService: SalesService
     private let inventoryService: InventoryService
 
+    enum SaleError: Error {
+        case alreadySubmitting
+    }
+
+    @Published var isSubmitting = false
+
     var item: Item
 
     init(
@@ -30,7 +36,11 @@ final class SellItemViewModel: ObservableObject {
         sale.price = item.estimatedPrice
     }
 
-    func submitSale() async throws {
+    func submitSale() async throws -> Item {
+        if isSubmitting { throw SaleError.alreadySubmitting }
+        isSubmitting = true
+        defer { isSubmitting = false }
+
         try await salesService.recordSale(sale)
         var updated = item
         updated.status = .sold
@@ -38,5 +48,8 @@ final class SellItemViewModel: ObservableObject {
         updated.updatedBy = sale.soldBy
         try await inventoryService.updateItem(updated)
         await salesService.sendReceipts(to: sale.buyerContact, sellerEmail: sale.soldBy, sale: sale)
+        item = updated
+        return updated
     }
 }
+

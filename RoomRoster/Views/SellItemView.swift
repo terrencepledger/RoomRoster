@@ -5,6 +5,7 @@ private typealias l10n = Strings.sellItem
 struct SellItemView: View {
     @Environment(\.dismiss) var dismiss
     @StateObject var viewModel: SellItemViewModel
+    var onComplete: (Result<Item, Error>) -> Void
 
     var body: some View {
         NavigationView {
@@ -33,13 +34,16 @@ struct SellItemView: View {
                 Button(Strings.general.save) {
                     Task {
                         do {
-                            try await viewModel.submitSale()
+                            let item = try await viewModel.submitSale()
+                            onComplete(.success(item))
                             dismiss()
                         } catch {
                             Logger.log(error, extra: ["description": "Failed to record sale"])
+                            onComplete(.failure(error))
                         }
                     }
                 }
+                .disabled(viewModel.isSubmitting)
             }
             .navigationTitle(l10n.title)
             .toolbar {
@@ -50,3 +54,4 @@ struct SellItemView: View {
         }
     }
 }
+

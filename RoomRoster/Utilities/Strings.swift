@@ -258,6 +258,8 @@ struct Strings {
         static let sellerSection = "Seller"
         static let soldBy = "Sold By"
         static let department = "Department"
+        static let success = "Sale recorded successfully"
+        static let failure = "Failed to record sale. Please try again."
     }
 
     // MARK: - SaleDetailsView

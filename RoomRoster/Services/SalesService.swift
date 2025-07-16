@@ -30,6 +30,12 @@ actor SalesService {
         try await networkService.sendRequest(request)
     }
 
+    func fetchSale(for itemId: String) async throws -> Sale? {
+        Logger.network("SalesService-fetchSale")
+        let sales = try await fetchSales()
+        return sales.first { $0.itemId == itemId }
+    }
+
     func fetchSales() async throws -> [Sale] {
         let url = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Sales?key=\(apiKey)"
         Logger.network("SalesService-fetchSales")
