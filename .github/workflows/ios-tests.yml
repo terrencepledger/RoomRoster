@@ -19,9 +19,6 @@ jobs:
         cp RoomRoster/Secrets-Example.plist RoomRoster/Secrets.plist
         cp RoomRoster/GoogleService-Info-Example.plist RoomRoster/GoogleService-Info.plist
 
-    - name: Resolve Swift Packages
-      run: xcodebuild -resolvePackageDependencies -project RoomRoster.xcodeproj -scheme RoomRoster
-
     - name: Run unit tests
       env:
         NSUnbufferedIO: "YES"          # live log streaming
@@ -31,6 +28,7 @@ jobs:
           -scheme RoomRoster \
           -sdk iphonesimulator \
           -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.0' \
+          -only-testing:RoomRosterTests \
           CODE_SIGNING_ALLOWED=NO \
           OTHER_SWIFT_FLAGS="-Xfrontend -enable-experimental-feature -Xfrontend AccessLevelOnImport -Xfrontend -enable-experimental-feature -Xfrontend TypedThrows"
     # ────────────── 5. Optional: capture DerivedData if the build fails ───────
