@@ -57,23 +57,23 @@
 		B6E684D32DD03D2400EE608B /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = B6E684D22DD03D2400EE608B /* FirebaseStorage */; };
 		B6E684D52DD176DA00EE608B /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E684D42DD176D900EE608B /* Logger.swift */; };
 		B6F964902DB021CD0093089A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B6F9648F2DB021CD0093089A /* GoogleService-Info.plist */; };
-                B6F964922DB028E80093089A /* ImageUploadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F964912DB028E80093089A /* ImageUploadService.swift */; };
-                CE2487F2AA23494BBE56993D /* ReportsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12FE82B0693248D49E8D77BB /* ReportsViewModel.swift */; };
-                EC28A959CE63441E9F3C1048 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70EC0F7257914A11A7589F29 /* ShareSheet.swift */; };
-                B6F964952DB02B4C0093089A /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964942DB02B4C0093089A /* FirebaseAnalytics */; };
+		B6F964922DB028E80093089A /* ImageUploadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F964912DB028E80093089A /* ImageUploadService.swift */; };
+		CE2487F2AA23494BBE56993D /* ReportsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12FE82B0693248D49E8D77BB /* ReportsViewModel.swift */; };
+		EC28A959CE63441E9F3C1048 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70EC0F7257914A11A7589F29 /* ShareSheet.swift */; };
+		B6F964952DB02B4C0093089A /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964942DB02B4C0093089A /* FirebaseAnalytics */; };
 		B6F964972DB02BB60093089A /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964962DB02BB60093089A /* FirebaseAnalytics */; };
 		B6F964992DB02BB60093089A /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964982DB02BB60093089A /* FirebaseAnalyticsOnDeviceConversion */; };
 		B6F9649B2DB02BB60093089A /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = B6F9649A2DB02BB60093089A /* FirebaseAnalyticsWithoutAdIdSupport */; };
 		B6F9649D2DB02BB60093089A /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = B6F9649C2DB02BB60093089A /* FirebaseAppCheck */; };
 		B6F9649F2DB02BB60093089A /* FirebaseAppDistribution-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = B6F9649E2DB02BB60093089A /* FirebaseAppDistribution-Beta */; };
 		B6F964A12DB02C470093089A /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964A02DB02C470093089A /* FirebaseAuth */; };
-				B6F964A32DB02C470093089A /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964A22DB02C470093089A /* FirebaseStorage */; };
-				8030ADBBCBB442E3B8D6D5FB /* Condition.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C0F9E1EBFE478980392A89 /* Condition.swift */; };
-				5E159DC99DBD4D6E817F1768 /* Sale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0109092CC44520A606D47B /* Sale.swift */; };
-				3284B9D30A6B43858230535F /* SalesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4E5379CA594554A6B22605 /* SalesService.swift */; };
-				7C37FF346999407A810EB18B /* SellItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DB1AD2C44D425AB9A59153 /* SellItemViewModel.swift */; };
-				A86D606B4FC641688F556F39 /* SalesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6624E3822EF84521B07B00F3 /* SalesView.swift */; };
-				3B334618E2334DAFB69FB690 /* SellItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CAB974B03A4708BB968FC8 /* SellItemView.swift */; };
+		B6F964A32DB02C470093089A /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964A22DB02C470093089A /* FirebaseStorage */; };
+		8030ADBBCBB442E3B8D6D5FB /* Condition.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C0F9E1EBFE478980392A89 /* Condition.swift */; };
+		5E159DC99DBD4D6E817F1768 /* Sale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0109092CC44520A606D47B /* Sale.swift */; };
+		3284B9D30A6B43858230535F /* SalesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4E5379CA594554A6B22605 /* SalesService.swift */; };
+		7C37FF346999407A810EB18B /* SellItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DB1AD2C44D425AB9A59153 /* SellItemViewModel.swift */; };
+		A86D606B4FC641688F556F39 /* SalesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6624E3822EF84521B07B00F3 /* SalesView.swift */; };
+		3B334618E2334DAFB69FB690 /* SellItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CAB974B03A4708BB968FC8 /* SellItemView.swift */; };
 		A787349732EA468CB09F1E52 /* SalesServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC8C5F5D40748AD93602E33 /* SalesServiceTests.swift */; };
 		FDB33D97700C2EF04190FA52 /* GmailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01D35FCE10EB02BEFD65D29 /* GmailService.swift */; };
 		2867C19B08004E95B4BAD5B0 /* ReceiptPDFGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013FD279BBA14C5E965646A5 /* ReceiptPDFGenerator.swift */; };
@@ -492,11 +492,11 @@ sourceTree = "<group>";
 				B61A9BD42DD65FE900D04E9A /* HistoryLogService.swift in Sources */,
 				767B05BD2D4C5E1700566C25 /* InventoryViewModel.swift in Sources */,
 				B61A9BD82DD6650000D04E9A /* SheetsUtils.swift in Sources */,
-                                B66016AF2DA9CEDC0012FDD0 /* CreateItemView.swift in Sources */,
-                                B65F71272DE6493600310D40 /* ReportsView.swift in Sources */,
-                                CE2487F2AA23494BBE56993D /* ReportsViewModel.swift in Sources */,
-                                EC28A959CE63441E9F3C1048 /* ShareSheet.swift in Sources */,
-                                B65F712D2DE64F8500310D40 /* Strings.swift in Sources */,
+				B66016AF2DA9CEDC0012FDD0 /* CreateItemView.swift in Sources */,
+				B65F71272DE6493600310D40 /* ReportsView.swift in Sources */,
+				CE2487F2AA23494BBE56993D /* ReportsViewModel.swift in Sources */,
+				EC28A959CE63441E9F3C1048 /* ShareSheet.swift in Sources */,
+				B65F712D2DE64F8500310D40 /* Strings.swift in Sources */,
 				767E82D52D8F356500B48011 /* EditItemView.swift in Sources */,
 				767E82C52D8F19EE00B48011 /* AppConfig.swift in Sources */,
 				767E82D72D8F3ABE00B48011 /* AuthenticationManager.swift in Sources */,
