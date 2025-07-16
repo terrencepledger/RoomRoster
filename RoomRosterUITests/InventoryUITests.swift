@@ -4,7 +4,9 @@ final class InventoryUITests: XCTestCase {
     func testInventoryScreenShownOnLaunch() {
         let app = XCUIApplication()
         app.launch()
-        XCTAssertTrue(app.navigationBars["Inventory"].waitForExistence(timeout: 5))
+        let inventoryTab = app.tabBars.buttons["Inventory"]
+        XCTAssertTrue(inventoryTab.waitForExistence(timeout: 5))
+        XCTAssertTrue(inventoryTab.isSelected)
     }
 }
 
