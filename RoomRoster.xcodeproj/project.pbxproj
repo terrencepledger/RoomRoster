@@ -141,20 +141,20 @@
 		B6A6D6DB2DD8FD4E00378BFF /* ErrorBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorBanner.swift; sourceTree = "<group>"; };
 		B6E684D42DD176D900EE608B /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		B6F9648F2DB021CD0093089A /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-                B6F964912DB028E80093089A /* ImageUploadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadService.swift; sourceTree = "<group>"; };
-                C7C0F9E1EBFE478980392A89 /* Condition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Condition.swift; sourceTree = "<group>"; };
-                6F0109092CC44520A606D47B /* Sale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sale.swift; sourceTree = "<group>"; };
-                3D4E5379CA594554A6B22605 /* SalesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesService.swift; sourceTree = "<group>"; };
-                6624E3822EF84521B07B00F3 /* SalesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesView.swift; sourceTree = "<group>"; };
-                68CAB974B03A4708BB968FC8 /* SellItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellItemView.swift; sourceTree = "<group>"; };
-                8BC8C5F5D40748AD93602E33 /* SalesServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesServiceTests.swift; sourceTree = "<group>"; };
-                C01D35FCE10EB02BEFD65D29 /* GmailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GmailService.swift; sourceTree = "<group>"; };
-                013FD279BBA14C5E965646A5 /* ReceiptPDFGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptPDFGenerator.swift; sourceTree = "<group>"; };
-                9062D441F4874BA89C2A0A1E /* InventoryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryServiceTests.swift; sourceTree = "<group>"; };
-                E71B5019D5A040FCBB81807B /* ItemValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemValidatorTests.swift; sourceTree = "<group>"; };
-                BF137618CD644A1997B55ED6 /* MockNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkService.swift; sourceTree = "<group>"; };
-                614508236AFA4269887FF35A /* RoomServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomServiceTests.swift; sourceTree = "<group>"; };
-                4AC01C73ED7A4FBC9EECB3D3 /* ViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelTests.swift; sourceTree = "<group>"; };
+    B6F964912DB028E80093089A /* ImageUploadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadService.swift; sourceTree = "<group>"; };
+    C7C0F9E1EBFE478980392A89 /* Condition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Condition.swift; sourceTree = "<group>"; };
+    6F0109092CC44520A606D47B /* Sale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sale.swift; sourceTree = "<group>"; };
+    3D4E5379CA594554A6B22605 /* SalesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesService.swift; sourceTree = "<group>"; };
+    6624E3822EF84521B07B00F3 /* SalesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesView.swift; sourceTree = "<group>"; };
+    68CAB974B03A4708BB968FC8 /* SellItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellItemView.swift; sourceTree = "<group>"; };
+    8BC8C5F5D40748AD93602E33 /* SalesServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesServiceTests.swift; sourceTree = "<group>"; };
+    C01D35FCE10EB02BEFD65D29 /* GmailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GmailService.swift; sourceTree = "<group>"; };
+    013FD279BBA14C5E965646A5 /* ReceiptPDFGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptPDFGenerator.swift; sourceTree = "<group>"; };
+    9062D441F4874BA89C2A0A1E /* InventoryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryServiceTests.swift; sourceTree = "<group>"; };
+    E71B5019D5A040FCBB81807B /* ItemValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemValidatorTests.swift; sourceTree = "<group>"; };
+    BF137618CD644A1997B55ED6 /* MockNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkService.swift; sourceTree = "<group>"; };
+    614508236AFA4269887FF35A /* RoomServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomServiceTests.swift; sourceTree = "<group>"; };
+    4AC01C73ED7A4FBC9EECB3D3 /* ViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
