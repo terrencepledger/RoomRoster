@@ -157,6 +157,8 @@
 		C66A533C9D0B40A885DA2172 /* Condition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Condition.swift; sourceTree = "<group>"; };
 		0EA2B3CF72714AF5B8CD11E0 /* Sale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sale.swift; sourceTree = "<group>"; };
 		3758A93BD9E24318B74E47C2 /* SalesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesService.swift; sourceTree = "<group>"; };
+		6624E3822EF84521B07B00F3 /* SalesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesView.swift; sourceTree = "<group>"; };
+		C01D35FCE10EB02BEFD65D29 /* GmailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GmailService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
