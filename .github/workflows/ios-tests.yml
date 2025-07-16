@@ -6,59 +6,65 @@ on:
 
 jobs:
   test:
-    # macos-15 image ships with Xcode 16.x (Swift 6) pre-installed.
+    name: Run iOS Unit Tests
     runs-on: macos-15
     timeout-minutes: 30
 
     steps:
-    # ────────────────────────────── 1. Checkout ──────────────────────────────
-    - uses: actions/checkout@v4
+      # ─────────────────────────────── 1. Checkout ───────────────────────────────
+      - uses: actions/checkout@v4
+      
 
-    # ─────────────────────── 2. Stub plist files required at build ───────────
-    - name: Create dummy plist files
-      run: |
-        mkdir -p RoomRoster/RoomRoster/RoomRoster
-        cat > RoomRoster/RoomRoster/RoomRoster/Secrets.plist <<'EOF'
-        <?xml version="1.0" encoding="UTF-8"?>
-        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" \
-          "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-        <plist version="1.0"><dict>
-          <key>API_KEY</key><string>${{ secrets.CI_FAKE_API_KEY || 'ci-fake-key' }}</string>
-          <key>SHEET_ID</key><string>${{ secrets.CI_FAKE_SHEET_ID || 'ci-fake-sheet-id' }}</string>
-        </dict></plist>
-        EOF
+      # ─────────────────────────────── 2. Select Xcode version ───────────────────
+      - name: Select Xcode 16
+        run: sudo xcode-select -s /Applications/Xcode_16.app
 
-        cat > RoomRoster/RoomRoster/RoomRoster/GoogleService-Info.plist <<'EOF'
-        <?xml version="1.0" encoding="UTF-8"?>
-        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" \
-          "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-        <plist version="1.0"><dict>
-          <key>BUNDLE_ID</key><string>com.example.ci</string>
-        </dict></plist>
-        EOF
+      # ─────────────────────────────── 3. Install xcpretty ───────────────────────
+      - name: Install xcpretty for better logs
+        run: gem install xcpretty
 
-    # ──────────────────── 3. Build + run all unit tests (iOS) ────────────────
-    - name: Run unit tests
-      env:
-        # Experimental language flags you already use
-        OTHER_SWIFT_FLAGS: >
-          -Xfrontend -enable-experimental-feature -Xfrontend AccessLevelOnImport
-          -Xfrontend -enable-experimental-feature -Xfrontend TypedThrows
-        NSUnbufferedIO: "YES"          # live log streaming
-      run: |
-        set -o pipefail
-        xcodebuild test \
-          -project RoomRoster.xcodeproj \
-          -scheme RoomRoster \
-          -sdk iphonesimulator \
-          -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
-          CODE_SIGNING_ALLOWED=NO \
-          OTHER_SWIFT_FLAGS="$OTHER_SWIFT_FLAGS"
+      # ─────────────────────────────── 4. Prepare secrets ────────────────────────
+      - name: Prepare configuration
+        run: |
+          cp RoomRoster/Secrets-Example.plist RoomRoster/Secrets.plist
+          cp RoomRoster/GoogleService-Info-Example.plist RoomRoster/GoogleService-Info.plist
 
-    # ───────────── 4. Optional: capture DerivedData if the build fails ───────
-    - name: Upload DerivedData (on failure)
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: DerivedData
-        path: ~/Library/Developer/Xcode/DerivedData
+      # ─────────────────────────────── 5. Run Unit Tests ─────────────────────────
+      - name: Run Unit Tests
+        env:
+          NSUnbufferedIO: "YES"
+        run: |
+          xcodebuild test \
+            -project RoomRoster.xcodeproj \
+            -scheme RoomRoster \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.0' \
+            -only-testing:RoomRosterTests \
+            -resultBundlePath build/TestResults \
+            CODE_SIGNING_ALLOWED=NO \
+            OTHER_SWIFT_FLAGS="-Xfrontend -enable-experimental-feature -Xfrontend AccessLevelOnImport -Xfrontend -enable-experimental-feature -Xfrontend TypedThrows" \
+          | xcpretty --test --color
+
+      # ─────────────────────────────── 6. Upload Result Bundle ───────────────────
+      - name: Upload Xcode Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ResultBundle
+          path: build/TestResults
+
+      # ─────────────────────────────── 7. Upload Logs on Failure ─────────────────
+      - name: Upload Diagnostic Logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: XcodeDiagnostics
+          path: ~/Library/Logs/DiagnosticReports
+
+      # ─────────────────────────────── 8. Upload DerivedData (optional) ──────────
+      - name: Upload DerivedData (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: DerivedData
+          path: ~/Library/Developer/Xcode/DerivedData
