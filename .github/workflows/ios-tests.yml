@@ -14,33 +14,11 @@ jobs:
     # ────────────────────────────── 1. Checkout ──────────────────────────────
     - uses: actions/checkout@v4
 
-    # ─────────────────────── 2. Prepare configuration ────────────────────────
-    - name: Copy example plist files
-      run: |
-        cp RoomRoster/Secrets-Example.plist RoomRoster/Secrets.plist
-        cp RoomRoster/GoogleService-Info-Example.plist RoomRoster/GoogleService-Info.plist
-        ls -al RoomRoster | grep plist
-
-    # ──────────────────────── 3. Resolve packages ───────────────────────────
-    - name: Resolve Swift Package dependencies
-      run: xcodebuild -resolvePackageDependencies -project RoomRoster.xcodeproj -scheme RoomRoster
-
-    # ────────────────────────── 4. Run unit tests ────────────────────────────
+    # ─────────────────────── 2. Run helper script ────────────────────────────
     - name: Run unit tests
       env:
-        OTHER_SWIFT_FLAGS: >-
-          -Xfrontend -enable-experimental-feature -Xfrontend AccessLevelOnImport
-          -Xfrontend -enable-experimental-feature -Xfrontend TypedThrows
         NSUnbufferedIO: "YES"          # live log streaming
-      run: |
-        set -o pipefail
-        xcodebuild test \
-          -project RoomRoster.xcodeproj \
-          -scheme RoomRoster \
-          -sdk iphonesimulator \
-          -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.0' \
-          CODE_SIGNING_ALLOWED=NO \
-          OTHER_SWIFT_FLAGS="$OTHER_SWIFT_FLAGS"
+      run: Scripts/ci-test.sh
     # ────────────── 5. Optional: capture DerivedData if the build fails ───────
     - name: Upload DerivedData (on failure)
       if: failure()
