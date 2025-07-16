@@ -14,7 +14,10 @@ final class RoomServiceTests: XCTestCase {
 
     func testAddRoomWithEmptyNameThrows() async throws {
         let service = RoomService(sheetId: "s", apiKey: "k", networkService: MockNetworkService())
-        await XCTAssertThrowsError(try await service.addRoom(name: "   ")) { error in
+        do {
+            _ = try await service.addRoom(name: "   ")
+            XCTFail("Expected invalidName error")
+        } catch {
             XCTAssertEqual(error as? RoomServiceError, .invalidName)
         }
     }
@@ -22,7 +25,10 @@ final class RoomServiceTests: XCTestCase {
     func testAddRoomWithInvalidURLThrows() async throws {
         // Provide an invalid sheet ID to produce an invalid URL
         let service = RoomService(sheetId: "invalid sheet id", apiKey: "k", networkService: MockNetworkService())
-        await XCTAssertThrowsError(try await service.addRoom(name: "Room")) { error in
+        do {
+            _ = try await service.addRoom(name: "Room")
+            XCTFail("Expected invalidURL error")
+        } catch {
             XCTAssertEqual(error as? NetworkError, .invalidURL)
         }
     }
