@@ -1,9 +1,19 @@
 #!/usr/bin/env bash
-# Scripts/ci-test.sh  –  Build & run RoomRoster tests in CI.
+# Scripts/ci-test.sh  –  Build & run RoomRoster tests in CI
 set -euo pipefail
 
 ###############################################################################
-# 1.  Stub the plist files the app expects
+# 0.  Make sure we’re at the repository root
+###############################################################################
+if [[ -n "${GITHUB_WORKSPACE:-}" && -d "$GITHUB_WORKSPACE" ]]; then
+  cd "$GITHUB_WORKSPACE"
+else
+  cd "$(git rev-parse --show-toplevel)"
+fi
+echo "📂 Working directory: $PWD"
+
+###############################################################################
+# 1.  Stub the plist files the RoomRoster target expects
 ###############################################################################
 mkdir -p RoomRoster/RoomRoster/RoomRoster
 
@@ -26,27 +36,30 @@ cat > RoomRoster/RoomRoster/RoomRoster/GoogleService-Info.plist <<EOF
 </dict></plist>
 EOF
 
+echo "📝 Stub plists created:"
+ls -l RoomRoster/RoomRoster/RoomRoster/*.plist
+
 ###############################################################################
-# 2.  Select a valid simulator UDID (robust across Xcode versions)
+# 2.  Choose a valid iOS-simulator UDID (robust across Xcode versions)
 ###############################################################################
 if [[ -n "${CI_SIM_UDID:-}" ]]; then
-  SIM_UDID="$CI_SIM_UDID"               # let callers pin a specific device
+  SIM_UDID="$CI_SIM_UDID"
 else
-  # Grab the first 36-char UUID from the “available” list (skips header lines)
   SIM_UDID=$(xcrun simctl list devices available \
-             | grep -Eo '[0-9A-F-]{36}' \
-             | head -n1)
+             | grep -Eo '[0-9A-F-]{36}' | head -n1)
 fi
+echo "📱 Using simulator UDID: $SIM_UDID"
 
-echo "ℹ️  Using simulator UDID: $SIM_UDID"
-xcrun simctl bootstatus "$SIM_UDID" -b >/dev/null   # wait until it’s ready
+# Wait until the simulator is fully booted (returns immediately if already up)
+xcrun simctl bootstatus "$SIM_UDID" -b >/dev/null
 
 ###############################################################################
-# 3.  Build & test (iOS slice only)
+# 3.  Build & test the iOS slice
 ###############################################################################
 OTHER_FLAGS="${OTHER_SWIFT_FLAGS:-"-Xfrontend -enable-experimental-feature -Xfrontend AccessLevelOnImport -Xfrontend -enable-experimental-feature -Xfrontend TypedThrows"}"
 
 set -o pipefail
+echo "🚀 Running xcodebuild test…"
 xcodebuild test \
   -project RoomRoster.xcodeproj \
   -scheme RoomRoster \
