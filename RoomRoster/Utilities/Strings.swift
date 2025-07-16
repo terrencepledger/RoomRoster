@@ -39,6 +39,10 @@ struct Strings {
             "Matched in: \(context)"
         }
         static let failedToSave = "Failed to save item. Please try again."
+        static let failedToLoad = "Failed to load inventory. Please try again."
+        static let failedToLoadRooms = "Failed to load rooms. Please try again."
+        static let failedToAddRoom = "Failed to add room. Please try again."
+        static let failedToLoadLogs = "Failed to load logs. Please try again."
         struct query {
             static let name = "name"
             static let description = "description"
@@ -100,6 +104,9 @@ struct Strings {
             static func imageUpload(_ error: String) -> String {
                 "Upload failed: \(error)"
             }
+            static let saveFailed = "Failed to save item. Please try again."
+            static let loadRoomsFailed = "Failed to load rooms. Please try again."
+            static let addRoomFailed = "Failed to add room. Please try again."
         }
     }
 
@@ -125,6 +132,7 @@ struct Strings {
         }
         static let editItem = "Edit Item"
         static let failedToUpdate = "Failed to update item. Please try again."
+        static let failedToLoadHistory = "Failed to load history. Please try again."
     }
 
     // MARK: - EditItemView

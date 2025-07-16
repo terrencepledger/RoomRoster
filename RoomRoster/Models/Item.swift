@@ -6,8 +6,6 @@
 //
 
 import Foundation
-import SwiftData
-import SwiftUICore
 
 struct Item: Identifiable {
     var id: String

@@ -11,6 +11,7 @@ import SwiftUI
 class ItemDetailsViewModel: ObservableObject {
     @Published var historyLogs: [String] = []
     @Published var isLoadingHistory: Bool = false
+    @Published var errorMessage: String?
 
     private let service = InventoryService()
 
@@ -25,6 +26,7 @@ class ItemDetailsViewModel: ObservableObject {
                 "description": "Error fetching item history"
             ])
             historyLogs = []
+            errorMessage = Strings.itemDetails.failedToLoadHistory
         }
     }
 }

@@ -12,6 +12,7 @@ struct AppConfig {
     
     let sheetId: String
     let apiKey: String
+    let sentryDSN: String?
     
     private init() {
         guard let url = Bundle.main.url(forResource: "Secrets", withExtension: "plist"),
@@ -24,8 +25,9 @@ struct AppConfig {
               let apiKey = plist["GoogleSheetsAPIKey"] as? String else {
             fatalError("Missing keys in Secrets.plist")
         }
-        
+
         self.sheetId = sheetId
         self.apiKey = apiKey
+        self.sentryDSN = plist["SentryDSN"] as? String
     }
 }

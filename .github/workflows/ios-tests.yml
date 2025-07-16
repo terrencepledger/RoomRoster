@@ -1,0 +1,70 @@
+name: iOS Unit Tests
+
+on:
+  pull_request:
+    branches: [main, staging]
+
+jobs:
+  test:
+    name: Run iOS Unit Tests
+    runs-on: macos-15
+    timeout-minutes: 30
+
+    steps:
+      # ─────────────────────────────── 1. Checkout ───────────────────────────────
+      - uses: actions/checkout@v4
+      
+
+      # ─────────────────────────────── 2. Select Xcode version ───────────────────
+      - name: Select Xcode 16
+        run: sudo xcode-select -s /Applications/Xcode_16.app
+
+      # ─────────────────────────────── 3. Install xcpretty ───────────────────────
+      - name: Install xcpretty for better logs
+        run: gem install xcpretty
+
+      # ─────────────────────────────── 4. Prepare secrets ────────────────────────
+      - name: Prepare configuration
+        run: |
+          cp RoomRoster/Secrets-Example.plist RoomRoster/Secrets.plist
+          cp RoomRoster/GoogleService-Info-Example.plist RoomRoster/GoogleService-Info.plist
+
+      # ─────────────────────────────── 5. Run Unit Tests ─────────────────────────
+      - name: Run Unit Tests
+        env:
+          NSUnbufferedIO: "YES"
+        run: |
+          xcodebuild test \
+            -project RoomRoster.xcodeproj \
+            -scheme RoomRoster \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.0' \
+            -only-testing:RoomRosterTests \
+            -resultBundlePath build/TestResults \
+            CODE_SIGNING_ALLOWED=NO \
+            OTHER_SWIFT_FLAGS="-Xfrontend -enable-experimental-feature -Xfrontend AccessLevelOnImport -Xfrontend -enable-experimental-feature -Xfrontend TypedThrows" \
+          | xcpretty --test --color
+
+      # ─────────────────────────────── 6. Upload Result Bundle ───────────────────
+      - name: Upload Xcode Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ResultBundle
+          path: build/TestResults
+
+      # ─────────────────────────────── 7. Upload Logs on Failure ─────────────────
+      - name: Upload Diagnostic Logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: XcodeDiagnostics
+          path: ~/Library/Logs/DiagnosticReports
+
+      # ─────────────────────────────── 8. Upload DerivedData (optional) ──────────
+      - name: Upload DerivedData (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: DerivedData
+          path: ~/Library/Developer/Xcode/DerivedData

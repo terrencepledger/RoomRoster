@@ -21,21 +21,18 @@ RoomRoster is a SwiftUI-based inventory management application that integrates w
 
 ## Configuration
 
-The project requires two pieces of private configuration that are not checked into source control:
+The project requires private configuration that is not checked into source control:
 
 - **Firebase** – Copy `RoomRoster/GoogleService-Info-Example.plist` to `RoomRoster/GoogleService-Info.plist` and populate it with the credentials for your Firebase project. The resulting file is ignored by Git.
-- **Sentry** – Set the `SENTRY_DSN` environment variable before launching the app:
-
-```bash
-export SENTRY_DSN="https://examplePublicKey@o0.ingest.sentry.io/0"
-```
-
-If the variable is unset, Sentry will not send events.
+- **Secrets** – Copy `RoomRoster/Secrets-Example.plist` to `RoomRoster/Secrets.plist` and provide the following values:
+  - `SheetID` – The ID of the Google Sheet used by the app.
+  - `GoogleSheetsAPIKey` – Your Google Sheets API key.
+  - `SentryDSN` – *(Optional)* The DSN for Sentry crash reporting. If omitted, Sentry will not send events.
 
 ## Backend Sheets
 
 The app expects a "Sales" sheet alongside the existing "Inventory" and "HistoryLog" sheets. Each sale row should contain the item ID, sale date, price, condition, buyer name and contact, and the seller and department.
 
 ## Email Receipts
-Sales receipts are emailed using the Gmail API. The app generates a simple PDF receipt and attaches it to the email.
 
+Sales receipts are emailed using the Gmail API. The app generates a simple PDF receipt and attaches it to the email.
