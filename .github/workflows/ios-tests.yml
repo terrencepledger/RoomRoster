@@ -18,7 +18,7 @@ jobs:
 
       # ──────────────── 2. Select an Xcode that understands Swift 6 / typed-throws ────────────────
       - name: Select Xcode 16 (official action)
-        uses: apple-actions/setup-xcode@v4      # ← check Marketplace for latest major
+        uses: apple-actions/setup-xcode@v1
         with:
           xcode-version: '16.2'
 
