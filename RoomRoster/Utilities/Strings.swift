@@ -12,6 +12,7 @@ struct Strings {
     struct general {
         static let save = "Save"
         static let cancel = "Cancel"
+        static let clear = "Clear"
     }
 
     // MARK: - MainMenu
@@ -211,8 +212,11 @@ struct Strings {
         static let totalValue = "Total Estimated Value"
         static let recentActivity = "Recent Activity"
         static let exportCSV = "Export CSV"
+        static let exportOverview = "Export Overview"
+        static let exportSearch = "Export Search"
         static let searchPlaceholder = "Search items..."
         static let searchResults = "Results"
+        static let clearSearch = "Clear"
     }
 
     // MARK: - SheetsView

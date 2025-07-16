@@ -10,11 +10,19 @@ struct ReportsView: View {
         NavigationView {
             List {
                 Section {
-                    TextField(l10n.searchPlaceholder, text: $viewModel.query)
+                    HStack {
+                        TextField(l10n.searchPlaceholder, text: $viewModel.query)
+                            .textFieldStyle(.roundedBorder)
+                        if !viewModel.query.isEmpty {
+                            Button(l10n.clearSearch) { viewModel.query = "" }
+                        }
+                    }
+                    Toggle(Strings.inventory.includeHistoryToggle, isOn: $viewModel.includeHistoryInSearch)
+                        .font(.subheadline)
                 }
 
                 if !viewModel.query.isEmpty {
-                    Section(header: Text(l10n.searchResults)) {
+                    Section(header: searchHeader) {
                         ForEach(viewModel.filteredItems, id: \.id) { item in
                             VStack(alignment: .leading) {
                                 Text(item.name)
@@ -62,8 +70,15 @@ struct ReportsView: View {
             .navigationTitle(l10n.title)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(l10n.exportCSV) {
-                        shareURL = viewModel.exportCSV()
+                    Menu {
+                        Button(l10n.exportOverview) {
+                            shareURL = viewModel.exportOverviewCSV()
+                        }
+                        Button(l10n.exportCSV) {
+                            shareURL = viewModel.exportCSV()
+                        }
+                    } label: {
+                        Image(systemName: "square.and.arrow.up")
                     }
                 }
             }
@@ -73,6 +88,14 @@ struct ReportsView: View {
         }
         .task { await viewModel.loadData() }
         .onAppear { Logger.page("ReportsView") }
+    }
+
+    private var searchHeader: some View {
+        HStack {
+            Text(l10n.searchResults)
+            Spacer()
+            Button(l10n.exportSearch) { shareURL = viewModel.exportCSV() }
+        }
     }
 }
 
