@@ -216,6 +216,7 @@
 				B6A6D6D92DD84F5000378BFF /* EditItemViewModel.swift */,
 				767E82CA2D8F1B2C00B48011 /* ItemDetailsViewModel.swift */,
 				767B05BC2D4C5E1700566C25 /* InventoryViewModel.swift */,
+				12FE82B0693248D49E8D77BB /* ReportsViewModel.swift */,
 				F1DB1AD2C44D425AB9A59153 /* SellItemViewModel.swift */,
                         );
 				path = ViewModels;
