@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
-# Scripts/ci-test.sh
-# Purpose: Build + test the iOS slice of RoomRoster in CI.
-
+# Scripts/ci-test.sh  –  Build & run RoomRoster tests in CI.
 set -euo pipefail
 
 ###############################################################################
-# 1.  Stub the plist files the app expects at build time
+# 1.  Stub the plist files the app expects
 ###############################################################################
 mkdir -p RoomRoster/RoomRoster/RoomRoster
 
@@ -29,16 +27,30 @@ cat > RoomRoster/RoomRoster/RoomRoster/GoogleService-Info.plist <<EOF
 EOF
 
 ###############################################################################
-# 2.  Build + test (iOS slice only)
+# 2.  Select a valid simulator UDID (robust across Xcode versions)
+###############################################################################
+if [[ -n "${CI_SIM_UDID:-}" ]]; then
+  SIM_UDID="$CI_SIM_UDID"               # let callers pin a specific device
+else
+  # Grab the first 36-char UUID from the “available” list (skips header lines)
+  SIM_UDID=$(xcrun simctl list devices available \
+             | grep -Eo '[0-9A-F-]{36}' \
+             | head -n1)
+fi
+
+echo "ℹ️  Using simulator UDID: $SIM_UDID"
+xcrun simctl bootstatus "$SIM_UDID" -b >/dev/null   # wait until it’s ready
+
+###############################################################################
+# 3.  Build & test (iOS slice only)
 ###############################################################################
 OTHER_FLAGS="${OTHER_SWIFT_FLAGS:-"-Xfrontend -enable-experimental-feature -Xfrontend AccessLevelOnImport -Xfrontend -enable-experimental-feature -Xfrontend TypedThrows"}"
 
-echo "📦  Running tests on the first available iOS simulator (OS=latest)"
 set -o pipefail
 xcodebuild test \
   -project RoomRoster.xcodeproj \
   -scheme RoomRoster \
   -sdk iphonesimulator \
-  -destination 'platform=iOS Simulator,OS=latest' \
+  -destination "id=$SIM_UDID" \
   CODE_SIGNING_ALLOWED=NO \
   OTHER_SWIFT_FLAGS="$OTHER_FLAGS"
