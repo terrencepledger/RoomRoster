@@ -34,10 +34,20 @@ final class InventoryManager: ObservableObject {
         self.networkService = networkService
     }
 
+    private func metadataURL(sheetId: String, apiKey: String) -> URL? {
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "sheets.googleapis.com"
+        let range = "'Metadata'!A1"
+        components.path = "/v4/spreadsheets/\(sheetId)/values/\(range)"
+        components.queryItems = [URLQueryItem(name: "key", value: apiKey)]
+        return components.url
+    }
+
     func verifyAccess(sheetId: String, apiKey: String) async -> Bool {
-        let url = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Metadata!A1?key=\(apiKey)"
+        guard let url = metadataURL(sheetId: sheetId, apiKey: apiKey) else { return false }
         do {
-            let response: GoogleSheetsResponse = try await networkService.fetchData(from: url)
+            let response: GoogleSheetsResponse = try await networkService.fetchData(from: url.absoluteString)
             return response.values.first?.first == inventoryMarker
         } catch {
             return false
@@ -45,9 +55,9 @@ final class InventoryManager: ObservableObject {
     }
 
     func switchInventory(sheetId: String, apiKey: String) async throws {
-        let url = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Metadata!A1?key=\(apiKey)"
+        guard let url = metadataURL(sheetId: sheetId, apiKey: apiKey) else { throw InventoryError.invalidInventory }
         do {
-            let response: GoogleSheetsResponse = try await networkService.fetchData(from: url)
+            let response: GoogleSheetsResponse = try await networkService.fetchData(from: url.absoluteString)
             guard response.values.first?.first == inventoryMarker else {
                 throw InventoryError.invalidInventory
             }
