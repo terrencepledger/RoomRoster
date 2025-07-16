@@ -33,6 +33,6 @@ final class SalesViewModel: ObservableObject {
     }
 
     func itemName(for sale: Sale) -> String {
-        itemsById[sale.itemId]?.name ?? sale.itemId
+        itemsById[sale.itemId]?.name ?? Strings.general.loading
     }
 }
