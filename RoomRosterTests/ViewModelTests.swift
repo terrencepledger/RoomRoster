@@ -2,17 +2,21 @@ import XCTest
 @testable import RoomRoster
 
 final class ViewModelTests: XCTestCase {
+    @MainActor
     func testInventoryViewModelLoadRooms() async throws {
         let mock = MockNetworkService()
         let response = GoogleSheetsResponse(range: "Rooms", majorDimension: "ROWS", values: [["R1"],["R2"]])
         mock.fetchDataResults = [response]
         let roomService = RoomService(sheetId: "s", apiKey: "k", networkService: mock)
-        let vm = InventoryViewModel(inventoryService: InventoryService(sheetId: "s", apiKey: "k", networkService: MockNetworkService()), roomService: roomService)
+        let vm = InventoryViewModel(
+            inventoryService: InventoryService(sheetId: "s", apiKey: "k", networkService: MockNetworkService()),
+            roomService: roomService
+        )
         await vm.loadRooms()
-        let rooms = await MainActor.run { vm.rooms }
-        XCTAssertEqual(rooms.map { $0.name }, ["R1", "R2"])
+        XCTAssertEqual(vm.rooms.map { $0.name }, ["R1", "R2"])
     }
 
+    @MainActor
     func testCreateItemViewModelValidateTag() {
         let vm = CreateItemViewModel(
             inventoryService: InventoryService(sheetId: "s", apiKey: "k", networkService: MockNetworkService()),
