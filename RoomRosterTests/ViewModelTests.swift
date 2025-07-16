@@ -9,7 +9,8 @@ final class ViewModelTests: XCTestCase {
         let roomService = RoomService(sheetId: "s", apiKey: "k", networkService: mock)
         let vm = InventoryViewModel(inventoryService: InventoryService(sheetId: "s", apiKey: "k", networkService: MockNetworkService()), roomService: roomService)
         await vm.loadRooms()
-        XCTAssertEqual(vm.rooms.map { $0.name }, ["R1", "R2"])
+        let rooms = await MainActor.run { vm.rooms }
+        XCTAssertEqual(rooms.map { $0.name }, ["R1", "R2"])
     }
 
     func testCreateItemViewModelValidateTag() {

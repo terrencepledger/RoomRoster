@@ -39,15 +39,4 @@ final class RoomRosterUITests: XCTestCase {
         }
     }
 
-    /// Runs all UI test suites in this target.
-    func runAllUITests() {
-        let suites: [XCTestSuite] = [
-            RoomRosterUITests.defaultTestSuite,
-            RoomRosterUITestsLaunchTests.defaultTestSuite,
-            InventoryUITests.defaultTestSuite
-        ]
-        for suite in suites {
-            suite.run()
-        }
-    }
 }

@@ -15,17 +15,4 @@ final class RoomRosterTests: XCTestCase {
         XCTAssertFalse(config.sheetId.isEmpty, "Sheet ID should be set to enable Sheet operations")
     }
 
-    /// Runs all unit test suites in this target.
-    func runAllUnitTests() {
-        let suites: [XCTestSuite] = [
-            RoomRosterTests.defaultTestSuite,
-            InventoryServiceTests.defaultTestSuite,
-            ItemValidatorTests.defaultTestSuite,
-            RoomServiceTests.defaultTestSuite,
-            ViewModelTests.defaultTestSuite
-        ]
-        for suite in suites {
-            suite.run()
-        }
-    }
 }
