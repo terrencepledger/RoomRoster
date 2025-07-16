@@ -38,4 +38,5 @@ final class RoomRosterUITests: XCTestCase {
             }
         }
     }
+
 }

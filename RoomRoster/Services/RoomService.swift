@@ -39,10 +39,13 @@ struct RoomService {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { throw RoomServiceError.invalidName }
 
-        let url = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Rooms:append?valueInputOption=USER_ENTERED"
+        guard sheetId.rangeOfCharacter(from: CharacterSet.urlPathAllowed.inverted) == nil else {
+            throw NetworkError.invalidURL
+        }
+        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Rooms:append?valueInputOption=USER_ENTERED"
         let payload: [String: Any] = ["values": [[trimmed]]]
         Logger.network("RoomService-addRoom")
-        guard let url = URL(string: url) else {
+        guard let url = URL(string: urlString) else {
             throw NetworkError.invalidURL
         }
         let request = try await networkService.authorizedRequest(
