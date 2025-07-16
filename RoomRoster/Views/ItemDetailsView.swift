@@ -13,6 +13,7 @@ struct ItemDetailsView: View {
     @State var item: Item
     @State private var isEditing = false
     @State private var errorMessage: String? = nil
+    @State private var showingSellSheet = false
     @StateObject private var viewModel = ItemDetailsViewModel()
 
     let inventoryVM = InventoryViewModel()
@@ -127,6 +128,16 @@ struct ItemDetailsView: View {
                     .foregroundColor(.white)
                     .cornerRadius(10)
                     .padding()
+
+                    Button(Strings.sellItem.title) {
+                        Logger.action("Pressed Sell Button")
+                        showingSellSheet = true
+                    }
+                    .padding()
+                    .background(Color.green)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                    .padding()
                 }
             }
         }
@@ -157,6 +168,9 @@ struct ItemDetailsView: View {
                 }
             }
             .environmentObject(inventoryVM)
+        }
+        .sheet(isPresented: $showingSellSheet) {
+            SellItemView(viewModel: SellItemViewModel(item: item))
         }
         .onAppear {
             Logger.page("ItemDetailsView")

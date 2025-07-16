@@ -18,6 +18,7 @@ struct InventoryView: View {
     @State private var expandedRooms: Set<Room> = []
     @State private var searchText: String = ""
     @State private var includeHistoryInSearch: Bool = false
+    @State private var includeSoldItems: Bool = false
     @State private var logVersion = 0
 
     var groupedItems: [(room: Room, items: [(Item, String)])] {
@@ -46,6 +47,8 @@ struct InventoryView: View {
                         Toggle(l10n.includeHistoryToggle, isOn: $includeHistoryInSearch)
                             .font(.subheadline)
                             .padding(.top, 4)
+                        Toggle(l10n.includeSoldToggle, isOn: $includeSoldItems)
+                            .font(.subheadline)
                     }
                     .padding(.horizontal)
 
@@ -134,11 +137,15 @@ struct InventoryView: View {
 
     var filteredItemsWithContext: [(Item, String)] {
         let query = searchText.lowercased().trimmingCharacters(in: .whitespaces)
+        var baseItems = viewModel.items
+        if !includeSoldItems {
+            baseItems = baseItems.filter { $0.status != .sold }
+        }
         guard !query.isEmpty else {
-            return viewModel.items.map { ($0, "") }
+            return baseItems.map { ($0, "") }
         }
 
-        return viewModel.items.compactMap { item in
+        return baseItems.compactMap { item in
             if item.name.lowercased().contains(query) {
                 return (item, l10n.query.name)
             } else if item.description.lowercased().contains(query) {

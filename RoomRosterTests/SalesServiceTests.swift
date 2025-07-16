@@ -1,0 +1,13 @@
+import XCTest
+@testable import RoomRoster
+
+final class SalesServiceTests: XCTestCase {
+    func testRecordSaleSendsPost() async throws {
+        let mock = MockNetworkService()
+        let service = SalesService(sheetId: "sheet", apiKey: "key", networkService: mock)
+        let sale = Sale(itemId: "1", date: Date(), price: 10, condition: .good, buyerName: "B", buyerContact: "b@example.com", soldBy: "S", department: "D")
+        try await service.recordSale(sale)
+        XCTAssertEqual(mock.authorizedRequests.first?.1, "POST")
+        XCTAssertEqual(mock.sentRequests.count, 1)
+    }
+}

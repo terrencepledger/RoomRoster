@@ -62,7 +62,10 @@ class AuthenticationManager: ObservableObject {
         let result = try await GIDSignIn.sharedInstance.signIn(
             withPresenting: rootVC,
             hint: nil,
-            additionalScopes: ["https://www.googleapis.com/auth/spreadsheets"]
+            additionalScopes: [
+                "https://www.googleapis.com/auth/spreadsheets",
+                "https://www.googleapis.com/auth/gmail.send",
+            ]
         )
 
         let user = result.user

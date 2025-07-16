@@ -1,0 +1,49 @@
+import SwiftUI
+
+private typealias l10n = Strings.sellItem
+
+struct SellItemView: View {
+    @Environment(\.dismiss) var dismiss
+    @StateObject var viewModel: SellItemViewModel
+
+    var body: some View {
+        NavigationView {
+            Form {
+                Section(l10n.priceSection) {
+                    TextField(l10n.price, value: $viewModel.sale.price, format: .number)
+                        .keyboardType(.decimalPad)
+                    Picker(l10n.condition, selection: $viewModel.sale.condition) {
+                        ForEach(Condition.allCases, id: \.self) { condition in
+                            Text(condition.label).tag(condition)
+                        }
+                    }
+                    DatePicker(l10n.date, selection: $viewModel.sale.date, displayedComponents: .date)
+                }
+                Section(l10n.buyerSection) {
+                    TextField(l10n.buyerName, text: $viewModel.sale.buyerName)
+                    TextField(l10n.buyerContact, text: $viewModel.sale.buyerContact)
+                }
+                Section(l10n.sellerSection) {
+                    TextField(l10n.soldBy, text: $viewModel.sale.soldBy)
+                    TextField(l10n.department, text: $viewModel.sale.department)
+                }
+                Button(Strings.general.save) {
+                    Task {
+                        do {
+                            try await viewModel.submitSale()
+                            dismiss()
+                        } catch {
+                            Logger.log(error, extra: ["description": "Failed to record sale"])
+                        }
+                    }
+                }
+            }
+            .navigationTitle(l10n.title)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(Strings.general.cancel) { dismiss() }
+                }
+            }
+        }
+    }
+}

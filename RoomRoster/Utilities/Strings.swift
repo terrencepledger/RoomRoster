@@ -27,6 +27,7 @@ struct Strings {
         static let title = "Inventory"
         static let searchPlaceholder = "Search..."
         static let includeHistoryToggle = "Include History"
+        static let includeSoldToggle = "Include Sold Items"
         static let addItemButton = "Add Item"
         static func status(_ status: String) -> String {
             "Status: \(status)"
@@ -213,5 +214,27 @@ struct Strings {
     struct sheets {
         static let title = "Sheets"
         static let comingSoon = "Sheets - Coming Soon"
+    }
+}
+
+    // MARK: - SalesView
+    struct sales {
+        static let title = "Sales"
+        static let comingSoon = "Sales - Coming Soon"
+    }
+
+    // MARK: - SellItemView
+    struct sellItem {
+        static let title = "Sell Item"
+        static let priceSection = "Sale Details"
+        static let price = "Price"
+        static let condition = "Condition"
+        static let date = "Date"
+        static let buyerSection = "Buyer"
+        static let buyerName = "Name"
+        static let buyerContact = "Contact"
+        static let sellerSection = "Seller"
+        static let soldBy = "Sold By"
+        static let department = "Department"
     }
 }

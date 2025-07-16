@@ -17,6 +17,11 @@ struct MainMenuView: View {
                     Label(l10n.inventory, systemImage: "archivebox")
                 }
 
+            SalesView()
+                .tabItem {
+                    Label(Strings.sales.title, systemImage: "dollarsign")
+                }
+
             ReportsView()
                 .tabItem {
                     Label(l10n.reports, systemImage: "chart.bar")
