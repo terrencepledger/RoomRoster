@@ -79,7 +79,8 @@
                 DE7D257232324BDDB96C6F37 /* RoomServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614508236AFA4269887FF35A /* RoomServiceTests.swift */; };
 		E9FBF450607D494DA1894333 /* MockNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF137618CD644A1997B55ED6 /* MockNetworkService.swift */; };
 		EC28A959CE63441E9F3C1048 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70EC0F7257914A11A7589F29 /* ShareSheet.swift */; };
-		FDB33D97700C2EF04190FA52 /* GmailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01D35FCE10EB02BEFD65D29 /* GmailService.swift */; };
+FDB33D97700C2EF04190FA52 /* GmailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01D35FCE10EB02BEFD65D29 /* GmailService.swift */; };
+				B7F2B3A12FF645E8A0FF1234 /* SheetsUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7F2B3A12FF645E8A0FF1235 /* SheetsUtilsTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -163,7 +164,8 @@
 		C01D35FCE10EB02BEFD65D29 /* GmailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GmailService.swift; sourceTree = "<group>"; };
 		C66A533C9D0B40A885DA2172 /* Condition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Condition.swift; sourceTree = "<group>"; };
 		E71B5019D5A040FCBB81807B /* ItemValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemValidatorTests.swift; sourceTree = "<group>"; };
-                F1DB1AD2C44D425AB9A59153 /* SellItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellItemViewModel.swift; sourceTree = "<group>"; };
+		B7F2B3A12FF645E8A0FF1235 /* SheetsUtilsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetsUtilsTests.swift; sourceTree = "<group>"; };
+F1DB1AD2C44D425AB9A59153 /* SellItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellItemViewModel.swift; sourceTree = "<group>"; };
                 E32FE1D99B3B44E6A6801234 /* SalesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -327,9 +329,10 @@
 				614508236AFA4269887FF35A /* RoomServiceTests.swift */,
 				4AC01C73ED7A4FBC9EECB3D3 /* ViewModelTests.swift */,
 				8BC8C5F5D40748AD93602E33 /* SalesServiceTests.swift */,
-			);
-			path = RoomRosterTests;
-			sourceTree = "<group>";
+				B7F2B3A12FF645E8A0FF1235 /* SheetsUtilsTests.swift */,
+);
+path = RoomRosterTests;
+sourceTree = "<group>";
 		};
 		767B05AC2D4C5DC400566C25 /* RoomRosterUITests */ = {
 			isa = PBXGroup;
@@ -561,9 +564,10 @@
 				DE7D257232324BDDB96C6F37 /* RoomServiceTests.swift in Sources */,
 				7DB3EA08C76F4E048B379677 /* ViewModelTests.swift in Sources */,
 				A787349732EA468CB09F1E52 /* SalesServiceTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
+				B7F2B3A12FF645E8A0FF1234 /* SheetsUtilsTests.swift in Sources */,
+);
+runOnlyForDeploymentPostprocessing = 0;
+};
 		767B05A52D4C5DC400566C25 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
