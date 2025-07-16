@@ -17,90 +17,95 @@ struct CreateItemView: View {
 
     var body: some View {
         NavigationView {
-            Form {
-                Section {
-                    CombinedImagePickerButton(image: $viewModel.pickedImage)
-                        .onChange(of: viewModel.pickedImage) { _, img in
-                            viewModel.onImagePicked(img)
-                        }
-                    
-                    if viewModel.isUploading {
-                        HStack {
-                            ProgressView()
-                            Text(l10n.uploadingImage)
-                        }
-                    }
-                    if let error = viewModel.uploadError {
-                        Text(error)
-                            .foregroundColor(.red)
-                            .font(.caption)
-                    }
-                    
-                    HStack {
-                        Text(l10n.imageURL).foregroundColor(.gray)
-                        Spacer()
-                        Text(viewModel.newItem.imageURL)
-                            .font(.caption)
-                            .multilineTextAlignment(.trailing)
-                    }
-                } header: {
-                    Text(l10n.photo)
+            VStack {
+                if let error = viewModel.errorMessage {
+                    ErrorBanner(message: error)
                 }
-                
-                Section(content: {
-                    HStack {
-                        Text(l10n.basicInfo.name)
-                        Spacer()
-                        TextField(l10n.basicInfo.enter.name, text: $viewModel.newItem.name)
-                            .multilineTextAlignment(.trailing)
-                    }
-                    HStack {
-                        Text(l10n.basicInfo.description)
-                        Spacer()
-                        TextField(l10n.basicInfo.enter.description, text: $viewModel.newItem.description)
-                            .multilineTextAlignment(.trailing)
-                    }
-                    HStack {
-                        Text(l10n.basicInfo.quantity)
-                        Spacer()
-                        TextField(
-                            l10n.basicInfo.enter.quantity,
-                            value: $viewModel.newItem.quantity,
-                            format: .number
-                        )
-                        .keyboardType(.numberPad)
-                        .textFieldStyle(.roundedBorder)
-                    }
-                    HStack {
-                        Text(l10n.basicInfo.tag)
-                        Spacer()
-                        TextField(l10n.basicInfo.enter.tag, text: $viewModel.propertyTagInput)
-                            .focused($tagFieldFocused)
-                            .multilineTextAlignment(.trailing)
-                            .onChange(of: tagFieldFocused) { _, focused in
-                                if !focused {
-                                    withAnimation { viewModel.validateTag() }
-                                }
+                Form {
+                    Section {
+                        CombinedImagePickerButton(image: $viewModel.pickedImage)
+                            .onChange(of: viewModel.pickedImage) { _, img in
+                                viewModel.onImagePicked(img)
                             }
-                    }
-                    if viewModel.showTagError, let error = viewModel.tagError {
-                        HStack {
-                            Spacer()
+
+                        if viewModel.isUploading {
+                            HStack {
+                                ProgressView()
+                                Text(l10n.uploadingImage)
+                            }
+                        }
+                        if let error = viewModel.uploadError {
                             Text(error)
                                 .foregroundColor(.red)
                                 .font(.caption)
-                                .onAppear {
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                                        withAnimation {
-                                            if (viewModel.tagError?.count ?? 0) > 0 {
-                                                if !tagFieldFocused {
-                                                    viewModel.propertyTagInput = ""
+                        }
+
+                        HStack {
+                            Text(l10n.imageURL).foregroundColor(.gray)
+                            Spacer()
+                            Text(viewModel.newItem.imageURL)
+                                .font(.caption)
+                                .multilineTextAlignment(.trailing)
+                        }
+                    } header: {
+                        Text(l10n.photo)
+                    }
+
+                    Section(content: {
+                        HStack {
+                            Text(l10n.basicInfo.name)
+                            Spacer()
+                            TextField(l10n.basicInfo.enter.name, text: $viewModel.newItem.name)
+                                .multilineTextAlignment(.trailing)
+                        }
+                        HStack {
+                            Text(l10n.basicInfo.description)
+                            Spacer()
+                            TextField(l10n.basicInfo.enter.description, text: $viewModel.newItem.description)
+                                .multilineTextAlignment(.trailing)
+                        }
+                        HStack {
+                            Text(l10n.basicInfo.quantity)
+                            Spacer()
+                            TextField(
+                                l10n.basicInfo.enter.quantity,
+                                value: $viewModel.newItem.quantity,
+                                format: .number
+                            )
+                            .keyboardType(.numberPad)
+                            .textFieldStyle(.roundedBorder)
+                        }
+                        HStack {
+                            Text(l10n.basicInfo.tag)
+                            Spacer()
+                            TextField(l10n.basicInfo.enter.tag, text: $viewModel.propertyTagInput)
+                                .focused($tagFieldFocused)
+                                .multilineTextAlignment(.trailing)
+                                .onChange(of: tagFieldFocused) { _, focused in
+                                    if !focused {
+                                        withAnimation { viewModel.validateTag() }
+                                    }
+                                }
+                        }
+                        if viewModel.showTagError, let error = viewModel.tagError {
+                            HStack {
+                                Spacer()
+                                Text(error)
+                                    .foregroundColor(.red)
+                                    .font(.caption)
+                                    .onAppear {
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                            withAnimation {
+                                                if (viewModel.tagError?.count ?? 0) > 0 {
+                                                    if !tagFieldFocused {
+                                                        viewModel.propertyTagInput = ""
+                                                    }
+                                                    viewModel.validateTag()
                                                 }
-                                                viewModel.validateTag()
                                             }
                                         }
                                     }
-                                }
+                            }
                         }
                     }
                 }, header: { Text(l10n.basicInfo.title) })
@@ -143,10 +148,15 @@ struct CreateItemView: View {
                 }
 
                 Button(Strings.general.save) {
-                    Task { await viewModel.saveItem() }
-                    dismiss()
+                    Task {
+                        await viewModel.saveItem()
+                        if viewModel.errorMessage == nil {
+                            dismiss()
+                        }
+                    }
                 }
                 .disabled(viewModel.newItem.name.isEmpty || viewModel.newItem.description.isEmpty || viewModel.tagError != nil || viewModel.newItem.lastKnownRoom == Room.placeholder())
+                }
             }
             .alert(
                 l10n.addRoom.title,

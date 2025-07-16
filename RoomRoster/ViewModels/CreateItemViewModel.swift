@@ -27,6 +27,7 @@ final class CreateItemViewModel: ObservableObject {
     @Published var showingAddRoomPrompt: Bool = false
     @Published var newRoomName: String = ""
     @Published var rooms: [Room] = []
+    @Published var errorMessage: String?
     
     var onSave: ((Item) -> Void)?
 
@@ -63,7 +64,7 @@ final class CreateItemViewModel: ObservableObject {
         do {
             rooms = try await roomService.fetchRooms()
         } catch {
-            // Optional: handle error state for room loading
+            errorMessage = l10n.errors.loadRoomsFailed
         }
     }
 
@@ -120,6 +121,7 @@ final class CreateItemViewModel: ObservableObject {
             rooms.append(newRoom)
         } catch {
             newItem.lastKnownRoom = Room.placeholder()
+            errorMessage = l10n.errors.addRoomFailed
         }
         newRoomName = ""
         showingAddRoomPrompt = false
@@ -132,7 +134,7 @@ final class CreateItemViewModel: ObservableObject {
             try await inventoryService.createItem(newItem)
             onSave?(newItem)
         } catch {
-            // Optional: handle save error state
+            errorMessage = l10n.errors.saveFailed
         }
     }
 
