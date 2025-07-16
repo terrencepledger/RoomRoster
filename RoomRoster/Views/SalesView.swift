@@ -3,11 +3,39 @@ import SwiftUI
 private typealias l10n = Strings.sales
 
 struct SalesView: View {
+    @StateObject private var viewModel = SalesViewModel()
+
     var body: some View {
-        Text(l10n.comingSoon)
-            .font(.title)
-            .foregroundColor(.secondary)
+        NavigationView {
+            List {
+                if let error = viewModel.errorMessage {
+                    ErrorBanner(message: error)
+                }
+
+                if viewModel.sales.isEmpty {
+                    Text(l10n.emptyState)
+                        .foregroundColor(.secondary)
+                } else {
+                    ForEach(Array(viewModel.sales.enumerated()), id: \.offset) { i, sale in
+                        VStack(alignment: .leading) {
+                            Text(sale.itemId)
+                                .font(.headline)
+                            HStack {
+                                Text(sale.date.toShortString())
+                                Spacer()
+                                if let price = sale.price {
+                                    Text("$\(price, specifier: "%.2f")")
+                                }
+                            }
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        }
+                    }
+                }
+            }
             .navigationTitle(l10n.title)
-            .onAppear { Logger.page("SalesView") }
+        }
+        .task { await viewModel.loadSales() }
+        .onAppear { Logger.page("SalesView") }
     }
 }

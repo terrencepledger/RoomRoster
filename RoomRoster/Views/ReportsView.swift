@@ -19,6 +19,8 @@ struct ReportsView: View {
                     }
                     Toggle(Strings.inventory.includeHistoryToggle, isOn: $viewModel.includeHistoryInSearch)
                         .font(.subheadline)
+                    Toggle(Strings.inventory.includeSoldToggle, isOn: $viewModel.includeSoldItems)
+                        .font(.subheadline)
                 }
 
                 if !viewModel.query.isEmpty {
@@ -46,6 +48,19 @@ struct ReportsView: View {
                         Text(l10n.totalValue)
                         Spacer()
                         Text("$\(viewModel.totalValue, specifier: "%.2f")")
+                    }
+                }
+
+                Section(header: Text(l10n.salesOverview)) {
+                    HStack {
+                        Text(l10n.totalSold)
+                        Spacer()
+                        Text(String(viewModel.sales.count))
+                    }
+                    HStack {
+                        Text(l10n.totalRevenue)
+                        Spacer()
+                        Text("$\(viewModel.totalSalesValue, specifier: "%.2f")")
                     }
                 }
 
