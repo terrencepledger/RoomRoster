@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Scripts/ci-test.sh  –  Build & run RoomRoster tests in CI
+# Scripts/ci-test.sh  —  Build & run RoomRoster tests in CI
 set -euo pipefail
 
 ###############################################################################
@@ -14,10 +14,11 @@ echo "📂 Working directory: $PWD"
 
 ###############################################################################
 # 1.  Stub the plist files the RoomRoster target expects
+#     (They live one folder below the project root, *not* two.)
 ###############################################################################
-mkdir -p RoomRoster/RoomRoster/RoomRoster
+mkdir -p RoomRoster/RoomRoster   # <- only TWO “RoomRoster” segments
 
-cat > RoomRoster/RoomRoster/RoomRoster/Secrets.plist <<EOF
+cat > RoomRoster/RoomRoster/Secrets.plist <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
   "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -27,7 +28,7 @@ cat > RoomRoster/RoomRoster/RoomRoster/Secrets.plist <<EOF
 </dict></plist>
 EOF
 
-cat > RoomRoster/RoomRoster/RoomRoster/GoogleService-Info.plist <<EOF
+cat > RoomRoster/RoomRoster/GoogleService-Info.plist <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
   "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -37,7 +38,7 @@ cat > RoomRoster/RoomRoster/RoomRoster/GoogleService-Info.plist <<EOF
 EOF
 
 echo "📝 Stub plists created:"
-ls -l RoomRoster/RoomRoster/RoomRoster/*.plist
+ls -l RoomRoster/RoomRoster/*.plist
 
 ###############################################################################
 # 2.  Choose a valid iOS-simulator UDID (robust across Xcode versions)
