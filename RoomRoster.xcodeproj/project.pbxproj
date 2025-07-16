@@ -73,8 +73,9 @@
 		B6F9649F2DB02BB60093089A /* FirebaseAppDistribution-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = B6F9649E2DB02BB60093089A /* FirebaseAppDistribution-Beta */; };
 		B6F964A12DB02C470093089A /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964A02DB02C470093089A /* FirebaseAuth */; };
 		B6F964A32DB02C470093089A /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964A22DB02C470093089A /* FirebaseStorage */; };
-		CE2487F2AA23494BBE56993D /* ReportsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12FE82B0693248D49E8D77BB /* ReportsViewModel.swift */; };
-		DE7D257232324BDDB96C6F37 /* RoomServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614508236AFA4269887FF35A /* RoomServiceTests.swift */; };
+                CE2487F2AA23494BBE56993D /* ReportsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12FE82B0693248D49E8D77BB /* ReportsViewModel.swift */; };
+                5A43DC562B7C4ABC9A123456 /* SalesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32FE1D99B3B44E6A6801234 /* SalesViewModel.swift */; };
+                DE7D257232324BDDB96C6F37 /* RoomServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614508236AFA4269887FF35A /* RoomServiceTests.swift */; };
 		E9FBF450607D494DA1894333 /* MockNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF137618CD644A1997B55ED6 /* MockNetworkService.swift */; };
 		EC28A959CE63441E9F3C1048 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70EC0F7257914A11A7589F29 /* ShareSheet.swift */; };
 		FDB33D97700C2EF04190FA52 /* GmailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01D35FCE10EB02BEFD65D29 /* GmailService.swift */; };
@@ -160,7 +161,8 @@
 		C01D35FCE10EB02BEFD65D29 /* GmailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GmailService.swift; sourceTree = "<group>"; };
 		C66A533C9D0B40A885DA2172 /* Condition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Condition.swift; sourceTree = "<group>"; };
 		E71B5019D5A040FCBB81807B /* ItemValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemValidatorTests.swift; sourceTree = "<group>"; };
-		F1DB1AD2C44D425AB9A59153 /* SellItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellItemViewModel.swift; sourceTree = "<group>"; };
+                F1DB1AD2C44D425AB9A59153 /* SellItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellItemViewModel.swift; sourceTree = "<group>"; };
+                E32FE1D99B3B44E6A6801234 /* SalesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,11 +228,12 @@
 				B6A6D6D92DD84F5000378BFF /* EditItemViewModel.swift */,
 				767E82CA2D8F1B2C00B48011 /* ItemDetailsViewModel.swift */,
 				767B05BC2D4C5E1700566C25 /* InventoryViewModel.swift */,
-				12FE82B0693248D49E8D77BB /* ReportsViewModel.swift */,
-				F1DB1AD2C44D425AB9A59153 /* SellItemViewModel.swift */,
-			);
-			path = ViewModels;
-			sourceTree = "<group>";
+                               12FE82B0693248D49E8D77BB /* ReportsViewModel.swift */,
+                               F1DB1AD2C44D425AB9A59153 /* SellItemViewModel.swift */,
+                                E32FE1D99B3B44E6A6801234 /* SalesViewModel.swift */,
+                        );
+                        path = ViewModels;
+                        sourceTree = "<group>";
 		};
 		765183BB2D8CD22300FBA72E /* Models */ = {
 			isa = PBXGroup;
@@ -533,10 +536,11 @@
 				B615ED202DE2BB15009BE623 /* Room.swift in Sources */,
 				8030ADBBCBB442E3B8D6D5FB /* Condition.swift in Sources */,
 				5E159DC99DBD4D6E817F1768 /* Sale.swift in Sources */,
-				3284B9D30A6B43858230535F /* SalesService.swift in Sources */,
-				7C37FF346999407A810EB18B /* SellItemViewModel.swift in Sources */,
-				A86D606B4FC641688F556F39 /* SalesView.swift in Sources */,
-				3B334618E2334DAFB69FB690 /* SellItemView.swift in Sources */,
+                                3284B9D30A6B43858230535F /* SalesService.swift in Sources */,
+                                7C37FF346999407A810EB18B /* SellItemViewModel.swift in Sources */,
+                                5A43DC562B7C4ABC9A123456 /* SalesViewModel.swift in Sources */,
+                                A86D606B4FC641688F556F39 /* SalesView.swift in Sources */,
+                                3B334618E2334DAFB69FB690 /* SellItemView.swift in Sources */,
 				FDB33D97700C2EF04190FA52 /* GmailService.swift in Sources */,
 				2867C19B08004E95B4BAD5B0 /* (null) in Sources */,
 			);

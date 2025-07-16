@@ -119,24 +119,25 @@ struct ItemDetailsView: View {
                 Spacer()
                 HStack {
                     Spacer()
-                    Button(l10n.editItem) {
-                        Logger.action("Pressed Edit Button")
-                        isEditing = true
-                    }
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                    .padding()
+                    VStack {
+                        Button(l10n.editItem) {
+                            Logger.action("Pressed Edit Button")
+                            isEditing = true
+                        }
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
 
-                    Button(Strings.sellItem.title) {
-                        Logger.action("Pressed Sell Button")
-                        showingSellSheet = true
+                        Button(Strings.sellItem.title) {
+                            Logger.action("Pressed Sell Button")
+                            showingSellSheet = true
+                        }
+                        .padding()
+                        .background(Color.green)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
                     }
-                    .padding()
-                    .background(Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
                     .padding()
                 }
             }

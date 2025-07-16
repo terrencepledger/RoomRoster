@@ -10,16 +10,23 @@ final class ReportsViewModel: ObservableObject {
     @Published var totalValue: Double = 0
     @Published var query: String = ""
     @Published var includeHistoryInSearch: Bool = false
+    @Published var includeSoldItems: Bool = false
+    @Published var sales: [Sale] = []
+    @Published var totalSalesValue: Double = 0
 
     private let inventoryService: InventoryService
+    private let salesService: SalesService
     init(
-        inventoryService: InventoryService = .init()
+        inventoryService: InventoryService = .init(),
+        salesService: SalesService = .init()
     ) {
         self.inventoryService = inventoryService
+        self.salesService = salesService
     }
 
     func loadData() async {
         await fetchItems()
+        await fetchSales()
         await loadRecentLogs()
     }
 
@@ -32,6 +39,15 @@ final class ReportsViewModel: ObservableObject {
             computeTotalValue(for: items)
         } catch {
             Logger.log(error, extra: ["description": "Failed to fetch inventory for reports"])
+        }
+    }
+
+    func fetchSales() async {
+        do {
+            sales = try await salesService.fetchSales()
+            totalSalesValue = sales.compactMap { $0.price }.reduce(0, +)
+        } catch {
+            Logger.log(error, extra: ["description": "Failed to fetch sales for reports"])
         }
     }
 
@@ -69,9 +85,13 @@ final class ReportsViewModel: ObservableObject {
 
     var filteredItems: [Item] {
         let q = query.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !q.isEmpty else { return items }
+        var base = items
+        if !includeSoldItems {
+            base = base.filter { $0.status != .sold }
+        }
+        guard !q.isEmpty else { return base }
 
-        return items.filter { item in
+        return base.filter { item in
             if item.name.lowercased().contains(q) { return true }
             if item.description.lowercased().contains(q) { return true }
             if let tag = item.propertyTag?.label.lowercased(), tag.contains(q) { return true }

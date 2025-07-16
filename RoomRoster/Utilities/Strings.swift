@@ -226,6 +226,9 @@ struct Strings {
         static let searchPlaceholder = "Search items..."
         static let searchResults = "Results"
         static let clearSearch = "Clear"
+        static let salesOverview = "Sales Overview"
+        static let totalSold = "Total Sold"
+        static let totalRevenue = "Total Revenue"
     }
 
     // MARK: - SheetsView
@@ -238,6 +241,8 @@ struct Strings {
     struct sales {
         static let title = "Sales"
         static let comingSoon = "Sales - Coming Soon"
+        static let emptyState = "No sales recorded"
+        static let failedToLoad = "Failed to load sales. Please try again."
     }
 
     // MARK: - SellItemView

@@ -30,6 +30,13 @@ actor SalesService {
         try await networkService.sendRequest(request)
     }
 
+    func fetchSales() async throws -> [Sale] {
+        let url = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Sales?key=\(apiKey)"
+        Logger.network("SalesService-fetchSales")
+        let sheet: GoogleSheetsResponse = try await networkService.fetchData(from: url)
+        return sheet.values.dropFirst().compactMap { Sale(from: $0) }
+    }
+
     func sendReceipts(to buyerEmail: String, sellerEmail: String, sale: Sale) async {
         let subject = "Sale Receipt for \(sale.itemId)"
         let body = "Item sold on \(sale.date.toShortString()) for \(sale.price ?? 0)"
