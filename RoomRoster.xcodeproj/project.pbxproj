@@ -126,6 +126,7 @@
 		B6E684D42DD176D900EE608B /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		B6F9648F2DB021CD0093089A /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B6F964912DB028E80093089A /* ImageUploadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadService.swift; sourceTree = "<group>"; };
+		41369DE8A719427EAB0ABC40 /* ci-test.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci-test.sh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -225,6 +226,7 @@
 				767B058E2D4C5DC000566C25 /* RoomRoster */,
 				767B05A22D4C5DC400566C25 /* RoomRosterTests */,
 				767B05AC2D4C5DC400566C25 /* RoomRosterUITests */,
+				3E25700189AF441A8937F22E /* Scripts */,
 				767B058D2D4C5DC000566C25 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -303,6 +305,14 @@
 				B6A6D6DB2DD8FD4E00378BFF /* ErrorBanner.swift */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		3E25700189AF441A8937F22E /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				41369DE8A719427EAB0ABC40 /* ci-test.sh */,
+			);
+			path = Scripts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
