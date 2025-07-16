@@ -107,8 +107,8 @@ struct CreateItemView: View {
                                     }
                             }
                         }
-                    }
-                }, header: { Text(l10n.basicInfo.title) })
+                    }, header: { Text(l10n.basicInfo.title) })
+                }
 
                 Section {
                     HStack {
@@ -187,5 +187,5 @@ struct CreateItemView: View {
             }
         }
     }
-}
+    
 
