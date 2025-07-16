@@ -257,9 +257,9 @@
 				3758A93BD9E24318B74E47C2 /* SalesService.swift */,
 				C01D35FCE10EB02BEFD65D29 /* GmailService.swift */,
 				013FD279BBA14C5E965646A5 /* ReceiptPDFGenerator.swift */,
-				);
-path = Services;
-sourceTree = "<group>";
+                                );
+				path = Services;
+				sourceTree = "<group>";
                 };
 				767B05832D4C5DC000566C25 = {
 			isa = PBXGroup;
