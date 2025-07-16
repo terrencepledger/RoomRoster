@@ -38,7 +38,7 @@ jobs:
           -project RoomRoster.xcodeproj \
           -scheme RoomRoster \
           -sdk iphonesimulator \
-          -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
+          -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.0' \
           CODE_SIGNING_ALLOWED=NO \
           OTHER_SWIFT_FLAGS="$OTHER_SWIFT_FLAGS"
     # ────────────── 5. Optional: capture DerivedData if the build fails ───────
