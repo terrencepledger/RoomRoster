@@ -81,8 +81,8 @@ final class HistoryLogService {
         if let existingRowIndex = historyResponse.values.firstIndex(where: { $0.first == itemId }) {
             let existingRow = historyResponse.values[existingRowIndex]
             let nextColIndex = existingRow.count + 1
-            let startColLetter = columnName(for: nextColIndex)
-            let endColLetter = columnName(for: nextColIndex + logEntries.count - 1)
+            let startColLetter = SheetsUtils.columnName(for: nextColIndex)
+            let endColLetter = SheetsUtils.columnName(for: nextColIndex + logEntries.count - 1)
             let spreadsheetRow = existingRowIndex + 1
             let updateRange = "HistoryLog!\(startColLetter)\(spreadsheetRow):\(endColLetter)\(spreadsheetRow)"
 
@@ -106,17 +106,6 @@ final class HistoryLogService {
             )
             try await NetworkService.shared.sendRequest(request)
         }
-    }
-
-    private func columnName(for index: Int) -> String {
-        var result = ""
-        var number = index
-        while number > 0 {
-            let remainder = (number - 1) % 26
-            result = String(UnicodeScalar(65 + remainder)!) + result
-            number = (number - 1) / 26
-        }
-        return result
     }
 
     private func detectItemChanges(old: Item, new: Item, updatedBy: String) -> [HistoryAction] {
