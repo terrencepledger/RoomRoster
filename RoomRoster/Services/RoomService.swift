@@ -13,21 +13,20 @@ enum RoomServiceError: Error {
 }
 
 struct RoomService {
-    private let sheetId: String
-    private let apiKey: String
+    private let manager: InventoryManager
     private let networkService: NetworkServiceProtocol
 
     init(
-        sheetId: String = AppConfig.shared.sheetId,
-        apiKey: String = AppConfig.shared.apiKey,
+        manager: InventoryManager = .shared,
         networkService: NetworkServiceProtocol = NetworkService.shared
     ) {
-        self.sheetId = sheetId
-        self.apiKey = apiKey
+        self.manager = manager
         self.networkService = networkService
     }
 
     func fetchRooms() async throws -> [Room] {
+        let sheetId = await manager.sheetId
+        let apiKey = await manager.apiKey
         Logger.network("RoomService-fetchRooms")
         let response: GoogleSheetsResponse = try await networkService.fetchData(
             from: "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Rooms!A:A?key=\(apiKey)"
@@ -39,6 +38,8 @@ struct RoomService {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { throw RoomServiceError.invalidName }
 
+        let sheetId = await manager.sheetId
+        let apiKey = await manager.apiKey
         let url = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Rooms:append?valueInputOption=USER_ENTERED"
         let payload: [String: Any] = ["values": [[trimmed]]]
         Logger.network("RoomService-addRoom")

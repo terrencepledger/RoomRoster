@@ -60,6 +60,7 @@
 		B6F9649F2DB02BB60093089A /* FirebaseAppDistribution-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = B6F9649E2DB02BB60093089A /* FirebaseAppDistribution-Beta */; };
 		B6F964A12DB02C470093089A /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964A02DB02C470093089A /* FirebaseAuth */; };
 		B6F964A32DB02C470093089A /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964A22DB02C470093089A /* FirebaseStorage */; };
+		1CF49481D6A349CFA17334BD /* InventoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC0C435A0D974E1B93E47816 /* InventoryManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -126,6 +127,7 @@
 		B6E684D42DD176D900EE608B /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		B6F9648F2DB021CD0093089A /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B6F964912DB028E80093089A /* ImageUploadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadService.swift; sourceTree = "<group>"; };
+		FC0C435A0D974E1B93E47816 /* InventoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,6 +216,7 @@
 				767E82C82D8F1AA500B48011 /* NetworkService.swift */,
 				B61A9BD32DD65FE900D04E9A /* HistoryLogService.swift */,
 				767E82C62D8F1A2B00B48011 /* InventoryService.swift */,
+				FC0C435A0D974E1B93E47816 /* InventoryManager.swift */,
 				B6F964912DB028E80093089A /* ImageUploadService.swift */,
 			);
 			path = Services;
@@ -443,6 +446,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				767E82C72D8F1A2B00B48011 /* InventoryService.swift in Sources */,
+				1CF49481D6A349CFA17334BD /* InventoryManager.swift in Sources */,
 				767B05C12D4C666F00566C25 /* ItemDetailsView.swift in Sources */,
 				767E82CB2D8F1B2C00B48011 /* ItemDetailsViewModel.swift in Sources */,
 				B65F71302DEB5C5200310D40 /* ItemValidator.swift in Sources */,

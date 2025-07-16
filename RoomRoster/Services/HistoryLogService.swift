@@ -35,8 +35,7 @@ enum HistoryLogError: Error, LocalizedError {
 
 final class HistoryLogService {
     static let shared = HistoryLogService()
-    private let sheetId = AppConfig.shared.sheetId
-    private let apiKey = AppConfig.shared.apiKey
+    private let manager: InventoryManager = .shared
 
     func logChanges(old: Item, new: Item, updatedBy: String?) async {
         let user = updatedBy ?? "Unknown"
@@ -74,6 +73,8 @@ final class HistoryLogService {
     }
 
     private func appendHistoryEntries(for itemId: String, logEntries: [String]) async throws {
+        let sheetId = await manager.sheetId
+        let apiKey = await manager.apiKey
         let historyURLString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/HistoryLog?key=\(apiKey)"
         Logger.network("HistoryLogService-appendHistoryEntries")
         let historyResponse: GoogleSheetsResponse = try await NetworkService.shared.fetchData(from: historyURLString)
@@ -86,6 +87,7 @@ final class HistoryLogService {
             let spreadsheetRow = existingRowIndex + 1
             let updateRange = "HistoryLog!\(startColLetter)\(spreadsheetRow):\(endColLetter)\(spreadsheetRow)"
 
+            let sheetId = await manager.sheetId
             let updateURLString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/\(updateRange)?valueInputOption=USER_ENTERED"
             guard let updateURL = URL(string: updateURLString) else { throw NetworkError.invalidURL }
 
@@ -96,6 +98,7 @@ final class HistoryLogService {
             )
             try await NetworkService.shared.sendRequest(request)
         } else {
+            let sheetId = await manager.sheetId
             let appendURLString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/HistoryLog:append?valueInputOption=USER_ENTERED"
             guard let appendURL = URL(string: appendURLString) else { throw NetworkError.invalidURL }
 

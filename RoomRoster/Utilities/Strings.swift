@@ -193,14 +193,11 @@ struct Strings {
     // MARK: - SettingsView
     struct settings {
         static let title = "Settings"
-        static let comingSoon = "Settings - Coming Soon"
-//        static let accountSection       = "Account"
-//        static let signOutButton        = "Sign Out"
-//        static let appSettingsSection   = "App Settings"
-//        static let darkModeToggle       = "Dark Mode"
-//        static let aboutSection         = "About"
-//        static let versionLabel         = "Version"
-//        static let feedbackButton       = "Send Feedback"
+        static let currentInventory = "Current Inventory"
+        static let changeInventory = "Switch Inventory"
+        static let sheetIdField = "Sheet ID"
+        static let apiKeyField = "API Key"
+        static let loadButton = "Load Inventory"
     }
 
     // MARK: - ReportsView

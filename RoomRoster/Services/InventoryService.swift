@@ -8,21 +8,20 @@
 import Foundation
 
 actor InventoryService {
-    private let sheetId: String
-    private let apiKey: String
+    private let manager: InventoryManager
     private var cachedHistory: GoogleSheetsResponse?
     private let networkService: NetworkServiceProtocol
     init(
-        sheetId: String = AppConfig.shared.sheetId,
-        apiKey: String = AppConfig.shared.apiKey,
+        manager: InventoryManager = .shared,
         networkService: NetworkServiceProtocol = NetworkService.shared
     ) {
-        self.sheetId = sheetId
-        self.apiKey = apiKey
+        self.manager = manager
         self.networkService = networkService
     }
 
     func fetchInventory() async throws -> GoogleSheetsResponse {
+        let sheetId = await manager.sheetId
+        let apiKey = await manager.apiKey
         let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Inventory?key=\(apiKey)"
         Logger.network("InventoryService-fetchInventory")
         return try await networkService.fetchData(from: urlString)
@@ -41,6 +40,8 @@ actor InventoryService {
 
     func fetchAllHistory() async throws -> GoogleSheetsResponse {
         if let sheet = cachedHistory { return sheet }
+        let sheetId = await manager.sheetId
+        let apiKey = await manager.apiKey
         let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/HistoryLog!A:Z?key=\(apiKey)"
         Logger.network("InventoryService-fetchHistory")
         let sheet: GoogleSheetsResponse = try await networkService.fetchData(from: urlString)
@@ -55,6 +56,8 @@ actor InventoryService {
     }
 
     func createItem(_ item: Item) async throws {
+        let sheetId = await manager.sheetId
+        let apiKey = await manager.apiKey
         let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Inventory:append?valueInputOption=USER_ENTERED"
         guard let url = URL(string: urlString) else {
             throw NetworkError.invalidURL
@@ -82,6 +85,8 @@ actor InventoryService {
     func updateItem(_ item: Item) async throws {
         let rowNumber = try await getRowNumber(for: item.id)
         let range = "Inventory!A\(rowNumber):L\(rowNumber)"
+        let sheetId = await manager.sheetId
+        let apiKey = await manager.apiKey
         let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/\(range)?valueInputOption=USER_ENTERED"
 
         guard let url = URL(string: urlString) else {
