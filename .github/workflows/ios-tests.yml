@@ -14,34 +14,16 @@ jobs:
     # ────────────────────────────── 1. Checkout ──────────────────────────────
     - uses: actions/checkout@v4
 
-    # ─────────────────────── 2. Stub plist files required at build ───────────
-    - name: Create dummy plist files
+    # ─────────────────────── 2. Prepare configuration ────────────────────────
+    - name: Copy example plist files
       run: |
-        mkdir -p RoomRoster/RoomRoster/RoomRoster
-        cat > RoomRoster/RoomRoster/RoomRoster/Secrets.plist <<'EOF'
-        <?xml version="1.0" encoding="UTF-8"?>
-        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" \
-          "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-        <plist version="1.0"><dict>
-          <key>API_KEY</key><string>${{ secrets.CI_FAKE_API_KEY || 'ci-fake-key' }}</string>
-          <key>SHEET_ID</key><string>${{ secrets.CI_FAKE_SHEET_ID || 'ci-fake-sheet-id' }}</string>
-        </dict></plist>
-        EOF
+        cp RoomRoster/Secrets-Example.plist RoomRoster/Secrets.plist
+        cp RoomRoster/GoogleService-Info-Example.plist RoomRoster/GoogleService-Info.plist
 
-        cat > RoomRoster/RoomRoster/RoomRoster/GoogleService-Info.plist <<'EOF'
-        <?xml version="1.0" encoding="UTF-8"?>
-        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" \
-          "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-        <plist version="1.0"><dict>
-          <key>BUNDLE_ID</key><string>com.example.ci</string>
-        </dict></plist>
-        EOF
-
-    # ──────────────────── 3. Build + run all unit tests (iOS) ────────────────
+    # ────────────────────────── 3. Run unit tests ────────────────────────────
     - name: Run unit tests
       env:
-        # Experimental language flags you already use
-        OTHER_SWIFT_FLAGS: >
+        OTHER_SWIFT_FLAGS: >-
           -Xfrontend -enable-experimental-feature -Xfrontend AccessLevelOnImport
           -Xfrontend -enable-experimental-feature -Xfrontend TypedThrows
         NSUnbufferedIO: "YES"          # live log streaming
@@ -54,7 +36,6 @@ jobs:
           -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
           CODE_SIGNING_ALLOWED=NO \
           OTHER_SWIFT_FLAGS="$OTHER_SWIFT_FLAGS"
-
     # ───────────── 4. Optional: capture DerivedData if the build fails ───────
     - name: Upload DerivedData (on failure)
       if: failure()
