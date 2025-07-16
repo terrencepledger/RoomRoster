@@ -17,18 +17,20 @@ struct SalesView: View {
                         .foregroundColor(.secondary)
                 } else {
                     ForEach(Array(viewModel.sales.enumerated()), id: \.offset) { i, sale in
-                        VStack(alignment: .leading) {
-                            Text(sale.itemId)
-                                .font(.headline)
-                            HStack {
-                                Text(sale.date.toShortString())
-                                Spacer()
-                                if let price = sale.price {
-                                    Text("$\(price, specifier: "%.2f")")
+                        NavigationLink(destination: SalesDetailsView(sale: sale, itemName: viewModel.itemName(for: sale))) {
+                            VStack(alignment: .leading) {
+                                Text(viewModel.itemName(for: sale))
+                                    .font(.headline)
+                                HStack {
+                                    Text(sale.date.toShortString())
+                                    Spacer()
+                                    if let price = sale.price {
+                                        Text("$\(price, specifier: "%.2f")")
+                                    }
                                 }
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
                             }
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
                         }
                     }
                 }
@@ -36,6 +38,7 @@ struct SalesView: View {
             .navigationTitle(l10n.title)
         }
         .task { await viewModel.loadSales() }
+        .refreshable { await viewModel.loadSales() }
         .onAppear { Logger.page("SalesView") }
     }
 }

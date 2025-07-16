@@ -259,4 +259,16 @@ struct Strings {
         static let soldBy = "Sold By"
         static let department = "Department"
     }
+
+    // MARK: - SaleDetailsView
+    struct saleDetails {
+        static let title = "Sale Details"
+        static let price = "Price:"
+        static let condition = "Condition:"
+        static let date = "Date:"
+        static let buyerName = "Buyer:"
+        static let buyerContact = "Contact:"
+        static let soldBy = "Sold By:"
+        static let department = "Department:"
+    }
 }
