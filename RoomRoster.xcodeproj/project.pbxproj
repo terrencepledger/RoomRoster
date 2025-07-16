@@ -149,6 +149,7 @@
 		BF137618CD644A1997B55ED6 /* MockNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkService.swift; sourceTree = "<group>"; };
 		614508236AFA4269887FF35A /* RoomServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomServiceTests.swift; sourceTree = "<group>"; };
 		4AC01C73ED7A4FBC9EECB3D3 /* ViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelTests.swift; sourceTree = "<group>"; };
+		8BC8C5F5D40748AD93602E33 /* SalesServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesServiceTests.swift; sourceTree = "<group>"; };
 		12FE82B0693248D49E8D77BB /* ReportsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportsViewModel.swift; sourceTree = "<group>"; };
 		70EC0F7257914A11A7589F29 /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
 		68CAB974B03A4708BB968FC8 /* SellItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellItemView.swift; sourceTree = "<group>"; };
@@ -312,6 +313,7 @@ sourceTree = "<group>";
 				BF137618CD644A1997B55ED6 /* MockNetworkService.swift */,
 				614508236AFA4269887FF35A /* RoomServiceTests.swift */,
 				4AC01C73ED7A4FBC9EECB3D3 /* ViewModelTests.swift */,
+				8BC8C5F5D40748AD93602E33 /* SalesServiceTests.swift */,
 			);
 			path = RoomRosterTests;
 			sourceTree = "<group>";
@@ -542,6 +544,7 @@ sourceTree = "<group>";
 			E9FBF450607D494DA1894333 /* MockNetworkService.swift in Sources */,
 			DE7D257232324BDDB96C6F37 /* RoomServiceTests.swift in Sources */,
 			7DB3EA08C76F4E048B379677 /* ViewModelTests.swift in Sources */,
+			A787349732EA468CB09F1E52 /* SalesServiceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			};
