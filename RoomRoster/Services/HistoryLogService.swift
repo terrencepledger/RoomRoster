@@ -7,6 +7,7 @@ enum HistoryAction: CustomStringConvertible {
     case created(by: String, date: Date)
     case edited(field: String, oldValue: String, newValue: String, by: String, date: Date)
     case deleted(by: String, date: Date)
+    case sold(price: Double?, buyer: String, by: String, date: Date)
 
     var description: String {
         switch self {
@@ -18,6 +19,10 @@ enum HistoryAction: CustomStringConvertible {
 
         case .deleted(let by, let date):
             return "Deleted by \(by) on \(date.toShortString())"
+
+        case .sold(let price, let buyer, let by, let date):
+            let priceString = price.map { "\($0)" } ?? "0"
+            return "Sold to \(buyer) for \(priceString) by \(by) on \(date.toShortString())"
         }
     }
 }
@@ -58,6 +63,16 @@ final class HistoryLogService {
 
         let action = HistoryAction.created(by: user, date: Date())
         await appendHistoryLog(for: item.id, action: action)
+    }
+
+    func logSale(_ sale: Sale) async {
+        let action = HistoryAction.sold(
+            price: sale.price,
+            buyer: sale.buyerName,
+            by: sale.soldBy,
+            date: sale.date
+        )
+        await appendHistoryLog(for: sale.itemId, action: action)
     }
 
     private func appendHistoryLog(for itemId: String, action: HistoryAction) async {
