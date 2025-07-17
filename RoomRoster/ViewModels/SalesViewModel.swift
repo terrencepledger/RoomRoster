@@ -29,6 +29,7 @@ final class SalesViewModel: ObservableObject {
         } catch {
             Logger.log(error, extra: ["description": "Failed to load sales"])
             errorMessage = Strings.sales.failedToLoad
+            HapticManager.shared.error()
         }
     }
 

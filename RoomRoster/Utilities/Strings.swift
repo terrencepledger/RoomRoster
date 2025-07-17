@@ -207,11 +207,11 @@ struct Strings {
         static let accountSection = "Account"
         static let signInButton = "Sign In"
         static let signOutButton = "Sign Out"
-//        static let appSettingsSection   = "App Settings"
-//        static let darkModeToggle       = "Dark Mode"
-//        static let aboutSection         = "About"
-//        static let versionLabel         = "Version"
-//        static let feedbackButton       = "Send Feedback"
+        static let appSettingsSection   = "App Settings"
+        static let darkModeToggle       = "Dark Mode"
+        static let aboutSection         = "About"
+        static let versionLabel         = "Version"
+        static let hapticsToggle        = "Haptics"
     }
 
     // MARK: - ReportsView

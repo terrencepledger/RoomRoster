@@ -15,9 +15,11 @@ struct RoomRosterApp: App {
         FirebaseApp.configure()
         Logger.initialize()
     }
+    @AppStorage("isDarkMode") private var isDarkMode = false
     var body: some Scene {
         WindowGroup {
             MainMenuView()
+                .preferredColorScheme(isDarkMode ? .dark : .light)
         }
     }
 }

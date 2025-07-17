@@ -65,6 +65,7 @@ final class CreateItemViewModel: ObservableObject {
             rooms = try await roomService.fetchRooms()
         } catch {
             errorMessage = l10n.errors.loadRoomsFailed
+            HapticManager.shared.error()
         }
     }
 
@@ -86,6 +87,7 @@ final class CreateItemViewModel: ObservableObject {
             newItem.imageURL = url.absoluteString
         } catch {
             uploadError = Strings.createItem.errors.imageUpload(error.localizedDescription)
+            HapticManager.shared.error()
         }
         isUploading = false
     }
@@ -122,6 +124,7 @@ final class CreateItemViewModel: ObservableObject {
         } catch {
             newItem.lastKnownRoom = Room.placeholder()
             errorMessage = l10n.errors.addRoomFailed
+            HapticManager.shared.error()
         }
         newRoomName = ""
         showingAddRoomPrompt = false
@@ -135,6 +138,7 @@ final class CreateItemViewModel: ObservableObject {
             onSave?(newItem)
         } catch {
             errorMessage = l10n.errors.saveFailed
+            HapticManager.shared.error()
         }
     }
 
