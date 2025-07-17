@@ -9,6 +9,7 @@ RoomRoster is a SwiftUI-based inventory management application that integrates w
 - **History Logs:** Fetches and displays the history log for each item from a dedicated Google Sheets range.
 - **Edit Functionality:** Allows users to edit item details via a dedicated editing view.
 - **Sales Tracking:** Record item sales with buyer information and condition while emailing receipts.
+- **Visual Reports:** Inventory and sales reports display bar and pie charts powered by Apple's Charts framework.
 - **Modern Concurrency:** Utilizes Swift's async/await for cleaner and more efficient asynchronous networking.
 - **Clean Architecture:** Implements a clear separation of concerns with dedicated networking and service layers, view models, and SwiftUI views.
 
