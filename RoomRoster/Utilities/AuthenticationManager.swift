@@ -23,6 +23,9 @@ class AuthenticationManager: ObservableObject {
             self.isSignedIn = true
             self.accessToken = user.accessToken.tokenString
             self.userName = user.profile?.name
+            self.email = user.profile?.email
+        } else {
+            Task { await restorePreviousSignIn() }
         }
     }
 
@@ -47,6 +50,19 @@ class AuthenticationManager: ObservableObject {
         self.accessToken = nil
         self.userName = nil
         self.isSignedIn = false
+    }
+
+    private func restorePreviousSignIn() async {
+        do {
+            if let user = try await GIDSignIn.sharedInstance.restorePreviousSignIn() {
+                self.isSignedIn = true
+                self.accessToken = user.accessToken.tokenString
+                self.userName = user.profile?.name
+                self.email = user.profile?.email
+            }
+        } catch {
+            Logger.log(error, extra: ["description": "Failed restoring sign in"]) 
+        }
     }
 
     private func triggerSignIn() async throws {
