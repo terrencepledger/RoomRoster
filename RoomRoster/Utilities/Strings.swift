@@ -238,6 +238,7 @@ struct Strings {
         static let comingSoon = "Sheets - Coming Soon"
         static let signInPrompt = "Sign in to view sheets"
         static let signInButton = "Sign In"
+        static let loading = "Loading Sheets..."
     }
 
     // MARK: - SalesView
