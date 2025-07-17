@@ -10,13 +10,25 @@ import SwiftUI
 private typealias l10n = Strings.settings
 
 struct SettingsView: View {
+    @StateObject private var auth = AuthenticationManager.shared
+    @StateObject private var sheets = SpreadsheetManager.shared
+
     var body: some View {
-        Text(l10n.comingSoon)
-            .font(.title)
-            .foregroundColor(.secondary)
-            .navigationTitle(l10n.title)
-            .onAppear {
-                Logger.page("SettingsView")
+        Form {
+            Section(l10n.accountSection) {
+                if auth.isSignedIn {
+                    Button(l10n.signOutButton) {
+                        auth.signOut()
+                        sheets.signOut()
+                    }
+                } else {
+                    Button(l10n.signInButton) {
+                        Task { await auth.signIn() }
+                    }
+                }
             }
+        }
+        .navigationTitle(l10n.title)
+        .onAppear { Logger.page("SettingsView") }
     }
 }

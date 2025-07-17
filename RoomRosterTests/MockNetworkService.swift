@@ -13,6 +13,15 @@ final class MockNetworkService: NetworkServiceProtocol {
         return value as! T
     }
 
+    var authorizedFetchInputs: [URL] = []
+    var authorizedFetchResults: [Any] = []
+    func fetchAuthorizedData<T: Codable>(from url: URL) async throws -> T {
+        authorizedFetchInputs.append(url)
+        guard !authorizedFetchResults.isEmpty else { throw MockError.noResponse }
+        let value = authorizedFetchResults.removeFirst()
+        return value as! T
+    }
+
     var authorizedRequests: [(URL,String,[String:Any])] = []
     var requestToReturn = URLRequest(url: URL(string: "https://example.com")!)
     func authorizedRequest(url: URL, method: String, jsonBody: [String : Any]) async throws -> URLRequest {

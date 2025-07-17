@@ -204,9 +204,9 @@ struct Strings {
     // MARK: - SettingsView
     struct settings {
         static let title = "Settings"
-        static let comingSoon = "Settings - Coming Soon"
-//        static let accountSection       = "Account"
-//        static let signOutButton        = "Sign Out"
+        static let accountSection = "Account"
+        static let signInButton = "Sign In"
+        static let signOutButton = "Sign Out"
 //        static let appSettingsSection   = "App Settings"
 //        static let darkModeToggle       = "Dark Mode"
 //        static let aboutSection         = "About"

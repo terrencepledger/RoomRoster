@@ -1,25 +1,32 @@
 import Foundation
 
 actor SalesService {
-    private let sheetId: String
-    private let apiKey: String
+    private let sheetIdProvider: () -> String
     private let networkService: NetworkServiceProtocol
     private let gmailService: GmailService
 
     init(
-        sheetId: String = AppConfig.shared.sheetId,
-        apiKey: String = AppConfig.shared.apiKey,
+        sheetIdProvider: @escaping () -> String = { SpreadsheetManager.shared.currentSheet?.id ?? "" },
         networkService: NetworkServiceProtocol = NetworkService.shared,
         gmailService: GmailService = GmailService()
     ) {
-        self.sheetId = sheetId
-        self.apiKey = apiKey
+        self.sheetIdProvider = sheetIdProvider
+        self.networkService = networkService
+        self.gmailService = gmailService
+    }
+
+    init(
+        sheetId: String,
+        networkService: NetworkServiceProtocol = NetworkService.shared,
+        gmailService: GmailService = GmailService()
+    ) {
+        self.sheetIdProvider = { sheetId }
         self.networkService = networkService
         self.gmailService = gmailService
     }
 
     func recordSale(_ sale: Sale) async throws {
-        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Sales:append?valueInputOption=USER_ENTERED"
+        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetIdProvider())/values/Sales:append?valueInputOption=USER_ENTERED"
         guard let url = URL(string: urlString) else { throw NetworkError.invalidURL }
         let request = try await networkService.authorizedRequest(
             url: url,
@@ -37,9 +44,9 @@ actor SalesService {
     }
 
     func fetchSales() async throws -> [Sale] {
-        let url = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Sales?key=\(apiKey)"
+        guard let url = URL(string: "https://sheets.googleapis.com/v4/spreadsheets/\(sheetIdProvider())/values/Sales") else { throw NetworkError.invalidURL }
         Logger.network("SalesService-fetchSales")
-        let sheet: GoogleSheetsResponse = try await networkService.fetchData(from: url)
+        let sheet: GoogleSheetsResponse = try await networkService.fetchAuthorizedData(from: url)
         return sheet.values.dropFirst().compactMap { Sale(from: $0) }
     }
 

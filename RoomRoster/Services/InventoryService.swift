@@ -8,24 +8,30 @@
 import Foundation
 
 actor InventoryService {
-    private let sheetId: String
-    private let apiKey: String
+    private let sheetIdProvider: () -> String
     private var cachedHistory: GoogleSheetsResponse?
     private let networkService: NetworkServiceProtocol
     init(
-        sheetId: String = AppConfig.shared.sheetId,
-        apiKey: String = AppConfig.shared.apiKey,
+        sheetIdProvider: @escaping () -> String = { SpreadsheetManager.shared.currentSheet?.id ?? "" },
         networkService: NetworkServiceProtocol = NetworkService.shared
     ) {
-        self.sheetId = sheetId
-        self.apiKey = apiKey
+        self.sheetIdProvider = sheetIdProvider
+        self.networkService = networkService
+    }
+
+    init(
+        sheetId: String,
+        networkService: NetworkServiceProtocol = NetworkService.shared
+    ) {
+        self.sheetIdProvider = { sheetId }
         self.networkService = networkService
     }
 
     func fetchInventory() async throws -> GoogleSheetsResponse {
-        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Inventory?key=\(apiKey)"
+        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetIdProvider())/values/Inventory"
+        guard let url = URL(string: urlString) else { throw NetworkError.invalidURL }
         Logger.network("InventoryService-fetchInventory")
-        return try await networkService.fetchData(from: urlString)
+        return try await networkService.fetchAuthorizedData(from: url)
     }
 
     /// Convenience method to fetch a single item from the inventory sheet.
@@ -41,9 +47,10 @@ actor InventoryService {
 
     func fetchAllHistory() async throws -> GoogleSheetsResponse {
         if let sheet = cachedHistory { return sheet }
-        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/HistoryLog!A:Z?key=\(apiKey)"
+        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetIdProvider())/values/HistoryLog!A:Z"
+        guard let url = URL(string: urlString) else { throw NetworkError.invalidURL }
         Logger.network("InventoryService-fetchHistory")
-        let sheet: GoogleSheetsResponse = try await networkService.fetchData(from: urlString)
+        let sheet: GoogleSheetsResponse = try await networkService.fetchAuthorizedData(from: url)
         cachedHistory = sheet
         return sheet
     }
@@ -55,7 +62,7 @@ actor InventoryService {
     }
 
     func createItem(_ item: Item) async throws {
-        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Inventory:append?valueInputOption=USER_ENTERED"
+        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetIdProvider())/values/Inventory:append?valueInputOption=USER_ENTERED"
         guard let url = URL(string: urlString) else {
             throw NetworkError.invalidURL
         }
@@ -82,7 +89,7 @@ actor InventoryService {
     func updateItem(_ item: Item) async throws {
         let rowNumber = try await getRowNumber(for: item.id)
         let range = "Inventory!A\(rowNumber):L\(rowNumber)"
-        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/\(range)?valueInputOption=USER_ENTERED"
+        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetIdProvider())/values/\(range)?valueInputOption=USER_ENTERED"
 
         guard let url = URL(string: urlString) else {
             throw NetworkError.invalidURL

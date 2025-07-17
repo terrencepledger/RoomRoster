@@ -10,8 +10,6 @@ import Foundation
 struct AppConfig {
     static let shared = AppConfig()
     
-    let sheetId: String
-    let apiKey: String
     let sentryDSN: String?
     
     private init() {
@@ -21,13 +19,6 @@ struct AppConfig {
             fatalError("Unable to load Secrets.plist")
         }
         
-        guard let sheetId = plist["SheetID"] as? String,
-              let apiKey = plist["GoogleSheetsAPIKey"] as? String else {
-            fatalError("Missing keys in Secrets.plist")
-        }
-
-        self.sheetId = sheetId
-        self.apiKey = apiKey
         self.sentryDSN = plist["SentryDSN"] as? String
     }
 }
