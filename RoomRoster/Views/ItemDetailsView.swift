@@ -228,11 +228,7 @@ struct ItemDetailsView: View {
             Logger.page("ItemDetailsView")
         }
         .onAppear {
-            Task {
-                if !AuthenticationManager.shared.isSignedIn {
-                    await AuthenticationManager.shared.signIn()
-                }
-            }
+            Task { await AuthenticationManager.shared.signIn() }
         }
         .task {
             await viewModel.fetchItemHistory(for: item.id)

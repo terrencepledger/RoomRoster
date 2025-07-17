@@ -181,11 +181,7 @@ struct CreateItemView: View {
                 }
             }
             .task {
-                Task {
-                    if !AuthenticationManager.shared.isSignedIn {
-                        await viewModel.signIn()
-                    }
-                }
+                Task { await viewModel.signIn() }
                 Task { await viewModel.loadRooms() }
             }
             .onAppear {

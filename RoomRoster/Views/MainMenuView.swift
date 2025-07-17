@@ -49,11 +49,7 @@ struct MainMenuView: View {
             HapticManager.shared.impact()
         }
         .onAppear {
-            Task {
-                if !auth.isSignedIn {
-                    await auth.signIn()
-                }
-            }
+            Task { await auth.signIn() }
         }
     }
 }

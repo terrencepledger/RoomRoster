@@ -20,28 +20,29 @@ class AuthenticationManager: ObservableObject {
 
     private init() {
         if let user = GIDSignIn.sharedInstance.currentUser {
-            self.isSignedIn = true
-            self.accessToken = user.accessToken.tokenString
-            self.userName = user.profile?.name
-            self.email = user.profile?.email
-        } else {
-            Task { await restorePreviousSignIn() }
+            updateUser(from: user)
         }
     }
 
     func signIn() async {
         if let user = GIDSignIn.sharedInstance.currentUser {
-            self.isSignedIn = true
-            self.accessToken = user.accessToken.tokenString
-            self.userName = user.profile?.name
+            updateUser(from: user)
             return
         }
+
+        do {
+            if let restored = try await GIDSignIn.sharedInstance.restorePreviousSignIn() {
+                updateUser(from: restored)
+                return
+            }
+        } catch {
+            Logger.log(error, extra: ["description": "Failed restoring sign in"])
+        }
+
         do {
             try await triggerSignIn()
         } catch {
-            Logger.log(error, extra: [
-                "description": "Failed signing in"
-            ])
+            Logger.log(error, extra: ["description": "Failed signing in"])
         }
     }
 
@@ -52,17 +53,11 @@ class AuthenticationManager: ObservableObject {
         self.isSignedIn = false
     }
 
-    private func restorePreviousSignIn() async {
-        do {
-            if let user = try await GIDSignIn.sharedInstance.restorePreviousSignIn() {
-                self.isSignedIn = true
-                self.accessToken = user.accessToken.tokenString
-                self.userName = user.profile?.name
-                self.email = user.profile?.email
-            }
-        } catch {
-            Logger.log(error, extra: ["description": "Failed restoring sign in"]) 
-        }
+    private func updateUser(from user: GIDGoogleUser) {
+        self.accessToken = user.accessToken.tokenString
+        self.userName = user.profile?.name
+        self.email = user.profile?.email
+        self.isSignedIn = true
     }
 
     private func triggerSignIn() async throws {
@@ -86,9 +81,6 @@ class AuthenticationManager: ObservableObject {
         )
 
         let user = result.user
-        self.accessToken = user.accessToken.tokenString
-        self.userName = user.profile?.name
-        self.email = user.profile?.email
-        self.isSignedIn = true
+        updateUser(from: user)
     }
 }
