@@ -13,6 +13,7 @@ private typealias l10n = Strings.inventory
 
 struct InventoryView: View {
     @StateObject private var viewModel = InventoryViewModel()
+    @StateObject private var sheets = SpreadsheetManager.shared
     @State private var showCreateItemView = false
     @State private var expandedRooms: Set<Room> = []
     @State private var searchText: String = ""
@@ -39,62 +40,74 @@ struct InventoryView: View {
                 }
 
                 List {
-                    Section {
-                        TextField(l10n.searchPlaceholder, text: $searchText)
-                            .textFieldStyle(.roundedBorder)
+                    if sheets.currentSheet == nil {
+                        Text(l10n.selectSheetPrompt)
+                            .foregroundColor(.secondary)
+                    } else {
+                        Section {
+                            TextField(l10n.searchPlaceholder, text: $searchText)
+                                .textFieldStyle(.roundedBorder)
 
-                        Toggle(l10n.includeHistoryToggle, isOn: $includeHistoryInSearch)
-                            .font(.subheadline)
-                            .padding(.top, 4)
-                        Toggle(l10n.includeSoldToggle, isOn: $includeSoldItems)
-                            .font(.subheadline)
-                    }
-                    .padding(.horizontal)
+                            Toggle(l10n.includeHistoryToggle, isOn: $includeHistoryInSearch)
+                                .font(.subheadline)
+                                .padding(.top, 4)
+                            Toggle(l10n.includeSoldToggle, isOn: $includeSoldItems)
+                                .font(.subheadline)
+                        }
+                        .padding(.horizontal)
 
-                    ForEach(groupedItems, id: \.room) { group in
-                        Section(header: sectionHeader(for: group.room)) {
-                            if expandedRooms.contains(group.room) {
-                                ForEach(group.items, id: \.0.id) { (item, context) in
-                                    NavigationLink(destination: ItemDetailsView(item: item).environmentObject(viewModel)) {
-                                        VStack(alignment: .leading) {
-                                            Text(item.name).font(.headline)
-                                            Text(l10n.status(item.status.label))
-                                            if let tag = item.propertyTag {
-                                                Text(l10n.tag(tag.label))
-                                                    .font(.subheadline)
-                                                    .foregroundColor(.gray)
+                        if viewModel.items.isEmpty {
+                            Text(l10n.emptyState)
+                                .foregroundColor(.secondary)
+                        } else {
+                            ForEach(groupedItems, id: \.room) { group in
+                                Section(header: sectionHeader(for: group.room)) {
+                                    if expandedRooms.contains(group.room) {
+                                        ForEach(group.items, id: \.0.id) { (item, context) in
+                                            NavigationLink(destination: ItemDetailsView(item: item).environmentObject(viewModel)) {
+                                                VStack(alignment: .leading) {
+                                                    Text(item.name).font(.headline)
+                                                    Text(l10n.status(item.status.label))
+                                                    if let tag = item.propertyTag {
+                                                        Text(l10n.tag(tag.label))
+                                                            .font(.subheadline)
+                                                            .foregroundColor(.gray)
+                                                    }
+                                                    if !context.isEmpty {
+                                                        Text(l10n.matchedLabel(context))
+                                                            .font(.caption)
+                                                            .italic()
+                                                            .foregroundColor(.secondary)
+                                                    }
+                                                }
                                             }
-                                            if !context.isEmpty {
-                                                Text(l10n.matchedLabel(context))
-                                                    .font(.caption)
-                                                    .italic()
-                                                    .foregroundColor(.secondary)
-                                            }
+                                            .simultaneousGesture(
+                                                TapGesture().onEnded { HapticManager.shared.impact() }
+                                            )
                                         }
                                     }
-                                    .simultaneousGesture(
-                                        TapGesture().onEnded { HapticManager.shared.impact() }
-                                    )
                                 }
                             }
                         }
                     }
                 }
 
-                Button(action: {
-                    Logger.action("Pressed Add Item Button")
-                    HapticManager.shared.impact()
-                    showCreateItemView.toggle()
-                }) {
-                    Image(systemName: "plus")
-                        .font(.system(size: 24))
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(Color.blue)
-                        .clipShape(Circle())
-                        .shadow(radius: 4)
+                if sheets.currentSheet != nil {
+                    Button(action: {
+                        Logger.action("Pressed Add Item Button")
+                        HapticManager.shared.impact()
+                        showCreateItemView.toggle()
+                    }) {
+                        Image(systemName: "plus")
+                            .font(.system(size: 24))
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.blue)
+                            .clipShape(Circle())
+                            .shadow(radius: 4)
+                    }
+                    .padding()
                 }
-                .padding()
             }
         }
         .sheet(isPresented: $showCreateItemView) {
@@ -130,10 +143,12 @@ struct InventoryView: View {
             Logger.page("InventoryView")
         }
         .task {
+            guard sheets.currentSheet != nil else { return }
             await viewModel.fetchInventory()
             await viewModel.loadRecentLogs(for: viewModel.items)
         }
         .refreshable {
+            guard sheets.currentSheet != nil else { return }
             await viewModel.fetchInventory()
             await viewModel.loadRecentLogs(for: viewModel.items)
         }
