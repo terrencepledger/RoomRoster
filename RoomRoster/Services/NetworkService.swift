@@ -38,6 +38,7 @@ struct NetworkService {
     }
 
     func fetchAuthorizedData<T: Codable>(from url: URL) async throws -> T {
+        await AuthenticationManager.shared.ensureSignedIn()
         guard let accessToken = await AuthenticationManager.shared.accessToken else {
             throw NSError(domain: "Auth", code: 401, userInfo: [NSLocalizedDescriptionKey: "User not signed in"])
         }
@@ -45,7 +46,14 @@ struct NetworkService {
         request.httpMethod = "GET"
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         Logger.network(url.absoluteString)
-        let (data, _) = try await URLSession.shared.data(for: request)
+        var (data, response) = try await URLSession.shared.data(for: request)
+        if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 401 {
+            await AuthenticationManager.shared.ensureSignedIn()
+            if let token = await AuthenticationManager.shared.accessToken {
+                request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+                (data, response) = try await URLSession.shared.data(for: request)
+            }
+        }
         do {
             return try JSONDecoder().decode(T.self, from: data)
         } catch {
@@ -59,6 +67,7 @@ struct NetworkService {
         method: String,
         jsonBody: [String: Any]
     ) async throws -> URLRequest {
+        await AuthenticationManager.shared.ensureSignedIn()
         guard let accessToken = await AuthenticationManager.shared.accessToken else {
             throw NSError(domain: "Auth", code: 401, userInfo: [NSLocalizedDescriptionKey: "User not signed in"])
         }
@@ -73,7 +82,16 @@ struct NetworkService {
 
     func sendRequest(_ request: URLRequest) async throws {
         Logger.network(request.debugDescription)
-        let (_, response) = try await URLSession.shared.data(for: request)
+        var currentRequest = request
+        var (data, response) = try await URLSession.shared.data(for: currentRequest)
+        if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 401 {
+            await AuthenticationManager.shared.ensureSignedIn()
+            if let token = await AuthenticationManager.shared.accessToken {
+                var retry = currentRequest
+                retry.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+                (data, response) = try await URLSession.shared.data(for: retry)
+            }
+        }
         guard let httpResponse = response as? HTTPURLResponse,
               (200..<300).contains(httpResponse.statusCode) else {
             throw NSError(domain: "Network", code: 500, userInfo: [NSLocalizedDescriptionKey: "Request failed with non-2xx response"])
