@@ -8,11 +8,11 @@
 import Foundation
 
 actor InventoryService {
-    private let sheetIdProvider: () -> String
+    private let sheetIdProvider: @MainActor () -> String?
     private var cachedHistory: GoogleSheetsResponse?
     private let networkService: NetworkServiceProtocol
     init(
-        sheetIdProvider: @escaping () -> String = { SpreadsheetManager.shared.currentSheet?.id ?? "" },
+        sheetIdProvider: @escaping @MainActor () -> String? = { SpreadsheetManager.shared.currentSheet?.id },
         networkService: NetworkServiceProtocol = NetworkService.shared
     ) {
         self.sheetIdProvider = sheetIdProvider
@@ -28,7 +28,8 @@ actor InventoryService {
     }
 
     func fetchInventory() async throws -> GoogleSheetsResponse {
-        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetIdProvider())/values/Inventory"
+        let sheetId = await MainActor.run { sheetIdProvider() } ?? ""
+        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Inventory"
         guard let url = URL(string: urlString) else { throw NetworkError.invalidURL }
         Logger.network("InventoryService-fetchInventory")
         return try await networkService.fetchAuthorizedData(from: url)
@@ -47,7 +48,8 @@ actor InventoryService {
 
     func fetchAllHistory() async throws -> GoogleSheetsResponse {
         if let sheet = cachedHistory { return sheet }
-        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetIdProvider())/values/HistoryLog!A:Z"
+        let sheetId = await MainActor.run { sheetIdProvider() } ?? ""
+        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/HistoryLog!A:Z"
         guard let url = URL(string: urlString) else { throw NetworkError.invalidURL }
         Logger.network("InventoryService-fetchHistory")
         let sheet: GoogleSheetsResponse = try await networkService.fetchAuthorizedData(from: url)
@@ -62,7 +64,8 @@ actor InventoryService {
     }
 
     func createItem(_ item: Item) async throws {
-        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetIdProvider())/values/Inventory:append?valueInputOption=USER_ENTERED"
+        let sheetId = await MainActor.run { sheetIdProvider() } ?? ""
+        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Inventory:append?valueInputOption=USER_ENTERED"
         guard let url = URL(string: urlString) else {
             throw NetworkError.invalidURL
         }
@@ -89,7 +92,8 @@ actor InventoryService {
     func updateItem(_ item: Item) async throws {
         let rowNumber = try await getRowNumber(for: item.id)
         let range = "Inventory!A\(rowNumber):L\(rowNumber)"
-        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetIdProvider())/values/\(range)?valueInputOption=USER_ENTERED"
+        let sheetId = await MainActor.run { sheetIdProvider() } ?? ""
+        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/\(range)?valueInputOption=USER_ENTERED"
 
         guard let url = URL(string: urlString) else {
             throw NetworkError.invalidURL

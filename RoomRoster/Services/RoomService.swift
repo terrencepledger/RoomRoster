@@ -13,11 +13,11 @@ enum RoomServiceError: Error {
 }
 
 struct RoomService {
-    private let sheetIdProvider: () -> String
+    private let sheetIdProvider: @MainActor () -> String?
     private let networkService: NetworkServiceProtocol
 
     init(
-        sheetIdProvider: @escaping () -> String = { SpreadsheetManager.shared.currentSheet?.id ?? "" },
+        sheetIdProvider: @escaping @MainActor () -> String? = { SpreadsheetManager.shared.currentSheet?.id },
         networkService: NetworkServiceProtocol = NetworkService.shared
     ) {
         self.sheetIdProvider = sheetIdProvider
@@ -34,7 +34,8 @@ struct RoomService {
 
     func fetchRooms() async throws -> [Room] {
         Logger.network("RoomService-fetchRooms")
-        guard let url = URL(string: "https://sheets.googleapis.com/v4/spreadsheets/\(sheetIdProvider())/values/Rooms!A:A") else { throw NetworkError.invalidURL }
+        let sheetId = await MainActor.run { sheetIdProvider() } ?? ""
+        guard let url = URL(string: "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Rooms!A:A") else { throw NetworkError.invalidURL }
         let response: GoogleSheetsResponse = try await networkService.fetchAuthorizedData(from: url)
         return response.values.compactMap { $0.first }.filter { !$0.isEmpty }.map { Room(name: $0) }
     }
@@ -43,7 +44,7 @@ struct RoomService {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { throw RoomServiceError.invalidName }
 
-        let sheetId = sheetIdProvider()
+        let sheetId = await MainActor.run { sheetIdProvider() } ?? ""
         guard sheetId.rangeOfCharacter(from: CharacterSet.urlPathAllowed.inverted) == nil else {
             throw NetworkError.invalidURL
         }
