@@ -48,6 +48,8 @@ struct MainMenuView: View {
         .onChange(of: selectedTab) { _, _ in
             HapticManager.shared.impact()
         }
-        .task { await auth.signIn() }
+        .onAppear {
+            Task { await auth.signIn() }
+        }
     }
 }
