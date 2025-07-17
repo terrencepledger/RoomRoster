@@ -10,6 +10,7 @@ import SwiftUI
 private typealias l10n = Strings.mainMenu
 
 struct MainMenuView: View {
+    @StateObject private var auth = AuthenticationManager.shared
     @State private var selectedTab = 0
 
     var body: some View {
@@ -47,5 +48,6 @@ struct MainMenuView: View {
         .onChange(of: selectedTab) { _, _ in
             HapticManager.shared.impact()
         }
+        .task { await auth.signIn() }
     }
 }
