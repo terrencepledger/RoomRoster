@@ -235,7 +235,6 @@ struct Strings {
     // MARK: - SheetsView
     struct sheets {
         static let title = "Sheets"
-        static let comingSoon = "Sheets - Coming Soon"
         static let signInPrompt = "Sign in to view sheets"
         static let signInButton = "Sign In"
     }
@@ -243,7 +242,6 @@ struct Strings {
     // MARK: - SalesView
     struct sales {
         static let title = "Sales"
-        static let comingSoon = "Sales - Coming Soon"
         static let emptyState = "No sales recorded"
         static let failedToLoad = "Failed to load sales. Please try again."
     }
