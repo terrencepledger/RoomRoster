@@ -30,6 +30,7 @@ class InventoryViewModel: ObservableObject {
         } catch {
             Logger.log(error, extra: ["description": "Failed to fetch rooms"])
             errorMessage = Strings.inventory.failedToLoadRooms
+            HapticManager.shared.error()
         }
     }
 
@@ -39,6 +40,7 @@ class InventoryViewModel: ObservableObject {
         } catch {
             Logger.log(error, extra: ["description": "Failed to add room"])
             errorMessage = Strings.inventory.failedToAddRoom
+            HapticManager.shared.error()
             return nil
         }
     }
@@ -52,6 +54,7 @@ class InventoryViewModel: ObservableObject {
                 "description": "Error fetching inventory"
             ])
             errorMessage = Strings.inventory.failedToLoad
+            HapticManager.shared.error()
         }
     }
 
@@ -71,6 +74,7 @@ class InventoryViewModel: ObservableObject {
         } catch {
             Logger.log(error, extra: ["context": "Failed to load item logs"])
             errorMessage = Strings.inventory.failedToLoadLogs
+            HapticManager.shared.error()
         }
     }
 }

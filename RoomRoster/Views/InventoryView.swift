@@ -72,6 +72,9 @@ struct InventoryView: View {
                                             }
                                         }
                                     }
+                                    .simultaneousGesture(
+                                        TapGesture().onEnded { HapticManager.shared.impact() }
+                                    )
                                 }
                             }
                         }
@@ -80,6 +83,7 @@ struct InventoryView: View {
 
                 Button(action: {
                     Logger.action("Pressed Add Item Button")
+                    HapticManager.shared.impact()
                     showCreateItemView.toggle()
                 }) {
                     Image(systemName: "plus")
@@ -111,6 +115,7 @@ struct InventoryView: View {
                                 withAnimation {
                                     viewModel.errorMessage = l10n.failedToSave
                                 }
+                                HapticManager.shared.error()
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
                                     withAnimation { viewModel.errorMessage = nil }
                                 }
@@ -210,6 +215,7 @@ struct InventoryView: View {
             } else {
                 expandedRooms.insert(room)
             }
+            HapticManager.shared.impact()
         }
     }
 }

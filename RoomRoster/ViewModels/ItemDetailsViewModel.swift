@@ -27,6 +27,7 @@ class ItemDetailsViewModel: ObservableObject {
             ])
             historyLogs = []
             errorMessage = Strings.itemDetails.failedToLoadHistory
+            HapticManager.shared.error()
         }
     }
 }
