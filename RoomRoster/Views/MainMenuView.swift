@@ -10,6 +10,8 @@ import SwiftUI
 private typealias l10n = Strings.mainMenu
 
 struct MainMenuView: View {
+    @StateObject private var auth = AuthenticationManager.shared
+
     var body: some View {
         TabView {
             InventoryView()
@@ -37,5 +39,6 @@ struct MainMenuView: View {
                     Label(l10n.settings, systemImage: "gearshape")
                 }
         }
+        .task { await auth.signIn() }
     }
 }
