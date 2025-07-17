@@ -16,18 +16,23 @@ struct SheetsView: View {
     var body: some View {
         Group {
             if auth.isSignedIn {
-                List {
-                    ForEach(manager.spreadsheets) { sheet in
-                        HStack {
-                            Text(sheet.name)
-                            Spacer()
-                            if sheet.id == manager.currentSheet?.id {
-                                Image(systemName: "checkmark")
-                                    .foregroundColor(.accentColor)
+                if manager.isLoading {
+                    ProgressView(l10n.loading)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    List {
+                        ForEach(manager.spreadsheets) { sheet in
+                            HStack {
+                                Text(sheet.name)
+                                Spacer()
+                                if sheet.id == manager.currentSheet?.id {
+                                    Image(systemName: "checkmark")
+                                        .foregroundColor(.accentColor)
+                                }
                             }
+                            .contentShape(Rectangle())
+                            .onTapGesture { manager.select(sheet) }
                         }
-                        .contentShape(Rectangle())
-                        .onTapGesture { manager.select(sheet) }
                     }
                 }
             } else {
@@ -44,6 +49,11 @@ struct SheetsView: View {
         .onAppear {
             Logger.page("SheetsView")
             Task { await manager.loadSheets() }
+        }
+        .onChange(of: auth.isSignedIn) { _, signedIn in
+            if signedIn {
+                Task { await manager.loadSheets() }
+            }
         }
     }
 }

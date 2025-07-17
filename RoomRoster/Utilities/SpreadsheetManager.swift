@@ -14,6 +14,7 @@ final class SpreadsheetManager: ObservableObject {
 
     @Published private(set) var spreadsheets: [Spreadsheet] = []
     @Published var currentSheet: Spreadsheet?
+    @Published private(set) var isLoading: Bool = false
 
     private let networkService: NetworkServiceProtocol
     private init(networkService: NetworkServiceProtocol = NetworkService.shared) {
@@ -26,6 +27,8 @@ final class SpreadsheetManager: ObservableObject {
 
     func loadSheets() async {
         guard AuthenticationManager.shared.isSignedIn else { return }
+        isLoading = true
+        defer { isLoading = false }
         do {
             let driveURL = URL(string: "https://www.googleapis.com/drive/v3/files?q=mimeType='application/vnd.google-apps.spreadsheet'&fields=files(id,name)")!
             let list: DriveFilesResponse = try await networkService.fetchAuthorizedData(from: driveURL)
