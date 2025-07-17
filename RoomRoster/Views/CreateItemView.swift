@@ -180,11 +180,9 @@ struct CreateItemView: View {
                     Button(Strings.general.cancel) { dismiss() }
                 }
             }
-            .task {
+            .onAppear {
                 Task { await viewModel.signIn() }
                 Task { await viewModel.loadRooms() }
-            }
-            .onAppear {
                 Logger.page("CreateItemView")
             }
         }

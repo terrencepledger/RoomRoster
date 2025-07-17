@@ -31,10 +31,9 @@ class AuthenticationManager: ObservableObject {
         }
 
         do {
-            if let restored = try await GIDSignIn.sharedInstance.restorePreviousSignIn() {
-                updateUser(from: restored)
-                return
-            }
+            let restored = try await GIDSignIn.sharedInstance.restorePreviousSignIn()
+            updateUser(from: restored)
+            return
         } catch {
             Logger.log(error, extra: ["description": "Failed restoring sign in"])
         }

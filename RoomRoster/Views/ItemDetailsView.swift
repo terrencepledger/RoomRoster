@@ -226,8 +226,6 @@ struct ItemDetailsView: View {
         }
         .onAppear {
             Logger.page("ItemDetailsView")
-        }
-        .onAppear {
             Task { await AuthenticationManager.shared.signIn() }
         }
         .task {
