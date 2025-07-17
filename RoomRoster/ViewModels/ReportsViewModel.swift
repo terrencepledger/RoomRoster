@@ -109,6 +109,18 @@ final class ReportsViewModel: ObservableObject {
         }
     }
 
+    var salesByMonth: [(date: Date, total: Double)] {
+        let calendar = Calendar.current
+        let groups = Dictionary(grouping: sales) { sale in
+            calendar.date(from: calendar.dateComponents([.year, .month], from: sale.date)) ?? sale.date
+        }
+        return groups.map { key, values in
+            let total = values.compactMap { $0.price }.reduce(0, +)
+            return (key, total)
+        }
+        .sorted { $0.date < $1.date }
+    }
+
     func exportCSV() -> URL? {
         let header = ItemField.allCases.map { $0.label }.joined(separator: ",")
         let lines: [String] = filteredItems.map { item in

@@ -1,4 +1,5 @@
 import SwiftUI
+import Charts
 
 private typealias l10n = Strings.reports
 
@@ -37,6 +38,15 @@ struct ReportsView: View {
                 }
 
                 Section(header: Text(l10n.inventorySummary)) {
+                    Chart {
+                        ForEach(Status.allCases, id: \.self) { status in
+                            let count = viewModel.statusCounts[status] ?? 0
+                            SectorMark(angle: .value("Count", count))
+                                .foregroundStyle(by: .value("Status", status.label))
+                        }
+                    }
+                    .frame(height: 180)
+
                     ForEach(Status.allCases, id: \.self) { status in
                         HStack {
                             Text(status.label)
@@ -52,6 +62,16 @@ struct ReportsView: View {
                 }
 
                 Section(header: Text(l10n.salesOverview)) {
+                    Chart {
+                        ForEach(viewModel.salesByMonth, id: \.date) { entry in
+                            BarMark(
+                                x: .value("Month", entry.date),
+                                y: .value("Revenue", entry.total)
+                            )
+                        }
+                    }
+                    .frame(height: 180)
+
                     HStack {
                         Text(l10n.totalSold)
                         Spacer()
@@ -65,6 +85,16 @@ struct ReportsView: View {
                 }
 
                 Section(header: Text(l10n.roomsSummary)) {
+                    Chart {
+                        ForEach(viewModel.roomCounts.keys.sorted(by: { $0.label < $1.label }), id: \.self) { room in
+                            BarMark(
+                                x: .value("Room", room.label),
+                                y: .value("Items", viewModel.roomCounts[room] ?? 0)
+                            )
+                        }
+                    }
+                    .frame(height: 180)
+
                     ForEach(viewModel.roomCounts.keys.sorted(by: { $0.label < $1.label }), id: \.self) { room in
                         HStack {
                             Text(room.label)
