@@ -64,6 +64,7 @@ class AuthenticationManager: ObservableObject {
             hint: nil,
             additionalScopes: [
                 "https://www.googleapis.com/auth/spreadsheets",
+                "https://www.googleapis.com/auth/drive.readonly",
                 "https://www.googleapis.com/auth/gmail.send",
             ]
         )
