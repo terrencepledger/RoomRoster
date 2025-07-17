@@ -25,23 +25,34 @@ class AuthenticationManager: ObservableObject {
     }
 
     func signIn() async {
-        if let user = GIDSignIn.sharedInstance.currentUser {
-            updateUser(from: user)
-            return
-        }
-
-        do {
-            let restored = try await GIDSignIn.sharedInstance.restorePreviousSignIn()
-            updateUser(from: restored)
-            return
-        } catch {
-            Logger.log(error, extra: ["description": "Failed restoring sign in"])
-        }
+        if await signInSilently() { return }
 
         do {
             try await triggerSignIn()
         } catch {
             Logger.log(error, extra: ["description": "Failed signing in"])
+        }
+    }
+
+    func ensureSignedIn() async {
+        if await signInSilently() == false {
+            await signIn()
+        }
+    }
+
+    private func signInSilently() async -> Bool {
+        if let user = GIDSignIn.sharedInstance.currentUser {
+            updateUser(from: user)
+            return true
+        }
+
+        do {
+            let restored = try await GIDSignIn.sharedInstance.restorePreviousSignIn()
+            updateUser(from: restored)
+            return true
+        } catch {
+            Logger.log(error, extra: ["description": "Failed restoring sign in"])
+            return false
         }
     }
 

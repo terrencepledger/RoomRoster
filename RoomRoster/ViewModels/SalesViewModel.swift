@@ -18,6 +18,7 @@ final class SalesViewModel: ObservableObject {
     }
 
     func loadSales() async {
+        errorMessage = nil
         do {
             itemsById = [:]
             sales = try await salesService.fetchSales()
