@@ -4,6 +4,7 @@ private typealias l10n = Strings.sales
 
 struct SalesView: View {
     @StateObject private var viewModel = SalesViewModel()
+    @StateObject private var sheets = SpreadsheetManager.shared
 
     var body: some View {
         NavigationView {
@@ -12,7 +13,10 @@ struct SalesView: View {
                     ErrorBanner(message: error)
                 }
 
-                if viewModel.sales.isEmpty {
+                if sheets.currentSheet == nil {
+                    Text(Strings.inventory.selectSheetPrompt)
+                        .foregroundColor(.secondary)
+                } else if viewModel.sales.isEmpty {
                     Text(l10n.emptyState)
                         .foregroundColor(.secondary)
                 } else {
@@ -40,8 +44,14 @@ struct SalesView: View {
             }
             .navigationTitle(l10n.title)
         }
-        .task { await viewModel.loadSales() }
-        .refreshable { await viewModel.loadSales() }
+        .task {
+            guard sheets.currentSheet != nil else { return }
+            await viewModel.loadSales()
+        }
+        .refreshable {
+            guard sheets.currentSheet != nil else { return }
+            await viewModel.loadSales()
+        }
         .onAppear { Logger.page("SalesView") }
     }
 }

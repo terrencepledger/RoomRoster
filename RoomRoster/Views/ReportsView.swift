@@ -5,37 +5,42 @@ private typealias l10n = Strings.reports
 
 struct ReportsView: View {
     @StateObject private var viewModel = ReportsViewModel()
+    @StateObject private var sheets = SpreadsheetManager.shared
     @State private var shareURL: URL?
 
     var body: some View {
         NavigationView {
             List {
-                Section {
-                    HStack {
-                        TextField(l10n.searchPlaceholder, text: $viewModel.query)
-                            .textFieldStyle(.roundedBorder)
-                        if !viewModel.query.isEmpty {
-                            Button(l10n.clearSearch) { viewModel.query = "" }
+                if sheets.currentSheet == nil {
+                    Text(Strings.inventory.selectSheetPrompt)
+                        .foregroundColor(.secondary)
+                } else {
+                    Section {
+                        HStack {
+                            TextField(l10n.searchPlaceholder, text: $viewModel.query)
+                                .textFieldStyle(.roundedBorder)
+                            if !viewModel.query.isEmpty {
+                                Button(l10n.clearSearch) { viewModel.query = "" }
+                            }
                         }
+                        Toggle(Strings.inventory.includeHistoryToggle, isOn: $viewModel.includeHistoryInSearch)
+                            .font(.subheadline)
+                        Toggle(Strings.inventory.includeSoldToggle, isOn: $viewModel.includeSoldItems)
+                            .font(.subheadline)
                     }
-                    Toggle(Strings.inventory.includeHistoryToggle, isOn: $viewModel.includeHistoryInSearch)
-                        .font(.subheadline)
-                    Toggle(Strings.inventory.includeSoldToggle, isOn: $viewModel.includeSoldItems)
-                        .font(.subheadline)
-                }
 
-                if !viewModel.query.isEmpty {
-                    Section(header: searchHeader) {
-                        ForEach(viewModel.filteredItems, id: \.id) { item in
-                            VStack(alignment: .leading) {
-                                Text(item.name)
-                                Text(item.lastKnownRoom.label)
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
+                    if !viewModel.query.isEmpty {
+                        Section(header: searchHeader) {
+                            ForEach(viewModel.filteredItems, id: \.id) { item in
+                                VStack(alignment: .leading) {
+                                    Text(item.name)
+                                    Text(item.lastKnownRoom.label)
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
                             }
                         }
                     }
-                }
 
                 Section(header: Text(l10n.inventorySummary)) {
                     Chart {
@@ -114,16 +119,18 @@ struct ReportsView: View {
             }
             .navigationTitle(l10n.title)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Menu {
-                        Button(l10n.exportOverview) {
-                            shareURL = viewModel.exportOverviewCSV()
+                if sheets.currentSheet != nil {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Menu {
+                            Button(l10n.exportOverview) {
+                                shareURL = viewModel.exportOverviewCSV()
+                            }
+                            Button(l10n.exportCSV) {
+                                shareURL = viewModel.exportCSV()
+                            }
+                        } label: {
+                            Image(systemName: "square.and.arrow.up")
                         }
-                        Button(l10n.exportCSV) {
-                            shareURL = viewModel.exportCSV()
-                        }
-                    } label: {
-                        Image(systemName: "square.and.arrow.up")
                     }
                 }
             }
@@ -131,8 +138,14 @@ struct ReportsView: View {
                 ShareSheet(activityItems: [url])
             }
         }
-        .task { await viewModel.loadData() }
-        .refreshable { await viewModel.loadData() }
+        .task {
+            guard sheets.currentSheet != nil else { return }
+            await viewModel.loadData()
+        }
+        .refreshable {
+            guard sheets.currentSheet != nil else { return }
+            await viewModel.loadData()
+        }
         .onAppear { Logger.page("ReportsView") }
     }
 
