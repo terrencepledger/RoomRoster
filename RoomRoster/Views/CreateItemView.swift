@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 private typealias l10n = Strings.createItem
 
@@ -151,6 +152,7 @@ struct CreateItemView: View {
                     Task {
                         await viewModel.saveItem()
                         if viewModel.errorMessage == nil {
+                            HapticManager.shared.success()
                             dismiss()
                         }
                     }

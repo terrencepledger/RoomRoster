@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PhotosUI
+import UIKit
 
 private typealias l10n = Strings.editItem
 
@@ -195,6 +196,7 @@ struct EditItemView: View {
                             }
                             editableItem.propertyTag = PropertyTag(rawValue: propertyTagInput)
                             onSave(editableItem)
+                            HapticManager.shared.success()
                             dismiss()
                         }
                     }
@@ -211,6 +213,7 @@ struct EditItemView: View {
                             editableItem.lastKnownRoom = Room.placeholder()
                         }
                         newRoomName = ""
+                        HapticManager.shared.success()
                     }
                 }
                 Button(Strings.general.cancel, role: .cancel) { }
@@ -277,6 +280,7 @@ struct EditItemView: View {
                 "description": "Upload Image Failed"
             ])
             uploadError = l10n.errors.imageUpload(error.localizedDescription)
+            HapticManager.shared.error()
         }
     }
 }

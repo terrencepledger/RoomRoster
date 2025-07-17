@@ -32,6 +32,9 @@ struct SalesView: View {
                                 .foregroundColor(.secondary)
                             }
                         }
+                        .simultaneousGesture(
+                            TapGesture().onEnded { HapticManager.shared.impact() }
+                        )
                     }
                 }
             }

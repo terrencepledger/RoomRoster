@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 private typealias l10n = Strings.itemDetails
 
@@ -132,6 +133,7 @@ struct ItemDetailsView: View {
                     VStack {
                         Button(l10n.editItem) {
                             Logger.action("Pressed Edit Button")
+                            HapticManager.shared.impact()
                             isEditing = true
                         }
                         .padding()
@@ -142,6 +144,7 @@ struct ItemDetailsView: View {
                         if item.status == .sold {
                             Button(Strings.saleDetails.title) {
                                 Logger.action("Pressed Sale Details Button")
+                                HapticManager.shared.impact()
                                 showingSaleDetails = true
                             }
                             .padding()
@@ -151,6 +154,7 @@ struct ItemDetailsView: View {
                         } else {
                             Button(Strings.sellItem.title) {
                                 Logger.action("Pressed Sell Button")
+                                HapticManager.shared.impact()
                                 showingSellSheet = true
                             }
                             .padding()
@@ -183,6 +187,7 @@ struct ItemDetailsView: View {
                         withAnimation {
                             viewModel.errorMessage = l10n.failedToUpdate
                         }
+                        HapticManager.shared.error()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
                             withAnimation { viewModel.errorMessage = nil }
                         }
@@ -207,6 +212,7 @@ struct ItemDetailsView: View {
                     }
                 case .failure:
                     saleError = Strings.sellItem.failure
+                    HapticManager.shared.error()
                     DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
                         withAnimation { saleError = nil }
                     }

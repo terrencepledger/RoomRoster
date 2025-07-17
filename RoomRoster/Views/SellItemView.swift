@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 private typealias l10n = Strings.sellItem
 
@@ -36,10 +37,12 @@ struct SellItemView: View {
                         do {
                             let item = try await viewModel.submitSale()
                             onComplete(.success(item))
+                            HapticManager.shared.success()
                             dismiss()
                         } catch {
                             Logger.log(error, extra: ["description": "Failed to record sale"])
                             onComplete(.failure(error))
+                            HapticManager.shared.error()
                         }
                     }
                 }

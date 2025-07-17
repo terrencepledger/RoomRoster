@@ -66,6 +66,7 @@
 		B6D80EFA2E28259300748907 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B6D80EF92E28259300748907 /* GoogleService-Info.plist */; };
 		B6D80EFB2E28CF5800748907 /* Spreadsheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9022FF3CD87CA507378085C4 /* Spreadsheet.swift */; };
 		B6D80EFD2E28DD8D00748907 /* SpreadsheetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D80EFC2E28DD8D00748907 /* SpreadsheetManager.swift */; };
+		B6D80EFE2E295A1600748907 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77809C47FCD59CC9A4E795CC /* HapticManager.swift */; };
 		B6E684CC2DCFB10400EE608B /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = B6E684CB2DCFB10400EE608B /* FirebaseCrashlytics */; };
 		B6E684D02DD03A6400EE608B /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = B6E684CF2DD03A6400EE608B /* Sentry */; };
 		B6E684D32DD03D2400EE608B /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = B6E684D22DD03D2400EE608B /* FirebaseStorage */; };
@@ -138,6 +139,7 @@
 		767E82D42D8F356500B48011 /* EditItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditItemView.swift; sourceTree = "<group>"; };
 		767E82D62D8F3ABE00B48011 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
 		767E82DF2D8F52FF00B48011 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		77809C47FCD59CC9A4E795CC /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		8BC8C5F5D40748AD93602E33 /* SalesServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesServiceTests.swift; sourceTree = "<group>"; };
 		9022FF3CD87CA507378085C4 /* Spreadsheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spreadsheet.swift; sourceTree = "<group>"; };
 		9062D441F4874BA89C2A0A1E /* InventoryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryServiceTests.swift; sourceTree = "<group>"; };
@@ -364,6 +366,7 @@
 				767E82D62D8F3ABE00B48011 /* AuthenticationManager.swift */,
 				767E82D22D8F34C800B48011 /* Extensions.swift */,
 				B6E684D42DD176D900EE608B /* Logger.swift */,
+				77809C47FCD59CC9A4E795CC /* HapticManager.swift */,
 				B61A9BD72DD6650000D04E9A /* SheetsUtils.swift */,
 			);
 			path = Utilities;
@@ -542,6 +545,7 @@
 				B6D80EFD2E28DD8D00748907 /* SpreadsheetManager.swift in Sources */,
 				B615ED222DE2BB4E009BE623 /* RoomService.swift in Sources */,
 				767E82C92D8F1AA500B48011 /* NetworkService.swift in Sources */,
+				B6D80EFE2E295A1600748907 /* HapticManager.swift in Sources */,
 				767B05BF2D4C5F9E00566C25 /* GoogleSheetsResponse.swift in Sources */,
 				B6A6D6DC2DD8FD4E00378BFF /* ErrorBanner.swift in Sources */,
 				AA12BBCC44D055EE00112233 /* SuccessBanner.swift in Sources */,
