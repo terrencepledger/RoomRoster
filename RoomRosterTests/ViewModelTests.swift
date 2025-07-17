@@ -6,10 +6,10 @@ final class ViewModelTests: XCTestCase {
     func testInventoryViewModelLoadRooms() async throws {
         let mock = MockNetworkService()
         let response = GoogleSheetsResponse(range: "Rooms", majorDimension: "ROWS", values: [["R1"],["R2"]])
-        mock.fetchDataResults = [response]
-        let roomService = RoomService(sheetId: "s", apiKey: "k", networkService: mock)
+        mock.authorizedFetchResults = [response]
+        let roomService = RoomService(sheetId: "s", networkService: mock)
         let vm = InventoryViewModel(
-            inventoryService: InventoryService(sheetId: "s", apiKey: "k", networkService: MockNetworkService()),
+            inventoryService: InventoryService(sheetId: "s", networkService: MockNetworkService()),
             roomService: roomService
         )
         await vm.loadRooms()
@@ -19,8 +19,8 @@ final class ViewModelTests: XCTestCase {
     @MainActor
     func testCreateItemViewModelValidateTag() {
         let vm = CreateItemViewModel(
-            inventoryService: InventoryService(sheetId: "s", apiKey: "k", networkService: MockNetworkService()),
-            roomService: RoomService(sheetId: "s", apiKey: "k", networkService: MockNetworkService()),
+            inventoryService: InventoryService(sheetId: "s", networkService: MockNetworkService()),
+            roomService: RoomService(sheetId: "s", networkService: MockNetworkService()),
             itemsProvider: { [Item(id: "1", imageURL: "", name: "", description: "", quantity: 1, dateAdded: "", estimatedPrice: nil, status: .available, lastKnownRoom: .empty(), updatedBy: "", lastUpdated: nil, propertyTag: PropertyTag(rawValue: "A0001"))] }
         )
         vm.propertyTagInput = "A0001"

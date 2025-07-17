@@ -10,13 +10,27 @@ import SwiftUI
 private typealias l10n = Strings.sheets
 
 struct SheetsView: View {
+    @StateObject private var manager = SpreadsheetManager.shared
+
     var body: some View {
-        Text(l10n.comingSoon)
-            .font(.title)
-            .foregroundColor(.secondary)
-            .navigationTitle(l10n.title)
-            .onAppear {
-                Logger.page("SheetsView")
+        List {
+            ForEach(manager.spreadsheets) { sheet in
+                HStack {
+                    Text(sheet.name)
+                    Spacer()
+                    if sheet.id == manager.currentSheet?.id {
+                        Image(systemName: "checkmark")
+                            .foregroundColor(.accentColor)
+                    }
+                }
+                .contentShape(Rectangle())
+                .onTapGesture { manager.select(sheet) }
             }
+        }
+        .navigationTitle(l10n.title)
+        .onAppear {
+            Logger.page("SheetsView")
+            Task { await manager.loadSheets() }
+        }
     }
 }

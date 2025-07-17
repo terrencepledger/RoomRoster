@@ -13,25 +13,30 @@ enum RoomServiceError: Error {
 }
 
 struct RoomService {
-    private let sheetId: String
-    private let apiKey: String
+    private let sheetIdProvider: @MainActor () -> String?
     private let networkService: NetworkServiceProtocol
 
     init(
-        sheetId: String = AppConfig.shared.sheetId,
-        apiKey: String = AppConfig.shared.apiKey,
+        sheetIdProvider: @escaping @MainActor () -> String? = { SpreadsheetManager.shared.currentSheet?.id },
         networkService: NetworkServiceProtocol = NetworkService.shared
     ) {
-        self.sheetId = sheetId
-        self.apiKey = apiKey
+        self.sheetIdProvider = sheetIdProvider
+        self.networkService = networkService
+    }
+
+    init(
+        sheetId: String,
+        networkService: NetworkServiceProtocol = NetworkService.shared
+    ) {
+        self.sheetIdProvider = { sheetId }
         self.networkService = networkService
     }
 
     func fetchRooms() async throws -> [Room] {
         Logger.network("RoomService-fetchRooms")
-        let response: GoogleSheetsResponse = try await networkService.fetchData(
-            from: "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Rooms!A:A?key=\(apiKey)"
-        )
+        let sheetId = await MainActor.run { sheetIdProvider() } ?? ""
+        guard let url = URL(string: "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Rooms!A:A") else { throw NetworkError.invalidURL }
+        let response: GoogleSheetsResponse = try await networkService.fetchAuthorizedData(from: url)
         return response.values.compactMap { $0.first }.filter { !$0.isEmpty }.map { Room(name: $0) }
     }
 
@@ -39,6 +44,7 @@ struct RoomService {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { throw RoomServiceError.invalidName }
 
+        let sheetId = await MainActor.run { sheetIdProvider() } ?? ""
         guard sheetId.rangeOfCharacter(from: CharacterSet.urlPathAllowed.inverted) == nil else {
             throw NetworkError.invalidURL
         }

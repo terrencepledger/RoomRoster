@@ -40,8 +40,9 @@ enum HistoryLogError: Error, LocalizedError {
 
 final class HistoryLogService {
     static let shared = HistoryLogService()
-    private let sheetId = AppConfig.shared.sheetId
-    private let apiKey = AppConfig.shared.apiKey
+    private func sheetId() async -> String {
+        await MainActor.run { SpreadsheetManager.shared.currentSheet?.id ?? "" }
+    }
 
     func logChanges(old: Item, new: Item, updatedBy: String?) async {
         let user = updatedBy ?? "Unknown"
@@ -89,9 +90,11 @@ final class HistoryLogService {
     }
 
     private func appendHistoryEntries(for itemId: String, logEntries: [String]) async throws {
-        let historyURLString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/HistoryLog?key=\(apiKey)"
+        let sheetId = await sheetId()
+        let historyURLString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/HistoryLog"
         Logger.network("HistoryLogService-appendHistoryEntries")
-        let historyResponse: GoogleSheetsResponse = try await NetworkService.shared.fetchData(from: historyURLString)
+        guard let historyURL = URL(string: historyURLString) else { throw NetworkError.invalidURL }
+        let historyResponse: GoogleSheetsResponse = try await NetworkService.shared.fetchAuthorizedData(from: historyURL)
 
         if let existingRowIndex = historyResponse.values.firstIndex(where: { $0.first == itemId }) {
             let existingRow = historyResponse.values[existingRowIndex]
