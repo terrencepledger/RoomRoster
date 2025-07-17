@@ -55,7 +55,7 @@ struct InventoryView: View {
                         Section(header: sectionHeader(for: group.room)) {
                             if expandedRooms.contains(group.room) {
                                 ForEach(group.items, id: \.0.id) { (item, context) in
-                                    NavigationLink(destination: ItemDetailsView(item: item)) {
+                                    NavigationLink(destination: ItemDetailsView(item: item).environmentObject(viewModel)) {
                                         VStack(alignment: .leading) {
                                             Text(item.name).font(.headline)
                                             Text(l10n.status(item.status.label))

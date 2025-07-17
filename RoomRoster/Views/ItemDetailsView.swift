@@ -14,9 +14,13 @@ struct ItemDetailsView: View {
     @State private var isEditing = false
     @State private var errorMessage: String? = nil
     @State private var showingSellSheet = false
+    @State private var showingSaleDetails = false
+    @State private var sale: Sale?
+    @State private var saleSuccess: String?
+    @State private var saleError: String?
     @StateObject private var viewModel = ItemDetailsViewModel()
 
-    let inventoryVM = InventoryViewModel()
+    @EnvironmentObject var inventoryVM: InventoryViewModel
 
     init(item: Item) {
         _item = State(initialValue: item)
@@ -28,6 +32,12 @@ struct ItemDetailsView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     if let error = viewModel.errorMessage {
                         ErrorBanner(message: error)
+                    }
+                    if let message = saleSuccess {
+                        SuccessBanner(message: message)
+                    }
+                    if let sellError = saleError {
+                        ErrorBanner(message: sellError)
                     }
                     if let url = URL(string: item.imageURL) {
                         AsyncImage(url: url) { image in
@@ -129,14 +139,25 @@ struct ItemDetailsView: View {
                         .foregroundColor(.white)
                         .cornerRadius(10)
 
-                        Button(Strings.sellItem.title) {
-                            Logger.action("Pressed Sell Button")
-                            showingSellSheet = true
+                        if item.status == .sold {
+                            Button(Strings.saleDetails.title) {
+                                Logger.action("Pressed Sale Details Button")
+                                showingSaleDetails = true
+                            }
+                            .padding()
+                            .background(Color.green)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                        } else {
+                            Button(Strings.sellItem.title) {
+                                Logger.action("Pressed Sell Button")
+                                showingSellSheet = true
+                            }
+                            .padding()
+                            .background(Color.green)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
                         }
-                        .padding()
-                        .background(Color.green)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
                     }
                     .padding()
                 }
@@ -171,7 +192,31 @@ struct ItemDetailsView: View {
             .environmentObject(inventoryVM)
         }
         .sheet(isPresented: $showingSellSheet) {
-            SellItemView(viewModel: SellItemViewModel(item: item))
+            SellItemView(viewModel: SellItemViewModel(item: item)) { result in
+                showingSellSheet = false
+                switch result {
+                case .success(let updatedItem):
+                    self.item = updatedItem
+                    saleSuccess = Strings.sellItem.success
+                    Task {
+                        await inventoryVM.fetchInventory()
+                        await loadSale()
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                        withAnimation { saleSuccess = nil }
+                    }
+                case .failure:
+                    saleError = Strings.sellItem.failure
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                        withAnimation { saleError = nil }
+                    }
+                }
+            }
+        }
+        .sheet(isPresented: $showingSaleDetails) {
+            if let sale {
+                SalesDetailsView(sale: sale, itemName: item.name)
+            }
         }
         .onAppear {
             Logger.page("ItemDetailsView")
@@ -182,9 +227,22 @@ struct ItemDetailsView: View {
         .task {
             await viewModel.fetchItemHistory(for: item.id)
         }
+        .task {
+            await loadSale()
+        }
         .refreshable {
             Logger.action("Refreshing")
             await viewModel.fetchItemHistory(for: item.id)
         }
     }
+
+    private func loadSale() async {
+        guard item.status == .sold else { return }
+        do {
+            sale = try await SalesService().fetchSale(for: item.id)
+        } catch {
+            Logger.log(error, extra: ["description": "Failed to load sale details"])
+        }
+    }
 }
+

@@ -35,6 +35,7 @@ struct GmailService {
             method: "POST",
             jsonBody: ["raw": encoded]
         )
+        Logger.network("GmailService-sendEmail")
         try await networkService.sendRequest(request)
     }
 }
