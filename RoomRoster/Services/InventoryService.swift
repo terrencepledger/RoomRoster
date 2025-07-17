@@ -11,20 +11,25 @@ actor InventoryService {
     private let sheetIdProvider: @MainActor () -> String?
     private var cachedHistory: GoogleSheetsResponse?
     private let networkService: NetworkServiceProtocol
+    private let cache: InventoryCache
     init(
         sheetIdProvider: @escaping @MainActor () -> String? = { SpreadsheetManager.shared.currentSheet?.id },
-        networkService: NetworkServiceProtocol = NetworkService.shared
+        networkService: NetworkServiceProtocol = NetworkService.shared,
+        cache: InventoryCache = .shared
     ) {
         self.sheetIdProvider = sheetIdProvider
         self.networkService = networkService
+        self.cache = cache
     }
 
     init(
         sheetId: String,
-        networkService: NetworkServiceProtocol = NetworkService.shared
+        networkService: NetworkServiceProtocol = NetworkService.shared,
+        cache: InventoryCache = .shared
     ) {
         self.sheetIdProvider = { sheetId }
         self.networkService = networkService
+        self.cache = cache
     }
 
     func fetchInventory() async throws -> GoogleSheetsResponse {
@@ -32,7 +37,10 @@ actor InventoryService {
         let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/Inventory"
         guard let url = URL(string: urlString) else { throw NetworkError.invalidURL }
         Logger.network("InventoryService-fetchInventory")
-        return try await networkService.fetchAuthorizedData(from: url)
+        let sheet: GoogleSheetsResponse = try await networkService.fetchAuthorizedData(from: url)
+        let items = sheet.values.dropFirst().compactMap { Item(from: $0) }
+        await cache.save(items: items)
+        return sheet
     }
 
     /// Convenience method to fetch a single item from the inventory sheet.
@@ -44,6 +52,10 @@ actor InventoryService {
             return nil
         }
         return Item(from: row)
+    }
+
+    func fetchCachedItems() async -> [Item] {
+        await cache.fetchItems()
     }
 
     func fetchAllHistory() async throws -> GoogleSheetsResponse {
@@ -77,6 +89,7 @@ actor InventoryService {
         )
         Logger.network("InventoryService-createItem")
         try await networkService.sendRequest(request)
+        await cache.upsert(item)
     }
 
     func getRowNumber(for id: String) async throws -> Int {
@@ -106,5 +119,6 @@ actor InventoryService {
         )
         Logger.network("InventoryService-updateItem")
         try await networkService.sendRequest(request)
+        await cache.upsert(item)
     }
 }
