@@ -15,12 +15,17 @@ final class CreateItemViewModel: ObservableObject {
     private let inventoryService: InventoryService
     private let roomService: RoomService
     private let imageUploadService: ImageUploadService
+    private let receiptService: PurchaseReceiptService
     private let itemsProvider: () -> [Item]
 
     @Published var newItem: Item
     @Published var pickedImage: UIImage?
+    @Published var pickedReceiptImage: UIImage?
+    @Published var pickedReceiptPDF: URL?
     @Published var isUploading: Bool = false
+    @Published var isUploadingReceipt: Bool = false
     @Published var uploadError: String?
+    @Published var receiptUploadError: String?
     @Published var tagError: String?
     @Published var showTagError: Bool = false
     @Published var propertyTagInput: String = ""
@@ -35,12 +40,14 @@ final class CreateItemViewModel: ObservableObject {
         inventoryService: InventoryService,
         roomService: RoomService,
         imageUploadService: ImageUploadService = .init(),
+        receiptService: PurchaseReceiptService = .init(),
         itemsProvider: @escaping () -> [Item],
         onSave: ((Item) -> Void)? = nil
     ) {
         self.inventoryService = inventoryService
         self.roomService = roomService
         self.imageUploadService = imageUploadService
+        self.receiptService = receiptService
         self.itemsProvider = itemsProvider
         self.onSave = onSave
 
@@ -56,7 +63,8 @@ final class CreateItemViewModel: ObservableObject {
             lastKnownRoom: .placeholder(),
             updatedBy: "",
             lastUpdated: nil,
-            propertyTag: nil
+            propertyTag: nil,
+            purchaseReceiptURL: nil
         )
     }
 
@@ -75,6 +83,18 @@ final class CreateItemViewModel: ObservableObject {
         Task { await uploadPickedImage(image) }
     }
 
+    func onReceiptPicked(_ image: UIImage?) {
+        pickedReceiptImage = image
+        guard let image else { return }
+        Task { await saveReceiptImage(image) }
+    }
+
+    func onReceiptPDFPicked(_ url: URL?) {
+        pickedReceiptPDF = url
+        guard let url else { return }
+        Task { await saveReceiptPDF(from: url) }
+    }
+
     private func uploadPickedImage(_ image: UIImage) async {
         isUploading = true
         uploadError = nil
@@ -90,6 +110,35 @@ final class CreateItemViewModel: ObservableObject {
             HapticManager.shared.error()
         }
         isUploading = false
+    }
+
+    private func saveReceiptImage(_ image: UIImage) async {
+        isUploadingReceipt = true
+        receiptUploadError = nil
+
+        do {
+            let url = try receiptService.saveReceipt(image: image, for: newItem.id)
+            newItem.purchaseReceiptURL = url.path
+        } catch {
+            receiptUploadError = error.localizedDescription
+            HapticManager.shared.error()
+        }
+        isUploadingReceipt = false
+    }
+
+    private func saveReceiptPDF(from url: URL) async {
+        isUploadingReceipt = true
+        receiptUploadError = nil
+
+        do {
+            let data = try Data(contentsOf: url)
+            let saved = try receiptService.saveReceiptPDF(data, for: newItem.id)
+            newItem.purchaseReceiptURL = saved.path
+        } catch {
+            receiptUploadError = error.localizedDescription
+            HapticManager.shared.error()
+        }
+        isUploadingReceipt = false
     }
 
     func validateTag() {

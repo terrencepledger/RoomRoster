@@ -52,6 +52,38 @@ struct CreateItemView: View {
                         Text(l10n.photo)
                     }
 
+                    Section {
+                        CombinedImagePickerButton(image: $viewModel.pickedReceiptImage)
+                            .onChange(of: viewModel.pickedReceiptImage) { _, img in
+                                viewModel.onReceiptPicked(img)
+                            }
+                        PDFPickerButton(url: $viewModel.pickedReceiptPDF)
+                            .onChange(of: viewModel.pickedReceiptPDF) { _, url in
+                                viewModel.onReceiptPDFPicked(url)
+                            }
+
+                        if viewModel.isUploadingReceipt {
+                            HStack {
+                                ProgressView()
+                                Text("Uploading receipt...")
+                            }
+                        }
+                        if let error = viewModel.receiptUploadError {
+                            Text(error)
+                                .foregroundColor(.red)
+                                .font(.caption)
+                        }
+                        HStack {
+                            Text("Receipt Path").foregroundColor(.gray)
+                            Spacer()
+                            Text(viewModel.newItem.purchaseReceiptURL ?? "")
+                                .font(.caption)
+                                .multilineTextAlignment(.trailing)
+                        }
+                    } header: {
+                        Text("Purchase Receipt")
+                    }
+
                     Section(content: {
                         HStack {
                             Text(l10n.basicInfo.name)

@@ -8,7 +8,7 @@
 enum ItemField: CaseIterable {
     case id, imageURL, name, description, quantity,
          dateAdded, estimatedPrice, status, lastKnownRoom,
-         updatedBy, lastUpdated, propertyTag
+         updatedBy, lastUpdated, propertyTag, purchaseReceiptURL
 
     var label: String {
         switch self {
@@ -24,6 +24,7 @@ enum ItemField: CaseIterable {
         case .updatedBy: return "Updated By"
         case .lastUpdated: return "Last Updated"
         case .propertyTag: return "Property Tag"
+        case .purchaseReceiptURL: return "Purchase Receipt URL"
         }
     }
 }
