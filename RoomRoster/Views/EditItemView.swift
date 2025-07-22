@@ -71,12 +71,12 @@ struct EditItemView: View {
                             Text(l10n.photo.loading)
                         }
                     }
-                if let error = uploadError {
-                    Text(error)
-                        .foregroundColor(.red)
-                        .font(.caption)
+                    if let error = uploadError {
+                        Text(error)
+                            .foregroundColor(.red)
+                            .font(.caption)
+                    }
                 }
-            }
 
             // MARK: – Purchase Receipt
             Section(header: Text("Purchase Receipt")) {
