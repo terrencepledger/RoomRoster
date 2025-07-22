@@ -18,7 +18,6 @@
 		630A8C62F5BBC9555EEC2E18 /* SpreadsheetManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D635C54A7B58948D1F8036B4 /* SpreadsheetManagerTests.swift */; };
                 72BF4E5D2A924D36879BA797 /* InventoryServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9062D441F4874BA89C2A0A1E /* InventoryServiceTests.swift */; };
                 62093EEF26D4F31B0F245579 /* PurchaseReceiptServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135983A51B686BEA6E40D6D4 /* PurchaseReceiptServiceTests.swift */; };
-                2CBDD1079F934CBC8848ABF1 /* ReceiptServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1271B69725CA4B51917374FA /* ReceiptServiceTests.swift */; };
                 767B05902D4C5DC000566C25 /* RoomRosterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B058F2D4C5DC000566C25 /* RoomRosterApp.swift */; };
                 767B05922D4C5DC000566C25 /* InventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05912D4C5DC000566C25 /* InventoryView.swift */; };
 		767B05942D4C5DC000566C25 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05932D4C5DC000566C25 /* Item.swift */; };
@@ -76,10 +75,6 @@
 		B6E684D52DD176DA00EE608B /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E684D42DD176D900EE608B /* Logger.swift */; };
                 B6F964922DB028E80093089A /* ImageUploadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F964912DB028E80093089A /* ImageUploadService.swift */; };
                 9E010CFAAB177DFBCE24F75D /* PurchaseReceiptService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348D6D97EC280691AFA3BF51 /* PurchaseReceiptService.swift */; };
-                0D944A089CCB4864A86C251D /* Receipt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C30BB400A54B48AD48FED9 /* Receipt.swift */; };
-                850A308EFCDC4BCBADF62870 /* ReceiptService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEAD6E27FFA4C4CA0BC7FD4 /* ReceiptService.swift */; };
-                C1E39A8006F44A5BAFDC48B2 /* ReceiptsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD4B82FD30743EDB172A265 /* ReceiptsViewModel.swift */; };
-                CB7DE6272A1445FA835C6F6F /* ReceiptsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB752F2B8CBE4F4D9B08C198 /* ReceiptsView.swift */; };
 		B6F964952DB02B4C0093089A /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964942DB02B4C0093089A /* FirebaseAnalytics */; };
 		B6F964972DB02BB60093089A /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964962DB02BB60093089A /* FirebaseAnalytics */; };
 		B6F964992DB02BB60093089A /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964982DB02BB60093089A /* FirebaseAnalyticsOnDeviceConversion */; };
@@ -179,11 +174,6 @@
 		B6E684D42DD176D900EE608B /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		B6F964912DB028E80093089A /* ImageUploadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadService.swift; sourceTree = "<group>"; };
                 348D6D97EC280691AFA3BF51 /* PurchaseReceiptService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseReceiptService.swift; sourceTree = "<group>"; };
-                51C30BB400A54B48AD48FED9 /* Receipt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Receipt.swift; sourceTree = "<group>"; };
-                1BEAD6E27FFA4C4CA0BC7FD4 /* ReceiptService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptService.swift; sourceTree = "<group>"; };
-                BBD4B82FD30743EDB172A265 /* ReceiptsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptsViewModel.swift; sourceTree = "<group>"; };
-                BB752F2B8CBE4F4D9B08C198 /* ReceiptsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptsView.swift; sourceTree = "<group>"; };
-                1271B69725CA4B51917374FA /* ReceiptServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptServiceTests.swift; sourceTree = "<group>"; };
                 135983A51B686BEA6E40D6D4 /* PurchaseReceiptServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseReceiptServiceTests.swift; sourceTree = "<group>"; };
 		B7F2B3A12FF645E8A0FF1235 /* SheetsUtilsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetsUtilsTests.swift; sourceTree = "<group>"; };
 		BF137618CD644A1997B55ED6 /* MockNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkService.swift; sourceTree = "<group>"; };
@@ -250,7 +240,6 @@
                                 6624E3822EF84521B07B00F3 /* SalesView.swift */,
                                 C616CDE1A2B34C5D67890ABD /* SalesDetailsView.swift */,
                                 68CAB974B03A4708BB968FC8 /* SellItemView.swift */,
-                                BB752F2B8CBE4F4D9B08C198 /* ReceiptsView.swift */,
                         );
                         path = Views;
                         sourceTree = "<group>";
@@ -265,7 +254,6 @@
 				12FE82B0693248D49E8D77BB /* ReportsViewModel.swift */,
                                 F1DB1AD2C44D425AB9A59153 /* SellItemViewModel.swift */,
                                 E32FE1D99B3B44E6A6801234 /* SalesViewModel.swift */,
-                                BBD4B82FD30743EDB172A265 /* ReceiptsViewModel.swift */,
                         );
                         path = ViewModels;
                         sourceTree = "<group>";
@@ -283,7 +271,6 @@
 				C66A533C9D0B40A885DA2172 /* Condition.swift */,
                                 0EA2B3CF72714AF5B8CD11E0 /* Sale.swift */,
                                 9022FF3CD87CA507378085C4 /* Spreadsheet.swift */,
-                                51C30BB400A54B48AD48FED9 /* Receipt.swift */,
                         );
                         path = Models;
                         sourceTree = "<group>";
@@ -298,7 +285,6 @@
 				767E82C62D8F1A2B00B48011 /* InventoryService.swift */,
                                 B6F964912DB028E80093089A /* ImageUploadService.swift */,
                                 348D6D97EC280691AFA3BF51 /* PurchaseReceiptService.swift */,
-                                1BEAD6E27FFA4C4CA0BC7FD4 /* ReceiptService.swift */,
                                 3758A93BD9E24318B74E47C2 /* SalesService.swift */,
                                 C01D35FCE10EB02BEFD65D29 /* GmailService.swift */,
                         );
@@ -359,7 +345,6 @@
 				767B05A32D4C5DC400566C25 /* RoomRosterTests.swift */,
 				9062D441F4874BA89C2A0A1E /* InventoryServiceTests.swift */,
                                 135983A51B686BEA6E40D6D4 /* PurchaseReceiptServiceTests.swift */,
-                                1271B69725CA4B51917374FA /* ReceiptServiceTests.swift */,
                                 E71B5019D5A040FCBB81807B /* ItemValidatorTests.swift */,
 				BF137618CD644A1997B55ED6 /* MockNetworkService.swift */,
 				614508236AFA4269887FF35A /* RoomServiceTests.swift */,
@@ -549,7 +534,7 @@
 				B65F71302DEB5C5200310D40 /* ItemValidator.swift in Sources */,
 				B6A6D6D62DD7AAEE00378BFF /* ItemField.swift in Sources */,
 				B6F964922DB028E80093089A /* ImageUploadService.swift in Sources */,
-								767B05922D4C5DC000566C25 /* InventoryView.swift in Sources */,
+                                767B05922D4C5DC000566C25 /* InventoryView.swift in Sources */,
 				B61A9BD42DD65FE900D04E9A /* HistoryLogService.swift in Sources */,
 				767B05BD2D4C5E1700566C25 /* InventoryViewModel.swift in Sources */,
 				B61A9BD82DD6650000D04E9A /* SheetsUtils.swift in Sources */,
@@ -587,10 +572,6 @@
 				B615ED202DE2BB15009BE623 /* Room.swift in Sources */,
 				8030ADBBCBB442E3B8D6D5FB /* Condition.swift in Sources */,
                                 9E010CFAAB177DFBCE24F75D /* PurchaseReceiptService.swift in Sources */,
-                                0D944A089CCB4864A86C251D /* Receipt.swift in Sources */,
-                                850A308EFCDC4BCBADF62870 /* ReceiptService.swift in Sources */,
-                                C1E39A8006F44A5BAFDC48B2 /* ReceiptsViewModel.swift in Sources */,
-                                CB7DE6272A1445FA835C6F6F /* ReceiptsView.swift in Sources */,
                                 5E159DC99DBD4D6E817F1768 /* Sale.swift in Sources */,
 				3284B9D30A6B43858230535F /* SalesService.swift in Sources */,
 				B6D80EFB2E28CF5800748907 /* Spreadsheet.swift in Sources */,
@@ -609,9 +590,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				767B05A42D4C5DC400566C25 /* RoomRosterTests.swift in Sources */,
-								72BF4E5D2A924D36879BA797 /* InventoryServiceTests.swift in Sources */,
+                                72BF4E5D2A924D36879BA797 /* InventoryServiceTests.swift in Sources */,
                                 62093EEF26D4F31B0F245579 /* PurchaseReceiptServiceTests.swift in Sources */,
-                                2CBDD1079F934CBC8848ABF1 /* ReceiptServiceTests.swift in Sources */,
                                 4A41F16A7DFB4ABE9D824975 /* ItemValidatorTests.swift in Sources */,
 				E9FBF450607D494DA1894333 /* MockNetworkService.swift in Sources */,
 				DE7D257232324BDDB96C6F37 /* RoomServiceTests.swift in Sources */,
