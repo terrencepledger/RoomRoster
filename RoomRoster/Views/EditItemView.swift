@@ -78,36 +78,36 @@ struct EditItemView: View {
                     }
                 }
 
-            // MARK: – Purchase Receipt
-            Section(header: Text("Purchase Receipt")) {
-                CombinedImagePickerButton(image: $pickedReceiptImage)
-                    .onChange(of: pickedReceiptImage) { _, img in
-                        Task { await saveReceiptImage(img) }
-                    }
-                PDFPickerButton(url: $pickedReceiptPDF)
-                    .onChange(of: pickedReceiptPDF) { _, url in
-                        Task { await saveReceiptPDF(url) }
-                    }
+                // MARK: – Purchase Receipt
+                Section(header: Text("Purchase Receipt")) {
+                    CombinedImagePickerButton(image: $pickedReceiptImage)
+                        .onChange(of: pickedReceiptImage) { _, img in
+                            Task { await saveReceiptImage(img) }
+                        }
+                    PDFPickerButton(url: $pickedReceiptPDF)
+                        .onChange(of: pickedReceiptPDF) { _, url in
+                            Task { await saveReceiptPDF(url) }
+                        }
 
-                if isUploadingReceipt {
+                    if isUploadingReceipt {
+                        HStack {
+                            ProgressView()
+                            Text("Uploading receipt...")
+                        }
+                    }
+                    if let error = receiptUploadError {
+                        Text(error)
+                            .foregroundColor(.red)
+                            .font(.caption)
+                    }
                     HStack {
-                        ProgressView()
-                        Text("Uploading receipt...")
+                        Text("Receipt Path").foregroundColor(.gray)
+                        Spacer()
+                        Text(editableItem.purchaseReceiptURL ?? "")
+                            .font(.caption)
+                            .multilineTextAlignment(.trailing)
                     }
                 }
-                if let error = receiptUploadError {
-                    Text(error)
-                        .foregroundColor(.red)
-                        .font(.caption)
-                }
-                HStack {
-                    Text("Receipt Path").foregroundColor(.gray)
-                    Spacer()
-                    Text(editableItem.purchaseReceiptURL ?? "")
-                        .font(.caption)
-                        .multilineTextAlignment(.trailing)
-                }
-            }
 
                 // MARK: – Basic Information
                 Section(header: Text(l10n.basicInfo.title)) {
