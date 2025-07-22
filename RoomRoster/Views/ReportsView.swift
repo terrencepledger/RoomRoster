@@ -116,8 +116,6 @@ struct ReportsView: View {
                     }
                 }
 
-                }
-
             }
             .navigationTitle(l10n.title)
             .toolbar {
@@ -157,11 +155,8 @@ struct ReportsView: View {
             Spacer()
             Button(l10n.exportSearch) { shareURL = viewModel.exportCSV() }
         }
-
     }
 }
-
-
 extension URL: Identifiable {
     public var id: String { absoluteString }
 }
