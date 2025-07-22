@@ -4,30 +4,25 @@ actor SalesService {
     private let sheetIdProvider: @MainActor () -> String?
     private let networkService: NetworkServiceProtocol
     private let gmailService: GmailService
-    private let receiptService: ReceiptService
 
     init(
         sheetIdProvider: @escaping @MainActor () -> String? = { SpreadsheetManager.shared.currentSheet?.id },
         networkService: NetworkServiceProtocol = NetworkService.shared,
-        gmailService: GmailService = GmailService(),
-        receiptService: ReceiptService = ReceiptService()
+        gmailService: GmailService = GmailService()
     ) {
         self.sheetIdProvider = sheetIdProvider
         self.networkService = networkService
         self.gmailService = gmailService
-        self.receiptService = receiptService
     }
 
     init(
         sheetId: String,
         networkService: NetworkServiceProtocol = NetworkService.shared,
-        gmailService: GmailService = GmailService(),
-        receiptService: ReceiptService = ReceiptService()
+        gmailService: GmailService = GmailService()
     ) {
         self.sheetIdProvider = { sheetId }
         self.networkService = networkService
         self.gmailService = gmailService
-        self.receiptService = receiptService
     }
 
     func recordSale(_ sale: Sale) async throws {
@@ -61,9 +56,6 @@ actor SalesService {
         let subject = "Sale Receipt for \(sale.itemId)"
         let body = "Item sold on \(sale.date.toShortString()) for \(sale.price ?? 0)"
         let pdf = ReceiptPDFGenerator.generate(for: sale)
-        if let data = pdf {
-            _ = try? receiptService.uploadReceipt(data, for: sale.itemId)
-        }
         if let buyerEmail {
             try? await gmailService.sendEmail(to: buyerEmail, subject: subject, body: body, attachment: pdf)
         }
