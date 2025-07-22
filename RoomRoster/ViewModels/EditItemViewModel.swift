@@ -10,19 +10,26 @@ import SwiftUI
 @MainActor
 final class EditItemViewModel: ObservableObject {
     @Published var editableItem: Item
+    @Published var pickedReceiptImage: UIImage?
+    @Published var pickedReceiptPDF: URL?
+    @Published var isUploadingReceipt: Bool = false
+    @Published var receiptUploadError: String?
     @Published var isSaving: Bool = false
 
     private let inventoryService: InventoryService
     private let historyService: HistoryLogService
+    private let receiptService: PurchaseReceiptService
 
     init(
         item: Item,
         inventoryService: InventoryService = .init(),
-        historyService: HistoryLogService = .init()
+        historyService: HistoryLogService = .init(),
+        receiptService: PurchaseReceiptService = .init()
     ) {
         self.editableItem = item
         self.inventoryService = inventoryService
         self.historyService = historyService
+        self.receiptService = receiptService
     }
 
     func loadItemData() async {
@@ -42,5 +49,44 @@ final class EditItemViewModel: ObservableObject {
         let previous = editableItem
         try await inventoryService.updateItem(editableItem)
         await historyService.logChanges(old: previous, new: editableItem, updatedBy: updatedBy)
+    }
+
+    func onReceiptPicked(_ image: UIImage?) {
+        pickedReceiptImage = image
+        guard let image else { return }
+        Task { await saveReceiptImage(image) }
+    }
+
+    func onReceiptPDFPicked(_ url: URL?) {
+        pickedReceiptPDF = url
+        guard let url else { return }
+        Task { await saveReceiptPDF(from: url) }
+    }
+
+    private func saveReceiptImage(_ image: UIImage) async {
+        isUploadingReceipt = true
+        receiptUploadError = nil
+        do {
+            let url = try receiptService.saveReceipt(image: image, for: editableItem.id)
+            editableItem.purchaseReceiptURL = url.path
+        } catch {
+            receiptUploadError = error.localizedDescription
+            HapticManager.shared.error()
+        }
+        isUploadingReceipt = false
+    }
+
+    private func saveReceiptPDF(from url: URL) async {
+        isUploadingReceipt = true
+        receiptUploadError = nil
+        do {
+            let data = try Data(contentsOf: url)
+            let saved = try receiptService.saveReceiptPDF(data, for: editableItem.id)
+            editableItem.purchaseReceiptURL = saved.path
+        } catch {
+            receiptUploadError = error.localizedDescription
+            HapticManager.shared.error()
+        }
+        isUploadingReceipt = false
     }
 }

@@ -19,8 +19,12 @@ struct EditItemView: View {
     @EnvironmentObject var viewModel: InventoryViewModel
 
     @State private var pickedImage: UIImage?
+    @State private var pickedReceiptImage: UIImage?
+    @State private var pickedReceiptPDF: URL?
     @State private var isUploading = false
+    @State private var isUploadingReceipt = false
     @State private var uploadError: String?
+    @State private var receiptUploadError: String?
     @State private var temporaryImageURL: String?
     @State private var dateAddedDate: Date = Date()
     @State private var propertyTagInput: String = ""
@@ -67,12 +71,43 @@ struct EditItemView: View {
                             Text(l10n.photo.loading)
                         }
                     }
-                    if let error = uploadError {
-                        Text(error)
-                            .foregroundColor(.red)
-                            .font(.caption)
+                if let error = uploadError {
+                    Text(error)
+                        .foregroundColor(.red)
+                        .font(.caption)
+                }
+            }
+
+            // MARK: – Purchase Receipt
+            Section(header: Text("Purchase Receipt")) {
+                CombinedImagePickerButton(image: $pickedReceiptImage)
+                    .onChange(of: pickedReceiptImage) { _, img in
+                        Task { await saveReceiptImage(img) }
+                    }
+                PDFPickerButton(url: $pickedReceiptPDF)
+                    .onChange(of: pickedReceiptPDF) { _, url in
+                        Task { await saveReceiptPDF(url) }
+                    }
+
+                if isUploadingReceipt {
+                    HStack {
+                        ProgressView()
+                        Text("Uploading receipt...")
                     }
                 }
+                if let error = receiptUploadError {
+                    Text(error)
+                        .foregroundColor(.red)
+                        .font(.caption)
+                }
+                HStack {
+                    Text("Receipt Path").foregroundColor(.gray)
+                    Spacer()
+                    Text(editableItem.purchaseReceiptURL ?? "")
+                        .font(.caption)
+                        .multilineTextAlignment(.trailing)
+                }
+            }
 
                 // MARK: – Basic Information
                 Section(header: Text(l10n.basicInfo.title)) {
@@ -280,6 +315,37 @@ struct EditItemView: View {
                 "description": "Upload Image Failed"
             ])
             uploadError = l10n.errors.imageUpload(error.localizedDescription)
+            HapticManager.shared.error()
+        }
+    }
+
+    private func saveReceiptImage(_ image: UIImage?) async {
+        guard let image else { return }
+        isUploadingReceipt = true
+        receiptUploadError = nil
+        defer { isUploadingReceipt = false }
+        do {
+            let url = try PurchaseReceiptService()
+                .saveReceipt(image: image, for: editableItem.id)
+            editableItem.purchaseReceiptURL = url.path
+        } catch {
+            receiptUploadError = error.localizedDescription
+            HapticManager.shared.error()
+        }
+    }
+
+    private func saveReceiptPDF(_ url: URL?) async {
+        guard let url else { return }
+        isUploadingReceipt = true
+        receiptUploadError = nil
+        defer { isUploadingReceipt = false }
+        do {
+            let data = try Data(contentsOf: url)
+            let saved = try PurchaseReceiptService()
+                .saveReceiptPDF(data, for: editableItem.id)
+            editableItem.purchaseReceiptURL = saved.path
+        } catch {
+            receiptUploadError = error.localizedDescription
             HapticManager.shared.error()
         }
     }
