@@ -249,7 +249,7 @@
 				767E82CA2D8F1B2C00B48011 /* ItemDetailsViewModel.swift */,
 				767B05BC2D4C5E1700566C25 /* InventoryViewModel.swift */,
 				12FE82B0693248D49E8D77BB /* ReportsViewModel.swift */,
-		F1DB1AD2C44D425AB9A59153 /* SellItemViewModel.swift */,
+				F1DB1AD2C44D425AB9A59153 /* SellItemViewModel.swift */,
 				E32FE1D99B3B44E6A6801234 /* SalesViewModel.swift */,
 			);
 			path = ViewModels;
@@ -344,7 +344,7 @@
 				BF137618CD644A1997B55ED6 /* MockNetworkService.swift */,
 				614508236AFA4269887FF35A /* RoomServiceTests.swift */,
 				4AC01C73ED7A4FBC9EECB3D3 /* ViewModelTests.swift */,
-		8BC8C5F5D40748AD93602E33 /* SalesServiceTests.swift */,
+				8BC8C5F5D40748AD93602E33 /* SalesServiceTests.swift */,
 				D635C54A7B58948D1F8036B4 /* SpreadsheetManagerTests.swift */,
 				B7F2B3A12FF645E8A0FF1235 /* SheetsUtilsTests.swift */,
 				F2ACBFBB75EA4E3C9514A9AB /* DepreciationCalculatorTests.swift */,
@@ -371,7 +371,7 @@
 				767E82D62D8F3ABE00B48011 /* AuthenticationManager.swift */,
 				767E82D22D8F34C800B48011 /* Extensions.swift */,
 				B6E684D42DD176D900EE608B /* Logger.swift */,
-		77809C47FCD59CC9A4E795CC /* HapticManager.swift */,
+				77809C47FCD59CC9A4E795CC /* HapticManager.swift */,
 				8A63CDB2EA6A42EA93C1D13D /* DepreciationCalculator.swift */,
 				B61A9BD72DD6650000D04E9A /* SheetsUtils.swift */,
                         );
@@ -593,8 +593,8 @@
 				7DB3EA08C76F4E048B379677 /* ViewModelTests.swift in Sources */,
 				A787349732EA468CB09F1E52 /* SalesServiceTests.swift in Sources */,
 				630A8C62F5BBC9555EEC2E18 /* SpreadsheetManagerTests.swift in Sources */,
-		B7F2B3A12FF645E8A0FF1234 /* SheetsUtilsTests.swift in Sources */,
-		B7F2B3A12FF645E8A0FF1234 /* SheetsUtilsTests.swift in Sources */,
+				B7F2B3A12FF645E8A0FF1234 /* SheetsUtilsTests.swift in Sources */,
+				B7F2B3A12FF645E8A0FF1234 /* SheetsUtilsTests.swift in Sources */,
 				7B030D6795A8463589912FAE /* DepreciationCalculatorTests.swift in Sources */,
                         );
                         runOnlyForDeploymentPostprocessing = 0;
