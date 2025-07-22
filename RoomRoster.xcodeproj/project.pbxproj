@@ -553,7 +553,7 @@
 				767E82C92D8F1AA500B48011 /* NetworkService.swift in Sources */,
 				B6D80EFE2E295A1600748907 /* HapticManager.swift in Sources */,
 				0A2B89787187428E8B76DD58 /* DepreciationCalculator.swift in Sources */,
-                               767B05BF2D4C5F9E00566C25 /* GoogleSheetsResponse.swift in Sources */,
+				767B05BF2D4C5F9E00566C25 /* GoogleSheetsResponse.swift in Sources */,
 				B6A6D6DC2DD8FD4E00378BFF /* ErrorBanner.swift in Sources */,
 				AA12BBCC44D055EE00112233 /* SuccessBanner.swift in Sources */,
 				B6A6D6DA2DD84F5000378BFF /* EditItemViewModel.swift in Sources */,
