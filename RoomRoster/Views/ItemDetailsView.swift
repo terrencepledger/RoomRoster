@@ -184,43 +184,49 @@ struct ItemDetailsView: View {
         .navigationTitle(l10n.title)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Menu {
-                    if let url = URL(string: item.imageURL) {
-                        Button(l10n.downloadImage) {
-                            Task {
-                                do {
-                                    shareURL = try await viewModel.downloadImage(from: url)
-                                    HapticManager.shared.success()
-                                } catch {
-                                    Logger.log(error, extra: ["description": "Failed to download image"])
-                                    HapticManager.shared.error()
-                                    viewModel.errorMessage = l10n.downloadFailed
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                                        withAnimation { viewModel.errorMessage = nil }
+                let hasImage = URL(string: item.imageURL) != nil
+                let hasReceipt = item.purchaseReceiptURL != nil
+
+                if hasImage || hasReceipt {
+                    Menu {
+                        if hasImage, let url = URL(string: item.imageURL) {
+                            Button(l10n.downloadImage) {
+                                Task {
+                                    do {
+                                        shareURL = try await viewModel.downloadImage(from: url)
+                                        HapticManager.shared.success()
+                                    } catch {
+                                        Logger.log(error, extra: ["description": "Failed to download image"])
+                                        HapticManager.shared.error()
+                                        viewModel.errorMessage = l10n.downloadFailed
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                            withAnimation { viewModel.errorMessage = nil }
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                    if item.purchaseReceiptURL != nil {
-                        Button(l10n.downloadReceipt) {
-                            Task {
-                                do {
-                                    shareURL = try await viewModel.downloadReceipt(for: item.id)
-                                    HapticManager.shared.success()
-                                } catch {
-                                    Logger.log(error, extra: ["description": "Failed to download receipt"])
-                                    HapticManager.shared.error()
-                                    viewModel.errorMessage = l10n.downloadFailed
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                                        withAnimation { viewModel.errorMessage = nil }
+
+                        if hasReceipt {
+                            Button(l10n.downloadReceipt) {
+                                Task {
+                                    do {
+                                        shareURL = try await viewModel.downloadReceipt(for: item.id)
+                                        HapticManager.shared.success()
+                                    } catch {
+                                        Logger.log(error, extra: ["description": "Failed to download receipt"])
+                                        HapticManager.shared.error()
+                                        viewModel.errorMessage = l10n.downloadFailed
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                            withAnimation { viewModel.errorMessage = nil }
+                                        }
                                     }
                                 }
                             }
                         }
+                    } label: {
+                        Image(systemName: "square.and.arrow.down")
                     }
-                } label: {
-                    Image(systemName: "square.and.arrow.down")
                 }
             }
         }
