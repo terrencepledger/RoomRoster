@@ -14,6 +14,8 @@ class ItemDetailsViewModel: ObservableObject {
     @Published var errorMessage: String?
 
     private let service = InventoryService()
+    private let downloader = FileDownloadService()
+    private let receiptService = PurchaseReceiptService()
 
     func fetchItemHistory(for itemId: String) async {
         isLoadingHistory = true
@@ -29,5 +31,17 @@ class ItemDetailsViewModel: ObservableObject {
             errorMessage = Strings.itemDetails.failedToLoadHistory
             HapticManager.shared.error()
         }
+    }
+
+    func downloadImage(from url: URL) async throws -> URL {
+        try await downloader.download(from: url)
+    }
+
+    func downloadReceipt(for itemId: String) async throws -> URL {
+        let data = try await receiptService.loadReceipt(for: itemId)
+        let fileURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent("\(itemId).pdf")
+        try data.write(to: fileURL)
+        return fileURL
     }
 }
