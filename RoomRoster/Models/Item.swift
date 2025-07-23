@@ -20,6 +20,7 @@ struct Item: Identifiable {
     var updatedBy: String
     var lastUpdated: Date?
     var propertyTag: PropertyTag?
+    var purchaseReceiptURL: String?
 }
 
 extension Item {
@@ -73,6 +74,13 @@ extension Item {
             keyPath: \.propertyTag,
             encode: { $0?.rawValue ?? "" },
             decode: { PropertyTag(rawValue: $0) }
+        ),
+        .purchaseReceiptURL: FieldBinding(
+            field: .purchaseReceiptURL,
+            label: "Purchase Receipt URL",
+            keyPath: \.purchaseReceiptURL,
+            encode: { $0 ?? "" },
+            decode: { $0 }
         )
     ]
 
@@ -97,7 +105,8 @@ extension Item {
     static func empty() -> Item {
         .init(id: "", imageURL: "", name: "", description: "", quantity: 0,
               dateAdded: "", estimatedPrice: nil, status: .available,
-              lastKnownRoom: .empty(), updatedBy: "", lastUpdated: nil, propertyTag: nil)
+              lastKnownRoom: .empty(), updatedBy: "", lastUpdated: nil, propertyTag: nil,
+              purchaseReceiptURL: nil)
     }
 }
 

@@ -21,7 +21,8 @@ final class ViewModelTests: XCTestCase {
         let vm = CreateItemViewModel(
             inventoryService: InventoryService(sheetId: "s", networkService: MockNetworkService()),
             roomService: RoomService(sheetId: "s", networkService: MockNetworkService()),
-            itemsProvider: { [Item(id: "1", imageURL: "", name: "", description: "", quantity: 1, dateAdded: "", estimatedPrice: nil, status: .available, lastKnownRoom: .empty(), updatedBy: "", lastUpdated: nil, propertyTag: PropertyTag(rawValue: "A0001"))] }
+            receiptService: PurchaseReceiptService(),
+            itemsProvider: { [Item(id: "1", imageURL: "", name: "", description: "", quantity: 1, dateAdded: "", estimatedPrice: nil, status: .available, lastKnownRoom: .empty(), updatedBy: "", lastUpdated: nil, propertyTag: PropertyTag(rawValue: "A0001"), purchaseReceiptURL: nil)] }
         )
         vm.propertyTagInput = "A0001"
         vm.validateTag()

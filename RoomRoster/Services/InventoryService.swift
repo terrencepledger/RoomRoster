@@ -91,7 +91,7 @@ actor InventoryService {
 
     func updateItem(_ item: Item) async throws {
         let rowNumber = try await getRowNumber(for: item.id)
-        let range = "Inventory!A\(rowNumber):L\(rowNumber)"
+        let range = "Inventory!A\(rowNumber):M\(rowNumber)"
         let sheetId = await MainActor.run { sheetIdProvider() } ?? ""
         let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId)/values/\(range)?valueInputOption=USER_ENTERED"
 
