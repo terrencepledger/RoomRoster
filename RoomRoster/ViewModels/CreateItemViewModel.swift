@@ -117,8 +117,8 @@ final class CreateItemViewModel: ObservableObject {
         receiptUploadError = nil
 
         do {
-            let url = try receiptService.saveReceipt(image: image, for: newItem.id)
-            newItem.purchaseReceiptURL = url.path
+            let url = try await receiptService.uploadReceipt(image: image, for: newItem.id)
+            newItem.purchaseReceiptURL = url.absoluteString
         } catch {
             receiptUploadError = error.localizedDescription
             HapticManager.shared.error()
@@ -132,8 +132,8 @@ final class CreateItemViewModel: ObservableObject {
 
         do {
             let data = try Data(contentsOf: url)
-            let saved = try receiptService.saveReceiptPDF(data, for: newItem.id)
-            newItem.purchaseReceiptURL = saved.path
+            let saved = try await receiptService.uploadReceiptPDF(data, for: newItem.id)
+            newItem.purchaseReceiptURL = saved.absoluteString
         } catch {
             receiptUploadError = error.localizedDescription
             HapticManager.shared.error()
