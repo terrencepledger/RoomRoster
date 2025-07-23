@@ -53,6 +53,7 @@ struct CreateItemView: View {
                     }
 
                     Section {
+                        ReceiptImageView(urlString: viewModel.newItem.purchaseReceiptURL)
                         CombinedImagePickerButton(image: $viewModel.pickedReceiptImage)
                             .onChange(of: viewModel.pickedReceiptImage) { _, img in
                                 viewModel.onReceiptPicked(img)

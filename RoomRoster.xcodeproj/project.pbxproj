@@ -75,7 +75,8 @@
 		B6E684D52DD176DA00EE608B /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E684D42DD176D900EE608B /* Logger.swift */; };
                 B6F964922DB028E80093089A /* ImageUploadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F964912DB028E80093089A /* ImageUploadService.swift */; };
                 9E010CFAAB177DFBCE24F75D /* PurchaseReceiptService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348D6D97EC280691AFA3BF51 /* PurchaseReceiptService.swift */; };
-		B6F964952DB02B4C0093089A /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964942DB02B4C0093089A /* FirebaseAnalytics */; };
+                A1E0B1C14AD24FA3B4C56D7F /* ReceiptImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E0B1C14AD24FA3B4C56D7E /* ReceiptImageView.swift */; };
+                B6F964952DB02B4C0093089A /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964942DB02B4C0093089A /* FirebaseAnalytics */; };
 		B6F964972DB02BB60093089A /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964962DB02BB60093089A /* FirebaseAnalytics */; };
 		B6F964992DB02BB60093089A /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964982DB02BB60093089A /* FirebaseAnalyticsOnDeviceConversion */; };
 		B6F9649B2DB02BB60093089A /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = B6F9649A2DB02BB60093089A /* FirebaseAnalyticsWithoutAdIdSupport */; };
@@ -117,8 +118,9 @@
 		614508236AFA4269887FF35A /* RoomServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomServiceTests.swift; sourceTree = "<group>"; };
 		6624E3822EF84521B07B00F3 /* SalesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesView.swift; sourceTree = "<group>"; };
 		68CAB974B03A4708BB968FC8 /* SellItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellItemView.swift; sourceTree = "<group>"; };
-		70EC0F7257914A11A7589F29 /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
-		767B058C2D4C5DC000566C25 /* RoomRoster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RoomRoster.app; sourceTree = BUILT_PRODUCTS_DIR; };
+                70EC0F7257914A11A7589F29 /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
+                A1E0B1C14AD24FA3B4C56D7E /* ReceiptImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptImageView.swift; sourceTree = "<group>"; };
+                767B058C2D4C5DC000566C25 /* RoomRoster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RoomRoster.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		767B058F2D4C5DC000566C25 /* RoomRosterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomRosterApp.swift; sourceTree = "<group>"; };
                 767B05912D4C5DC000566C25 /* InventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryView.swift; sourceTree = "<group>"; };
 		767B05932D4C5DC000566C25 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
@@ -385,8 +387,9 @@
 			isa = PBXGroup;
 			children = (
 				B6A6D6DB2DD8FD4E00378BFF /* ErrorBanner.swift */,
-				AA12BBCC44D055EE00112232 /* SuccessBanner.swift */,
-				70EC0F7257914A11A7589F29 /* ShareSheet.swift */,
+                                AA12BBCC44D055EE00112232 /* SuccessBanner.swift */,
+                                A1E0B1C14AD24FA3B4C56D7E /* ReceiptImageView.swift */,
+                                70EC0F7257914A11A7589F29 /* ShareSheet.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -568,8 +571,9 @@
 				767B05902D4C5DC000566C25 /* RoomRosterApp.swift in Sources */,
 				B65F71292DE6494A00310D40 /* SheetsView.swift in Sources */,
 				B612436C2DB03BA000B9098B /* ImagePickerView.swift in Sources */,
-				E0B282C5B6FF4AADB74F1235 /* DocumentPickerView.swift in Sources */,
-				B615ED202DE2BB15009BE623 /* Room.swift in Sources */,
+                                E0B282C5B6FF4AADB74F1235 /* DocumentPickerView.swift in Sources */,
+                                A1E0B1C14AD24FA3B4C56D7F /* ReceiptImageView.swift in Sources */,
+                                B615ED202DE2BB15009BE623 /* Room.swift in Sources */,
 				8030ADBBCBB442E3B8D6D5FB /* Condition.swift in Sources */,
                                 9E010CFAAB177DFBCE24F75D /* PurchaseReceiptService.swift in Sources */,
                                 5E159DC99DBD4D6E817F1768 /* Sale.swift in Sources */,

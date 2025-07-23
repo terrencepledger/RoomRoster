@@ -80,6 +80,7 @@ struct EditItemView: View {
 
                 // MARK: – Purchase Receipt
                 Section(header: Text("Purchase Receipt")) {
+                    ReceiptImageView(urlString: editableItem.purchaseReceiptURL)
                     CombinedImagePickerButton(image: $pickedReceiptImage)
                         .onChange(of: pickedReceiptImage) { _, img in
                             Task { await saveReceiptImage(img) }

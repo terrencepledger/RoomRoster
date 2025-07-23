@@ -50,6 +50,12 @@ struct ItemDetailsView: View {
                         .cornerRadius(12)
                     }
 
+                    if item.purchaseReceiptURL != nil {
+                        Text("Purchase Receipt")
+                            .font(.headline)
+                        ReceiptImageView(urlString: item.purchaseReceiptURL)
+                    }
+
                     VStack(alignment: .leading, spacing: 8) {
                         Text(item.name)
                             .font(.title)
