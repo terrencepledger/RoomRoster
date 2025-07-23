@@ -117,8 +117,9 @@ struct ReportsView: View {
                 }
 
             }
-            .navigationTitle(l10n.title)
-            .toolbar {
+        }
+        .navigationTitle(l10n.title)
+        .toolbar {
                 if sheets.currentSheet != nil {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Menu {
