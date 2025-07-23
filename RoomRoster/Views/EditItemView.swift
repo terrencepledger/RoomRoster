@@ -326,9 +326,9 @@ struct EditItemView: View {
         receiptUploadError = nil
         defer { isUploadingReceipt = false }
         do {
-            let url = try PurchaseReceiptService()
-                .saveReceipt(image: image, for: editableItem.id)
-            editableItem.purchaseReceiptURL = url.path
+            let url = try await PurchaseReceiptService()
+                .uploadReceipt(image: image, for: editableItem.id)
+            editableItem.purchaseReceiptURL = url.absoluteString
         } catch {
             receiptUploadError = error.localizedDescription
             HapticManager.shared.error()
@@ -342,9 +342,9 @@ struct EditItemView: View {
         defer { isUploadingReceipt = false }
         do {
             let data = try Data(contentsOf: url)
-            let saved = try PurchaseReceiptService()
-                .saveReceiptPDF(data, for: editableItem.id)
-            editableItem.purchaseReceiptURL = saved.path
+            let saved = try await PurchaseReceiptService()
+                .uploadReceiptPDF(data, for: editableItem.id)
+            editableItem.purchaseReceiptURL = saved.absoluteString
         } catch {
             receiptUploadError = error.localizedDescription
             HapticManager.shared.error()
