@@ -76,6 +76,7 @@
 		B6E684D52DD176DA00EE608B /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E684D42DD176D900EE608B /* Logger.swift */; };
                 B6F964922DB028E80093089A /* ImageUploadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F964912DB028E80093089A /* ImageUploadService.swift */; };
                 9E010CFAAB177DFBCE24F75D /* PurchaseReceiptService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348D6D97EC280691AFA3BF51 /* PurchaseReceiptService.swift */; };
+                99567D737F954FCFACA5BB98 /* FileDownloadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237EB84657314FDAAB9F319B /* FileDownloadService.swift */; };
                 A1E0B1C14AD24FA3B4C56D7F /* ReceiptImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E0B1C14AD24FA3B4C56D7E /* ReceiptImageView.swift */; };
                 B6F964952DB02B4C0093089A /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964942DB02B4C0093089A /* FirebaseAnalytics */; };
 		B6F964972DB02BB60093089A /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964962DB02BB60093089A /* FirebaseAnalytics */; };
@@ -179,6 +180,7 @@
 		B6E684D42DD176D900EE608B /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		B6F964912DB028E80093089A /* ImageUploadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadService.swift; sourceTree = "<group>"; };
                 348D6D97EC280691AFA3BF51 /* PurchaseReceiptService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseReceiptService.swift; sourceTree = "<group>"; };
+                237EB84657314FDAAB9F319B /* FileDownloadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDownloadService.swift; sourceTree = "<group>"; };
                 135983A51B686BEA6E40D6D4 /* PurchaseReceiptServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseReceiptServiceTests.swift; sourceTree = "<group>"; };
 		B7F2B3A12FF645E8A0FF1235 /* SheetsUtilsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetsUtilsTests.swift; sourceTree = "<group>"; };
 		BF137618CD644A1997B55ED6 /* MockNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkService.swift; sourceTree = "<group>"; };
@@ -290,6 +292,7 @@
 				B61A9BD32DD65FE900D04E9A /* HistoryLogService.swift */,
 				767E82C62D8F1A2B00B48011 /* InventoryService.swift */,
                                 B6F964912DB028E80093089A /* ImageUploadService.swift */,
+                                237EB84657314FDAAB9F319B /* FileDownloadService.swift */,
                                 348D6D97EC280691AFA3BF51 /* PurchaseReceiptService.swift */,
                                 3758A93BD9E24318B74E47C2 /* SalesService.swift */,
                                 C01D35FCE10EB02BEFD65D29 /* GmailService.swift */,
@@ -583,6 +586,7 @@
                                 B615ED202DE2BB15009BE623 /* Room.swift in Sources */,
 				8030ADBBCBB442E3B8D6D5FB /* Condition.swift in Sources */,
                                 9E010CFAAB177DFBCE24F75D /* PurchaseReceiptService.swift in Sources */,
+                                99567D737F954FCFACA5BB98 /* FileDownloadService.swift in Sources */,
                                 5E159DC99DBD4D6E817F1768 /* Sale.swift in Sources */,
 				3284B9D30A6B43858230535F /* SalesService.swift in Sources */,
 				B6D80EFB2E28CF5800748907 /* Spreadsheet.swift in Sources */,

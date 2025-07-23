@@ -138,6 +138,9 @@ struct Strings {
         static let editItem = "Edit Item"
         static let failedToUpdate = "Failed to update item. Please try again."
         static let failedToLoadHistory = "Failed to load history. Please try again."
+        static let downloadImage = "Download Image"
+        static let downloadReceipt = "Download Receipt"
+        static let downloadFailed = "Failed to download file. Please try again."
     }
 
     // MARK: - EditItemView

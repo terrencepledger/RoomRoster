@@ -20,6 +20,7 @@ struct ItemDetailsView: View {
     @State private var saleSuccess: String?
     @State private var saleError: String?
     @StateObject private var viewModel = ItemDetailsViewModel()
+    @State private var shareURL: URL?
 
     @EnvironmentObject var inventoryVM: InventoryViewModel
 
@@ -181,6 +182,48 @@ struct ItemDetailsView: View {
             }
         }
         .navigationTitle(l10n.title)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Menu {
+                    if let url = URL(string: item.imageURL) {
+                        Button(l10n.downloadImage) {
+                            Task {
+                                do {
+                                    shareURL = try await viewModel.downloadImage(from: url)
+                                    HapticManager.shared.success()
+                                } catch {
+                                    Logger.log(error, extra: ["description": "Failed to download image"])
+                                    HapticManager.shared.error()
+                                    viewModel.errorMessage = l10n.downloadFailed
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                        withAnimation { viewModel.errorMessage = nil }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if item.purchaseReceiptURL != nil {
+                        Button(l10n.downloadReceipt) {
+                            Task {
+                                do {
+                                    shareURL = try await viewModel.downloadReceipt(for: item.id)
+                                    HapticManager.shared.success()
+                                } catch {
+                                    Logger.log(error, extra: ["description": "Failed to download receipt"])
+                                    HapticManager.shared.error()
+                                    viewModel.errorMessage = l10n.downloadFailed
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                        withAnimation { viewModel.errorMessage = nil }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } label: {
+                    Image(systemName: "square.and.arrow.down")
+                }
+            }
+        }
         .sheet(isPresented: $isEditing) {
             EditItemView(editableItem: item) { updatedItem in
                 let oldItem = item
@@ -236,6 +279,9 @@ struct ItemDetailsView: View {
             if let sale {
                 SalesDetailsView(sale: sale, itemName: item.name)
             }
+        }
+        .sheet(item: $shareURL) { url in
+            ShareSheet(activityItems: [url])
         }
         .onAppear {
             Logger.page("ItemDetailsView")
