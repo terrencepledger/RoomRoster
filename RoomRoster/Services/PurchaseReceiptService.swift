@@ -47,7 +47,7 @@ final class PurchaseReceiptService {
         let ref = storage.reference().child("receipts/\(itemId).\(type.fileExtension)")
         let metadata = StorageMetadata()
         metadata.contentType = type.mimeType
-        try await withCheckedThrowingContinuation { cont in
+        try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Void, Error>) in
             ref.putData(data, metadata: metadata) { _, error in
                 if let error = error {
                     cont.resume(throwing: PurchaseReceiptServiceError.uploadFailed(error))
@@ -61,7 +61,7 @@ final class PurchaseReceiptService {
 
     private func downloadReceiptURL(for itemId: String, type: ReceiptFileType) async throws -> URL {
         let ref = storage.reference().child("receipts/\(itemId).\(type.fileExtension)")
-        return try await withCheckedThrowingContinuation { cont in
+        return try await withCheckedThrowingContinuation { (cont: CheckedContinuation<URL, Error>) in
             ref.downloadURL { url, error in
                 if let error = error {
                     cont.resume(throwing: error)
