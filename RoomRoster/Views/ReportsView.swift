@@ -160,3 +160,5 @@ struct ReportsView: View {
 extension URL: Identifiable {
     public var id: String { absoluteString }
 }
+
+}
