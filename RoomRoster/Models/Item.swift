@@ -100,3 +100,9 @@ extension Item {
               lastKnownRoom: .empty(), updatedBy: "", lastUpdated: nil, propertyTag: nil)
     }
 }
+
+extension Item {
+    var depreciatedValue: Double? {
+        DepreciationCalculator.depreciatedValue(for: self, annualRate: 0.1)
+    }
+}
