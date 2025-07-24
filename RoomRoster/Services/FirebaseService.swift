@@ -10,7 +10,7 @@ struct FirebaseService {
         let ref = storage.reference().child(path)
         let metadata = StorageMetadata()
         metadata.contentType = contentType
-        try await withCheckedThrowingContinuation { cont in
+        try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Void, Error>) in
             ref.putData(data, metadata: metadata) { _, error in
                 if let error = error {
                     cont.resume(throwing: error)
@@ -25,7 +25,7 @@ struct FirebaseService {
     func downloadURL(for path: String) async throws -> URL {
         Logger.network("FirebaseService-downloadURL-\(path)")
         let ref = storage.reference().child(path)
-        return try await withCheckedThrowingContinuation { cont in
+        return try await withCheckedThrowingContinuation { (cont: CheckedContinuation<URL, Error>) in
             ref.downloadURL { url, error in
                 if let error = error {
                     cont.resume(throwing: error)
