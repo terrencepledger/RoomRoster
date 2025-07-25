@@ -55,11 +55,7 @@ actor SalesService {
     func sendReceipts(to buyerEmail: String?, sellerEmail: String, sale: Sale) async {
         let subject = "Sale Receipt for \(sale.itemId)"
         let body = "Item sold on \(sale.date.toShortString()) for \(sale.price ?? 0)"
-        #if canImport(UIKit)
         let pdf = ReceiptPDFGenerator.generate(for: sale)
-        #else
-        let pdf: Data? = nil
-        #endif
         if let buyerEmail {
             try? await gmailService.sendEmail(to: buyerEmail, subject: subject, body: body, attachment: pdf)
         }
