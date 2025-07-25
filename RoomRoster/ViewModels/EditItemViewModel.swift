@@ -6,6 +6,10 @@
 //
 
 import SwiftUI
+import Foundation
+#if canImport(UIKit)
+import UIKit
+#endif
 
 @MainActor
 final class EditItemViewModel: ObservableObject {

@@ -7,6 +7,10 @@
 
 import SwiftUI
 import Combine
+import Foundation
+#if canImport(UIKit)
+import UIKit
+#endif
 
 private typealias l10n = Strings.createItem
 

@@ -73,7 +73,9 @@ class AuthenticationManager: ObservableObject {
     }
 
     private func triggerSignIn() async throws {
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene, let rootVC = windowScene.windows.first(where: { $0.isKeyWindow })?.rootViewController
+        #if canImport(UIKit)
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let rootVC = windowScene.windows.first(where: { $0.isKeyWindow })?.rootViewController
         else {
             throw NSError(
                 domain: "Auth",
@@ -94,5 +96,12 @@ class AuthenticationManager: ObservableObject {
 
         let user = result.user
         updateUser(from: user)
+        #else
+        throw NSError(
+            domain: "Auth",
+            code: -1,
+            userInfo: [NSLocalizedDescriptionKey: "Google sign-in requires UIKit"]
+        )
+        #endif
     }
 }

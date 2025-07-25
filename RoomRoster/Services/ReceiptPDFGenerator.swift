@@ -1,6 +1,7 @@
 #if canImport(UIKit)
 import UIKit
 #endif
+import Foundation
 
 struct ReceiptPDFGenerator {
     static func generate(for sale: Sale) -> Data? {

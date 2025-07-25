@@ -1,3 +1,4 @@
+#if canImport(UIKit)
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -49,3 +50,4 @@ struct PDFPickerButton: View {
         }
     }
 }
+#endif
