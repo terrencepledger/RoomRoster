@@ -241,6 +241,7 @@ struct ItemDetailsView: View {
                         await HistoryLogService()
                             .logChanges(old: oldItem, new: updatedItem, updatedBy: updatedBy)
                         await viewModel.fetchItemHistory(for: item.id)
+                        await inventoryVM.fetchInventory()
                     } catch {
                         Logger.log(error, extra: [
                             "description": "Error updating item",
