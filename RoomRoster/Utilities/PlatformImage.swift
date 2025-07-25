@@ -6,6 +6,10 @@ import AppKit
 public typealias PlatformImage = NSImage
 #endif
 
+#if canImport(SwiftUI)
+import SwiftUI
+#endif
+
 #if canImport(CoreGraphics)
 import CoreGraphics
 #endif
@@ -22,7 +26,9 @@ extension PlatformImage {
         #endif
     }
 }
+#endif
 
+#if canImport(SwiftUI) && (canImport(AppKit) || canImport(UIKit))
 extension Image {
     init(platformImage: PlatformImage) {
         #if canImport(UIKit)
