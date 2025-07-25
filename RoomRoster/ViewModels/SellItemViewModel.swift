@@ -16,6 +16,7 @@ final class SellItemViewModel: ObservableObject {
     private let salesService: SalesService
     private let inventoryService: InventoryService
     private let historyService: HistoryLogService
+    private let receiptService: SaleReceiptService
 
     enum SaleError: Error {
         case alreadySubmitting
@@ -29,12 +30,14 @@ final class SellItemViewModel: ObservableObject {
         item: Item,
         salesService: SalesService = .init(),
         inventoryService: InventoryService = .init(),
-        historyService: HistoryLogService = .init()
+        historyService: HistoryLogService = .init(),
+        receiptService: SaleReceiptService = .init()
     ) {
         self.item = item
         self.salesService = salesService
         self.inventoryService = inventoryService
         self.historyService = historyService
+        self.receiptService = receiptService
         sale.itemId = item.id
         sale.price = item.estimatedPrice
     }
@@ -44,6 +47,11 @@ final class SellItemViewModel: ObservableObject {
         isSubmitting = true
         defer { isSubmitting = false }
 
+        if let data = ReceiptPDFGenerator.generate(for: sale) {
+            if let url = try? await receiptService.uploadReceiptPDF(data, for: sale.itemId) {
+                sale.receiptPDFURL = url.absoluteString
+            }
+        }
         try await salesService.recordSale(sale)
         var updated = item
         updated.status = .sold

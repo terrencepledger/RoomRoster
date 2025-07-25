@@ -77,6 +77,10 @@
                 B6F964922DB028E80093089A /* ImageUploadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F964912DB028E80093089A /* ImageUploadService.swift */; };
                0846C3EC3AB702F6D4C449EE /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC08C6562BA6C4B23B534ED /* FirebaseService.swift */; };
                9E010CFAAB177DFBCE24F75D /* PurchaseReceiptService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348D6D97EC280691AFA3BF51 /* PurchaseReceiptService.swift */; };
+                25C53E74D5D744DD93C31C71 /* SaleReceiptService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E453FBEAF7344E3B80ABA26 /* SaleReceiptService.swift */; };
+                231BCF345A6D40108E4E8A25 /* EditSaleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1822C415782A45CBAE97E18E /* EditSaleViewModel.swift */; };
+                97BFB50A000F41D8BB3BD152 /* EditSaleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99FBCC06B74DEE9D983DD3 /* EditSaleView.swift */; };
+                62176ADB9D7B4DF2BBE81798 /* SaleReceiptServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363E06481A95438E8355C5E0 /* SaleReceiptServiceTests.swift */; };
                 99567D737F954FCFACA5BB98 /* FileDownloadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237EB84657314FDAAB9F319B /* FileDownloadService.swift */; };
                 A1E0B1C14AD24FA3B4C56D7F /* ReceiptImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E0B1C14AD24FA3B4C56D7E /* ReceiptImageView.swift */; };
                 B6F964952DB02B4C0093089A /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = B6F964942DB02B4C0093089A /* FirebaseAnalytics */; };
@@ -181,9 +185,12 @@
 		B6E684D42DD176D900EE608B /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
                 B6F964912DB028E80093089A /* ImageUploadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadService.swift; sourceTree = "<group>"; };
                4AC08C6562BA6C4B23B534ED /* FirebaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
-               348D6D97EC280691AFA3BF51 /* PurchaseReceiptService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseReceiptService.swift; sourceTree = "<group>"; };
+                348D6D97EC280691AFA3BF51 /* PurchaseReceiptService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseReceiptService.swift; sourceTree = "<group>"; };
+                4A0C6DE9B5F0434A834687D3 /* ReceiptFileType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptFileType.swift; sourceTree = "<group>"; };
+                7E453FBEAF7344E3B80ABA26 /* SaleReceiptService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleReceiptService.swift; sourceTree = "<group>"; };
                 237EB84657314FDAAB9F319B /* FileDownloadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDownloadService.swift; sourceTree = "<group>"; };
                 135983A51B686BEA6E40D6D4 /* PurchaseReceiptServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseReceiptServiceTests.swift; sourceTree = "<group>"; };
+                363E06481A95438E8355C5E0 /* SaleReceiptServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleReceiptServiceTests.swift; sourceTree = "<group>"; };
 		B7F2B3A12FF645E8A0FF1235 /* SheetsUtilsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetsUtilsTests.swift; sourceTree = "<group>"; };
 		BF137618CD644A1997B55ED6 /* MockNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkService.swift; sourceTree = "<group>"; };
 		C01D35FCE10EB02BEFD65D29 /* GmailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GmailService.swift; sourceTree = "<group>"; };
@@ -248,8 +255,9 @@
 				B65F712A2DE6495900310D40 /* SettingsView.swift */,
 				B65F71282DE6494A00310D40 /* SheetsView.swift */,
                                 6624E3822EF84521B07B00F3 /* SalesView.swift */,
-                                C616CDE1A2B34C5D67890ABD /* SalesDetailsView.swift */,
-                                68CAB974B03A4708BB968FC8 /* SellItemView.swift */,
+                               C616CDE1A2B34C5D67890ABD /* SalesDetailsView.swift */,
+                               68CAB974B03A4708BB968FC8 /* SellItemView.swift */,
+                                7E99FBCC06B74DEE9D983DD3 /* EditSaleView.swift */,
                         );
                         path = Views;
                         sourceTree = "<group>";
@@ -262,8 +270,9 @@
 				767E82CA2D8F1B2C00B48011 /* ItemDetailsViewModel.swift */,
 				767B05BC2D4C5E1700566C25 /* InventoryViewModel.swift */,
 				12FE82B0693248D49E8D77BB /* ReportsViewModel.swift */,
-                                F1DB1AD2C44D425AB9A59153 /* SellItemViewModel.swift */,
-                                E32FE1D99B3B44E6A6801234 /* SalesViewModel.swift */,
+                               F1DB1AD2C44D425AB9A59153 /* SellItemViewModel.swift */,
+                               E32FE1D99B3B44E6A6801234 /* SalesViewModel.swift */,
+                                1822C415782A45CBAE97E18E /* EditSaleViewModel.swift */,
                         );
                         path = ViewModels;
                         sourceTree = "<group>";
@@ -296,10 +305,12 @@
                                B6F964912DB028E80093089A /* ImageUploadService.swift */,
                                4AC08C6562BA6C4B23B534ED /* FirebaseService.swift */,
                                237EB84657314FDAAB9F319B /* FileDownloadService.swift */,
-                                348D6D97EC280691AFA3BF51 /* PurchaseReceiptService.swift */,
-                                3758A93BD9E24318B74E47C2 /* SalesService.swift */,
-                                C01D35FCE10EB02BEFD65D29 /* GmailService.swift */,
-                        );
+                               348D6D97EC280691AFA3BF51 /* PurchaseReceiptService.swift */,
+                                4A0C6DE9B5F0434A834687D3 /* ReceiptFileType.swift */,
+                                7E453FBEAF7344E3B80ABA26 /* SaleReceiptService.swift */,
+                               3758A93BD9E24318B74E47C2 /* SalesService.swift */,
+                               C01D35FCE10EB02BEFD65D29 /* GmailService.swift */,
+                       );
 			path = Services;
 			sourceTree = "<group>";
 		};
@@ -361,8 +372,9 @@
 				BF137618CD644A1997B55ED6 /* MockNetworkService.swift */,
 				614508236AFA4269887FF35A /* RoomServiceTests.swift */,
 				4AC01C73ED7A4FBC9EECB3D3 /* ViewModelTests.swift */,
-				8BC8C5F5D40748AD93602E33 /* SalesServiceTests.swift */,
-				D635C54A7B58948D1F8036B4 /* SpreadsheetManagerTests.swift */,
+                               8BC8C5F5D40748AD93602E33 /* SalesServiceTests.swift */,
+                                363E06481A95438E8355C5E0 /* SaleReceiptServiceTests.swift */,
+                               D635C54A7B58948D1F8036B4 /* SpreadsheetManagerTests.swift */,
 				B7F2B3A12FF645E8A0FF1235 /* SheetsUtilsTests.swift */,
 				F2ACBFBB75EA4E3C9514A9AB /* DepreciationCalculatorTests.swift */,
                         );
@@ -590,6 +602,9 @@
                                 B615ED202DE2BB15009BE623 /* Room.swift in Sources */,
 				8030ADBBCBB442E3B8D6D5FB /* Condition.swift in Sources */,
                                 9E010CFAAB177DFBCE24F75D /* PurchaseReceiptService.swift in Sources */,
+                                25C53E74D5D744DD93C31C71 /* SaleReceiptService.swift in Sources */,
+                                231BCF345A6D40108E4E8A25 /* EditSaleViewModel.swift in Sources */,
+                                97BFB50A000F41D8BB3BD152 /* EditSaleView.swift in Sources */,
                                 99567D737F954FCFACA5BB98 /* FileDownloadService.swift in Sources */,
                                 5E159DC99DBD4D6E817F1768 /* Sale.swift in Sources */,
 				3284B9D30A6B43858230535F /* SalesService.swift in Sources */,
@@ -611,6 +626,7 @@
 				767B05A42D4C5DC400566C25 /* RoomRosterTests.swift in Sources */,
                                 72BF4E5D2A924D36879BA797 /* InventoryServiceTests.swift in Sources */,
                                 62093EEF26D4F31B0F245579 /* PurchaseReceiptServiceTests.swift in Sources */,
+                                62176ADB9D7B4DF2BBE81798 /* SaleReceiptServiceTests.swift in Sources */,
                                 4A41F16A7DFB4ABE9D824975 /* ItemValidatorTests.swift in Sources */,
 				E9FBF450607D494DA1894333 /* MockNetworkService.swift in Sources */,
 				DE7D257232324BDDB96C6F37 /* RoomServiceTests.swift in Sources */,
