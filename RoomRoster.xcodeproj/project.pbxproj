@@ -800,12 +800,13 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
+                               SWIFT_EMIT_LOC_STRINGS = YES;
+                               SWIFT_VERSION = 5.0;
+                               TARGETED_DEVICE_FAMILY = "1,2";
+                               SUPPORTS_MACCATALYST = YES;
+                       };
+                       name = Debug;
+               };
 		767B05B52D4C5DC400566C25 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -842,11 +843,12 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
+                               SWIFT_VERSION = 5.0;
+                               TARGETED_DEVICE_FAMILY = "1,2";
+                               SUPPORTS_MACCATALYST = YES;
+                       };
+                       name = Release;
+               };
 		767B05B72D4C5DC400566C25 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -864,12 +866,13 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RoomRoster.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RoomRoster";
-			};
-			name = Debug;
-		};
+                               SWIFT_VERSION = 5.0;
+                               TARGETED_DEVICE_FAMILY = "1,2";
+                               TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RoomRoster.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RoomRoster";
+                               SUPPORTS_MACCATALYST = YES;
+                       };
+                       name = Debug;
+               };
 		767B05B82D4C5DC400566C25 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -887,12 +890,13 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RoomRoster.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RoomRoster";
-			};
-			name = Release;
-		};
+                               SWIFT_VERSION = 5.0;
+                               TARGETED_DEVICE_FAMILY = "1,2";
+                               TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RoomRoster.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RoomRoster";
+                               SUPPORTS_MACCATALYST = YES;
+                       };
+                       name = Release;
+               };
 		767B05BA2D4C5DC400566C25 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -909,12 +913,13 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = RoomRoster;
-			};
-			name = Debug;
-		};
+                               SWIFT_VERSION = 5.0;
+                               TARGETED_DEVICE_FAMILY = "1,2";
+                               TEST_TARGET_NAME = RoomRoster;
+                               SUPPORTS_MACCATALYST = YES;
+                       };
+                       name = Debug;
+               };
 		767B05BB2D4C5DC400566C25 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -931,12 +936,13 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = RoomRoster;
-			};
-			name = Release;
-		};
+                               SWIFT_VERSION = 5.0;
+                               TARGETED_DEVICE_FAMILY = "1,2";
+                               TEST_TARGET_NAME = RoomRoster;
+                               SUPPORTS_MACCATALYST = YES;
+                       };
+                       name = Release;
+               };
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
