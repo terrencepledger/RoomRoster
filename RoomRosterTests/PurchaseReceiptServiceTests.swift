@@ -1,5 +1,7 @@
 import XCTest
+#if canImport(UIKit)
 import UIKit
+#endif
 @testable import RoomRoster
 
 final class PurchaseReceiptServiceTests: XCTestCase {

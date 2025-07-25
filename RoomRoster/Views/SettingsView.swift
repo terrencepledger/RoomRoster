@@ -6,7 +6,9 @@
 //
 
 import SwiftUI
+#if canImport(UIKit)
 import UIKit
+#endif
 
 private typealias l10n = Strings.settings
 

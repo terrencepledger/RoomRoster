@@ -5,7 +5,9 @@
 //  Created by Terrence Pledger on 4/16/25.
 //
 
+#if canImport(UIKit)
 import UIKit
+#endif
 
 enum ImageUploadError: Error {
     case failedToConvertImage

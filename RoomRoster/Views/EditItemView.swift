@@ -7,7 +7,9 @@
 
 import SwiftUI
 import PhotosUI
+#if canImport(UIKit)
 import UIKit
+#endif
 
 private typealias l10n = Strings.editItem
 

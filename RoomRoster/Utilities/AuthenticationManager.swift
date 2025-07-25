@@ -7,7 +7,9 @@
 
 import Foundation
 import GoogleSignIn
+#if canImport(UIKit)
 import UIKit
+#endif
 
 @MainActor
 class AuthenticationManager: ObservableObject {
