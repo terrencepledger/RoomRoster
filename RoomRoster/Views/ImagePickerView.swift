@@ -7,9 +7,12 @@
 
 import SwiftUI
 import PhotosUI
+import UIKit
 
 private typealias l10n = Strings.imagePicker
 
+// UIKit-based picker for iPhone and iPad only. Not available on Mac Catalyst.
+#if !targetEnvironment(macCatalyst)
 struct UIKitImagePicker: UIViewControllerRepresentable {
     @Environment(\.presentationMode) private var presentationMode
     @Binding var image: UIImage?
@@ -85,3 +88,36 @@ struct CombinedImagePickerButton: View {
         }
     }
 }
+#endif
+
+#if targetEnvironment(macCatalyst)
+/// Mac Catalyst version using `PhotosPicker` since `UIImagePickerController`
+/// isn't available on macOS.
+struct CombinedImagePickerButton: View {
+    @Binding var image: UIImage?
+    @State private var selection: PhotosPickerItem?
+
+    var body: some View {
+        PhotosPicker(selection: $selection, matching: .images) {
+            if let img = image {
+                Image(uiImage: img)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 120)
+                    .cornerRadius(8)
+            } else {
+                Label(l10n.title, systemImage: "photo.on.rectangle")
+            }
+        }
+        .onChange(of: selection) { newItem in
+            guard let newItem else { return }
+            Task {
+                if let data = try? await newItem.loadTransferable(type: Data.self),
+                   let uiImage = UIImage(data: data) {
+                    image = uiImage
+                }
+            }
+        }
+    }
+}
+#endif
