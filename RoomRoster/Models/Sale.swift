@@ -9,11 +9,13 @@ struct Sale {
     var buyerContact: String?
     var soldBy: String
     var department: String
+    var receiptImageURL: String?
+    var receiptPDFURL: String?
 }
 
 extension Sale {
     init?(from row: [String]) {
-        let padded = row.padded(to: 8)
+        let padded = row.padded(to: 10)
         guard !padded[0].isEmpty,
               let date = Date.fromShortString(padded[1]) else { return nil }
         itemId = padded[0]
@@ -24,6 +26,8 @@ extension Sale {
         buyerContact = padded[5]
         soldBy = padded[6]
         department = padded[7]
+        receiptImageURL = padded[8].isEmpty ? nil : padded[8]
+        receiptPDFURL = padded[9].isEmpty ? nil : padded[9]
     }
     func toRow() -> [String] {
         [
@@ -34,7 +38,9 @@ extension Sale {
             buyerName,
             buyerContact ?? "",
             soldBy,
-            department
+            department,
+            receiptImageURL ?? "",
+            receiptPDFURL ?? ""
         ]
     }
 }
