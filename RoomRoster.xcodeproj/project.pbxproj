@@ -77,7 +77,8 @@
                 B6F964922DB028E80093089A /* ImageUploadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F964912DB028E80093089A /* ImageUploadService.swift */; };
                0846C3EC3AB702F6D4C449EE /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC08C6562BA6C4B23B534ED /* FirebaseService.swift */; };
                9E010CFAAB177DFBCE24F75D /* PurchaseReceiptService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348D6D97EC280691AFA3BF51 /* PurchaseReceiptService.swift */; };
-                25C53E74D5D744DD93C31C71 /* SaleReceiptService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E453FBEAF7344E3B80ABA26 /* SaleReceiptService.swift */; };
+               B0230BC284FF666FFF0227E5 /* ReceiptFileType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A0C6DE9B5F0434A834687D3 /* ReceiptFileType.swift */; };
+               25C53E74D5D744DD93C31C71 /* SaleReceiptService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E453FBEAF7344E3B80ABA26 /* SaleReceiptService.swift */; };
                 231BCF345A6D40108E4E8A25 /* EditSaleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1822C415782A45CBAE97E18E /* EditSaleViewModel.swift */; };
                 97BFB50A000F41D8BB3BD152 /* EditSaleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E99FBCC06B74DEE9D983DD3 /* EditSaleView.swift */; };
                 62176ADB9D7B4DF2BBE81798 /* SaleReceiptServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363E06481A95438E8355C5E0 /* SaleReceiptServiceTests.swift */; };
@@ -601,8 +602,9 @@
                                 A1E0B1C14AD24FA3B4C56D7F /* ReceiptImageView.swift in Sources */,
                                 B615ED202DE2BB15009BE623 /* Room.swift in Sources */,
 				8030ADBBCBB442E3B8D6D5FB /* Condition.swift in Sources */,
-                                9E010CFAAB177DFBCE24F75D /* PurchaseReceiptService.swift in Sources */,
-                                25C53E74D5D744DD93C31C71 /* SaleReceiptService.swift in Sources */,
+                               9E010CFAAB177DFBCE24F75D /* PurchaseReceiptService.swift in Sources */,
+                               B0230BC284FF666FFF0227E5 /* ReceiptFileType.swift in Sources */,
+                               25C53E74D5D744DD93C31C71 /* SaleReceiptService.swift in Sources */,
                                 231BCF345A6D40108E4E8A25 /* EditSaleViewModel.swift in Sources */,
                                 97BFB50A000F41D8BB3BD152 /* EditSaleView.swift in Sources */,
                                 99567D737F954FCFACA5BB98 /* FileDownloadService.swift in Sources */,
