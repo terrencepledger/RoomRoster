@@ -14,10 +14,10 @@ import UIKit
 private typealias l10n = Strings.imagePicker
 
 // UIKit-based picker for iPhone and iPad only. Not available on Mac Catalyst.
-#if !targetEnvironment(macCatalyst)
+#if canImport(UIKit) && !targetEnvironment(macCatalyst)
 struct UIKitImagePicker: UIViewControllerRepresentable {
     @Environment(\.presentationMode) private var presentationMode
-    @Binding var image: UIImage?
+    @Binding var image: PlatformImage?
     let sourceType: UIImagePickerController.SourceType
 
     class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
@@ -52,7 +52,7 @@ struct UIKitImagePicker: UIViewControllerRepresentable {
 }
 
 struct CombinedImagePickerButton: View {
-    @Binding var image: UIImage?
+    @Binding var image: PlatformImage?
     @State private var showSourceDialog = false
     @State private var showPicker = false
     @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
@@ -63,7 +63,7 @@ struct CombinedImagePickerButton: View {
             showSourceDialog = true
         } label: {
             if let img = image {
-                Image(uiImage: img)
+                Image(platformImage: img)
                     .resizable()
                     .scaledToFit()
                     .frame(height: 120)
@@ -90,19 +90,17 @@ struct CombinedImagePickerButton: View {
         }
     }
 }
-#endif
-
-#if targetEnvironment(macCatalyst)
-/// Mac Catalyst version using `PhotosPicker` since `UIImagePickerController`
-/// isn't available on macOS.
+#else
+/// macOS or Mac Catalyst version using `PhotosPicker` since `UIImagePickerController`
+/// isn't available.
 struct CombinedImagePickerButton: View {
-    @Binding var image: UIImage?
+    @Binding var image: PlatformImage?
     @State private var selection: PhotosPickerItem?
 
     var body: some View {
         PhotosPicker(selection: $selection, matching: .images) {
             if let img = image {
-                Image(uiImage: img)
+                Image(platformImage: img)
                     .resizable()
                     .scaledToFit()
                     .frame(height: 120)
@@ -115,8 +113,8 @@ struct CombinedImagePickerButton: View {
             guard let newItem else { return }
             Task {
                 if let data = try? await newItem.loadTransferable(type: Data.self),
-                   let uiImage = UIImage(data: data) {
-                    image = uiImage
+                   let platform = PlatformImage(data: data) {
+                    image = platform
                 }
             }
         }

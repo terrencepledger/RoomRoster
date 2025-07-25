@@ -94,7 +94,8 @@
 		DE7D257232324BDDB96C6F37 /* RoomServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614508236AFA4269887FF35A /* RoomServiceTests.swift */; };
 		E9FBF450607D494DA1894333 /* MockNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF137618CD644A1997B55ED6 /* MockNetworkService.swift */; };
 		EC28A959CE63441E9F3C1048 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70EC0F7257914A11A7589F29 /* ShareSheet.swift */; };
-		FDB33D97700C2EF04190FA52 /* GmailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01D35FCE10EB02BEFD65D29 /* GmailService.swift */; };
+                FDB33D97700C2EF04190FA52 /* GmailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01D35FCE10EB02BEFD65D29 /* GmailService.swift */; };
+                FB42C5677D8D477793E2A66E /* PlatformImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA014E93EE2475992EB91B0 /* PlatformImage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -193,7 +194,8 @@
 		E32FE1D99B3B44E6A6801234 /* SalesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesViewModel.swift; sourceTree = "<group>"; };
 						E71B5019D5A040FCBB81807B /* ItemValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemValidatorTests.swift; sourceTree = "<group>"; };
 		F1DB1AD2C44D425AB9A59153 /* SellItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellItemViewModel.swift; sourceTree = "<group>"; };
-		F2ACBFBB75EA4E3C9514A9AB /* DepreciationCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepreciationCalculatorTests.swift; sourceTree = "<group>"; };
+                F2ACBFBB75EA4E3C9514A9AB /* DepreciationCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepreciationCalculatorTests.swift; sourceTree = "<group>"; };
+                AFA014E93EE2475992EB91B0 /* PlatformImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformImage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -388,10 +390,11 @@
 				767E82D62D8F3ABE00B48011 /* AuthenticationManager.swift */,
 				767E82D22D8F34C800B48011 /* Extensions.swift */,
 				B6E684D42DD176D900EE608B /* Logger.swift */,
-				77809C47FCD59CC9A4E795CC /* HapticManager.swift */,
-				8A63CDB2EA6A42EA93C1D13D /* DepreciationCalculator.swift */,
-				B61A9BD72DD6650000D04E9A /* SheetsUtils.swift */,
-                        );
+                               77809C47FCD59CC9A4E795CC /* HapticManager.swift */,
+                               AFA014E93EE2475992EB91B0 /* PlatformImage.swift */,
+                               8A63CDB2EA6A42EA93C1D13D /* DepreciationCalculator.swift */,
+                               B61A9BD72DD6650000D04E9A /* SheetsUtils.swift */,
+                       );
                         path = Utilities;
                         sourceTree = "<group>";
                 };
@@ -597,11 +600,12 @@
 				7C37FF346999407A810EB18B /* SellItemViewModel.swift in Sources */,
 				5A43DC562B7C4ABC9A123456 /* SalesViewModel.swift in Sources */,
 				A86D606B4FC641688F556F39 /* SalesView.swift in Sources */,
-				C616CDE1A2B34C5D67890ABE /* SalesDetailsView.swift in Sources */,
-				3B334618E2334DAFB69FB690 /* SellItemView.swift in Sources */,
-				FDB33D97700C2EF04190FA52 /* GmailService.swift in Sources */,
-				2867C19B08004E95B4BAD5B0 /* (null) in Sources */,
-			);
+                                C616CDE1A2B34C5D67890ABE /* SalesDetailsView.swift in Sources */,
+                                3B334618E2334DAFB69FB690 /* SellItemView.swift in Sources */,
+                                FB42C5677D8D477793E2A66E /* PlatformImage.swift in Sources */,
+                                FDB33D97700C2EF04190FA52 /* GmailService.swift in Sources */,
+                                2867C19B08004E95B4BAD5B0 /* (null) in Sources */,
+                        );
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		767B059B2D4C5DC400566C25 /* Sources */ = {

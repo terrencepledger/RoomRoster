@@ -8,9 +8,6 @@
 import SwiftUI
 import Combine
 import Foundation
-#if canImport(UIKit)
-import UIKit
-#endif
 
 private typealias l10n = Strings.createItem
 
@@ -23,8 +20,8 @@ final class CreateItemViewModel: ObservableObject {
     private let itemsProvider: () -> [Item]
 
     @Published var newItem: Item
-    @Published var pickedImage: UIImage?
-    @Published var pickedReceiptImage: UIImage?
+    @Published var pickedImage: PlatformImage?
+    @Published var pickedReceiptImage: PlatformImage?
     @Published var pickedReceiptPDF: URL?
     @Published var isUploading: Bool = false
     @Published var isUploadingReceipt: Bool = false
@@ -81,13 +78,13 @@ final class CreateItemViewModel: ObservableObject {
         }
     }
 
-    func onImagePicked(_ image: UIImage?) {
+    func onImagePicked(_ image: PlatformImage?) {
         pickedImage = image
         guard let image else { return }
         Task { await uploadPickedImage(image) }
     }
 
-    func onReceiptPicked(_ image: UIImage?) {
+    func onReceiptPicked(_ image: PlatformImage?) {
         pickedReceiptImage = image
         guard let image else { return }
         Task { await saveReceiptImage(image) }
@@ -99,7 +96,7 @@ final class CreateItemViewModel: ObservableObject {
         Task { await saveReceiptPDF(from: url) }
     }
 
-    private func uploadPickedImage(_ image: UIImage) async {
+    private func uploadPickedImage(_ image: PlatformImage) async {
         isUploading = true
         uploadError = nil
 
@@ -116,7 +113,7 @@ final class CreateItemViewModel: ObservableObject {
         isUploading = false
     }
 
-    private func saveReceiptImage(_ image: UIImage) async {
+    private func saveReceiptImage(_ image: PlatformImage) async {
         isUploadingReceipt = true
         receiptUploadError = nil
 
