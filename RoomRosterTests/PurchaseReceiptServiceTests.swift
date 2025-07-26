@@ -1,5 +1,5 @@
 import XCTest
-import UIKit
+import CoreGraphics
 @testable import RoomRoster
 
 final class PurchaseReceiptServiceTests: XCTestCase {
@@ -12,7 +12,11 @@ final class PurchaseReceiptServiceTests: XCTestCase {
 
     func testUploadImage() async throws {
         let service = PurchaseReceiptService()
-        let image = UIImage(systemName: "doc")!
+        #if canImport(UIKit)
+        let image = PlatformImage(systemName: "doc")!
+        #else
+        let image = PlatformImage(size: .init(width: 1, height: 1))
+        #endif
         _ = try? await service.uploadReceipt(image: image, for: "999")
         XCTAssertTrue(true)
     }

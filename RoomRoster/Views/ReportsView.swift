@@ -120,24 +120,23 @@ struct ReportsView: View {
         }
         .navigationTitle(l10n.title)
         .toolbar {
-                if sheets.currentSheet != nil {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Menu {
-                            Button(l10n.exportOverview) {
-                                shareURL = viewModel.exportOverviewCSV()
-                            }
-                            Button(l10n.exportCSV) {
-                                shareURL = viewModel.exportCSV()
-                            }
-                        } label: {
-                            Image(systemName: "square.and.arrow.up")
+            if sheets.currentSheet != nil {
+                ToolbarItem(placement: toolbarSharePlacement) {
+                    Menu {
+                        Button(l10n.exportOverview) {
+                            shareURL = viewModel.exportOverviewCSV()
                         }
+                        Button(l10n.exportCSV) {
+                            shareURL = viewModel.exportCSV()
+                        }
+                    } label: {
+                        Image(systemName: "square.and.arrow.up")
                     }
                 }
             }
-            .sheet(item: $shareURL) { url in
-                ShareSheet(activityItems: [url])
-            }
+        }
+        .sheet(item: $shareURL) { url in
+            ShareSheet(activityItems: [url])
         }
         .task {
             guard sheets.currentSheet != nil else { return }
@@ -156,6 +155,14 @@ struct ReportsView: View {
             Spacer()
             Button(l10n.exportSearch) { shareURL = viewModel.exportCSV() }
         }
+    }
+
+    private var toolbarSharePlacement: ToolbarItemPlacement {
+#if os(iOS)
+        .navigationBarTrailing
+#else
+        .automatic
+#endif
     }
 }
 extension URL: Identifiable {

@@ -6,11 +6,12 @@
 //
 
 import SwiftUI
+import Foundation
 
 @MainActor
 final class EditItemViewModel: ObservableObject {
     @Published var editableItem: Item
-    @Published var pickedReceiptImage: UIImage?
+    @Published var pickedReceiptImage: PlatformImage?
     @Published var pickedReceiptPDF: URL?
     @Published var isUploadingReceipt: Bool = false
     @Published var receiptUploadError: String?
@@ -51,7 +52,7 @@ final class EditItemViewModel: ObservableObject {
         await historyService.logChanges(old: previous, new: editableItem, updatedBy: updatedBy)
     }
 
-    func onReceiptPicked(_ image: UIImage?) {
+    func onReceiptPicked(_ image: PlatformImage?) {
         pickedReceiptImage = image
         guard let image else { return }
         Task { await saveReceiptImage(image) }
@@ -63,7 +64,7 @@ final class EditItemViewModel: ObservableObject {
         Task { await saveReceiptPDF(from: url) }
     }
 
-    private func saveReceiptImage(_ image: UIImage) async {
+    private func saveReceiptImage(_ image: PlatformImage) async {
         isUploadingReceipt = true
         receiptUploadError = nil
         do {

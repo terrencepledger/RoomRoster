@@ -1,5 +1,4 @@
 import Foundation
-import UIKit
 
 enum PurchaseReceiptServiceError: Error {
     case failedToConvertImage
@@ -37,8 +36,8 @@ final class PurchaseReceiptService {
         )
     }
 
-    func uploadReceipt(image: UIImage, for itemId: String) async throws -> URL {
-        guard let data = image.jpegData(compressionQuality: 0.8) else {
+    func uploadReceipt(image: PlatformImage, for itemId: String) async throws -> URL {
+        guard let data = image.jpegDataCompatible(compressionQuality: 0.8) else {
             throw PurchaseReceiptServiceError.failedToConvertImage
         }
         return try await firebaseService.uploadData(

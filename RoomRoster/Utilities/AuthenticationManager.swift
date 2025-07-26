@@ -7,7 +7,11 @@
 
 import Foundation
 import GoogleSignIn
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 @MainActor
 class AuthenticationManager: ObservableObject {
@@ -71,7 +75,9 @@ class AuthenticationManager: ObservableObject {
     }
 
     private func triggerSignIn() async throws {
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene, let rootVC = windowScene.windows.first(where: { $0.isKeyWindow })?.rootViewController
+        #if canImport(UIKit)
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let rootVC = windowScene.windows.first(where: { $0.isKeyWindow })?.rootViewController
         else {
             throw NSError(
                 domain: "Auth",
@@ -92,5 +98,32 @@ class AuthenticationManager: ObservableObject {
 
         let user = result.user
         updateUser(from: user)
+        #elseif canImport(AppKit)
+        guard let window = NSApplication.shared.windows.first else {
+            throw NSError(
+                domain: "Auth",
+                code: -1,
+                userInfo: [NSLocalizedDescriptionKey: "No active window found"]
+            )
+        }
+
+        let result = try await GIDSignIn.sharedInstance.signIn(
+            withPresenting: window,
+            hint: nil,
+            additionalScopes: [
+                "https://www.googleapis.com/auth/spreadsheets",
+                "https://www.googleapis.com/auth/drive.readonly",
+                "https://www.googleapis.com/auth/gmail.send",
+            ]
+        )
+
+        updateUser(from: result.user)
+        #else
+        throw NSError(
+            domain: "Auth",
+            code: -1,
+            userInfo: [NSLocalizedDescriptionKey: "Google sign-in not supported"]
+        )
+        #endif
     }
 }
