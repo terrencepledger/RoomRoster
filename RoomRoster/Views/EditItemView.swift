@@ -135,7 +135,9 @@ struct EditItemView: View {
                         TextField(l10n.basicInfo.enter.quantity,
                                   value: $editableItem.quantity,
                                   format: .number)
+#if os(iOS)
                             .keyboardType(.numberPad)
+#endif
                             .textFieldStyle(.roundedBorder)
                     }
                     VStack(alignment: .leading, spacing: 4) {
@@ -182,7 +184,9 @@ struct EditItemView: View {
                         TextField(l10n.details.enter.price,
                                   value: $editableItem.estimatedPrice,
                                   format: .number)
+#if os(iOS)
                             .keyboardType(.decimalPad)
+#endif
                             .textFieldStyle(.roundedBorder)
                     }
                     VStack(alignment: .leading, spacing: 4) {

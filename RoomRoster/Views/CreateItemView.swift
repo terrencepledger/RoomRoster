@@ -108,7 +108,9 @@ struct CreateItemView: View {
                                 value: $viewModel.newItem.quantity,
                                 format: .number
                             )
+#if os(iOS)
                             .keyboardType(.numberPad)
+#endif
                             .textFieldStyle(.roundedBorder)
                         }
                         HStack {
