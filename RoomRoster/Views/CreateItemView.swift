@@ -108,7 +108,7 @@ struct CreateItemView: View {
                                 value: $viewModel.newItem.quantity,
                                 format: .number
                             )
-#if os(iOS)
+#if canImport(UIKit)
                             .keyboardType(.numberPad)
 #endif
                             .textFieldStyle(.roundedBorder)

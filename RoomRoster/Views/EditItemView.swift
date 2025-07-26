@@ -135,7 +135,7 @@ struct EditItemView: View {
                         TextField(l10n.basicInfo.enter.quantity,
                                   value: $editableItem.quantity,
                                   format: .number)
-#if os(iOS)
+#if canImport(UIKit)
                             .keyboardType(.numberPad)
 #endif
                             .textFieldStyle(.roundedBorder)
@@ -184,7 +184,7 @@ struct EditItemView: View {
                         TextField(l10n.details.enter.price,
                                   value: $editableItem.estimatedPrice,
                                   format: .number)
-#if os(iOS)
+#if canImport(UIKit)
                             .keyboardType(.decimalPad)
 #endif
                             .textFieldStyle(.roundedBorder)

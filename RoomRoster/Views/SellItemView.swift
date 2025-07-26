@@ -15,7 +15,7 @@ struct SellItemView: View {
             Form {
                 Section(l10n.priceSection) {
                     TextField(l10n.price, value: $viewModel.sale.price, format: .number)
-#if os(iOS)
+#if canImport(UIKit)
                         .keyboardType(.decimalPad)
 #endif
                     Picker(l10n.condition, selection: $viewModel.sale.condition) {
