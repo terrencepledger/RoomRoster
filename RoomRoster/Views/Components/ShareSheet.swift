@@ -29,8 +29,8 @@ struct ShareSheet: View {
 
     var body: some View {
         if #available(macOS 13, *) {
-            if let first = activityItems.first as? any Transferable {
-                ShareLink(item: first)
+            if let url = activityItems.first as? URL {
+                ShareLink(item: url)
             }
         }
     }

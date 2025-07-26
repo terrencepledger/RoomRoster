@@ -1,5 +1,5 @@
-#if canImport(UIKit)
 import SwiftUI
+#if canImport(UIKit)
 import UniformTypeIdentifiers
 
 struct DocumentPickerView: UIViewControllerRepresentable {
@@ -47,6 +47,31 @@ struct PDFPickerButton: View {
         }
         .sheet(isPresented: $showPicker) {
             DocumentPickerView(allowedTypes: [.pdf], url: $url)
+        }
+    }
+}
+#elseif canImport(AppKit)
+import AppKit
+import UniformTypeIdentifiers
+
+struct PDFPickerButton: View {
+    @Binding var url: URL?
+    var label: String = "Select PDF"
+
+    var body: some View {
+        Button {
+            let panel = NSOpenPanel()
+            panel.allowedContentTypes = [.pdf]
+            panel.allowsMultipleSelection = false
+            if panel.runModal() == .OK {
+                url = panel.url
+            }
+        } label: {
+            if let url {
+                Label(url.lastPathComponent, systemImage: "doc")
+            } else {
+                Label(label, systemImage: "doc")
+            }
         }
     }
 }
