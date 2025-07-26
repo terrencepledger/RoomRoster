@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0846C3EC3AB702F6D4C449EE /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC08C6562BA6C4B23B534ED /* FirebaseService.swift */; };
-		0A2B89787187428E8B76DD58 /* DepreciationCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A63CDB2EA6A42EA93C1D13D /* DepreciationCalculator.swift */; };
 		1BF611EA9DCA414DB7F7B032 /* InventoryUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4280063F1BA4122A570E8B9 /* InventoryUITests.swift */; };
 		231BCF345A6D40108E4E8A25 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		25C53E74D5D744DD93C31C71 /* SaleReceiptService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E453FBEAF7344E3B80ABA26 /* SaleReceiptService.swift */; };
@@ -43,7 +42,6 @@
 		767E82D52D8F356500B48011 /* EditItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767E82D42D8F356500B48011 /* EditItemView.swift */; };
 		767E82D72D8F3ABE00B48011 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767E82D62D8F3ABE00B48011 /* AuthenticationManager.swift */; };
 		767E82DA2D8F3B4E00B48011 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 767E82D92D8F3B4E00B48011 /* GoogleSignIn */; };
-		7B030D6795A8463589912FAE /* DepreciationCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2ACBFBB75EA4E3C9514A9AB /* DepreciationCalculatorTests.swift */; };
 		7C37FF346999407A810EB18B /* SellItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DB1AD2C44D425AB9A59153 /* SellItemViewModel.swift */; };
 		7DB3EA08C76F4E048B379677 /* ViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC01C73ED7A4FBC9EECB3D3 /* ViewModelTests.swift */; };
 		8030ADBBCBB442E3B8D6D5FB /* Condition.swift in Sources */ = {isa = PBXBuildFile; fileRef = C66A533C9D0B40A885DA2172 /* Condition.swift */; };
@@ -162,7 +160,6 @@
 		767E82DF2D8F52FF00B48011 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		77809C47FCD59CC9A4E795CC /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		7E453FBEAF7344E3B80ABA26 /* SaleReceiptService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaleReceiptService.swift; sourceTree = "<group>"; };
-		8A63CDB2EA6A42EA93C1D13D /* DepreciationCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepreciationCalculator.swift; sourceTree = "<group>"; };
 		8BC8C5F5D40748AD93602E33 /* SalesServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesServiceTests.swift; sourceTree = "<group>"; };
 		9022FF3CD87CA507378085C4 /* Spreadsheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spreadsheet.swift; sourceTree = "<group>"; };
 		9062D441F4874BA89C2A0A1E /* InventoryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryServiceTests.swift; sourceTree = "<group>"; };
@@ -205,7 +202,6 @@
 		E32FE1D99B3B44E6A6801234 /* SalesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesViewModel.swift; sourceTree = "<group>"; };
 		E71B5019D5A040FCBB81807B /* ItemValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemValidatorTests.swift; sourceTree = "<group>"; };
 		F1DB1AD2C44D425AB9A59153 /* SellItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellItemViewModel.swift; sourceTree = "<group>"; };
-		F2ACBFBB75EA4E3C9514A9AB /* DepreciationCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepreciationCalculatorTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -381,7 +377,6 @@
 				363E06481A95438E8355C5E0 /* SaleReceiptServiceTests.swift */,
 				D635C54A7B58948D1F8036B4 /* SpreadsheetManagerTests.swift */,
 				B7F2B3A12FF645E8A0FF1235 /* SheetsUtilsTests.swift */,
-				F2ACBFBB75EA4E3C9514A9AB /* DepreciationCalculatorTests.swift */,
 			);
 			path = RoomRosterTests;
 			sourceTree = "<group>";
@@ -406,7 +401,6 @@
 				767E82D22D8F34C800B48011 /* Extensions.swift */,
 				B6E684D42DD176D900EE608B /* Logger.swift */,
 				77809C47FCD59CC9A4E795CC /* HapticManager.swift */,
-				8A63CDB2EA6A42EA93C1D13D /* DepreciationCalculator.swift */,
 				B61A9BD72DD6650000D04E9A /* SheetsUtils.swift */,
 			);
 			path = Utilities;
@@ -590,7 +584,6 @@
 				B615ED222DE2BB4E009BE623 /* RoomService.swift in Sources */,
 				767E82C92D8F1AA500B48011 /* NetworkService.swift in Sources */,
 				B6D80EFE2E295A1600748907 /* HapticManager.swift in Sources */,
-				0A2B89787187428E8B76DD58 /* DepreciationCalculator.swift in Sources */,
 				767B05BF2D4C5F9E00566C25 /* GoogleSheetsResponse.swift in Sources */,
 				B6A6D6DC2DD8FD4E00378BFF /* ErrorBanner.swift in Sources */,
 				AA12BBCC44D055EE00112233 /* SuccessBanner.swift in Sources */,
@@ -643,7 +636,6 @@
 				630A8C62F5BBC9555EEC2E18 /* SpreadsheetManagerTests.swift in Sources */,
 				B7F2B3A12FF645E8A0FF1234 /* SheetsUtilsTests.swift in Sources */,
 				B7F2B3A12FF645E8A0FF1234 /* SheetsUtilsTests.swift in Sources */,
-				7B030D6795A8463589912FAE /* DepreciationCalculatorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

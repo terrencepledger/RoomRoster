@@ -57,7 +57,7 @@ final class ReportsViewModel: ObservableObject {
     }
 
     private func computeTotalValue(for items: [Item]) {
-        totalValue = items.compactMap { $0.depreciatedValue ?? $0.estimatedPrice }.reduce(0, +)
+        totalValue = items.compactMap { $0.estimatedPrice }.reduce(0, +)
     }
 
     func loadRecentLogs(maxEntries: Int = 10) async {
