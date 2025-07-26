@@ -7,12 +7,17 @@
 
 import SwiftUI
 import PhotosUI
+#if canImport(UIKit)
+import UIKit
+#endif
 
 private typealias l10n = Strings.imagePicker
 
+// UIKit-based picker for iPhone and iPad only. Not available on Mac Catalyst.
+#if canImport(UIKit) && !targetEnvironment(macCatalyst)
 struct UIKitImagePicker: UIViewControllerRepresentable {
     @Environment(\.presentationMode) private var presentationMode
-    @Binding var image: UIImage?
+    @Binding var image: PlatformImage?
     let sourceType: UIImagePickerController.SourceType
 
     class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
@@ -47,7 +52,7 @@ struct UIKitImagePicker: UIViewControllerRepresentable {
 }
 
 struct CombinedImagePickerButton: View {
-    @Binding var image: UIImage?
+    @Binding var image: PlatformImage?
     @State private var showSourceDialog = false
     @State private var showPicker = false
     @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
@@ -58,7 +63,7 @@ struct CombinedImagePickerButton: View {
             showSourceDialog = true
         } label: {
             if let img = image {
-                Image(uiImage: img)
+                Image(platformImage: img)
                     .resizable()
                     .scaledToFit()
                     .frame(height: 120)
@@ -85,3 +90,34 @@ struct CombinedImagePickerButton: View {
         }
     }
 }
+#else
+/// macOS or Mac Catalyst version using `PhotosPicker` since `UIImagePickerController`
+/// isn't available.
+struct CombinedImagePickerButton: View {
+    @Binding var image: PlatformImage?
+    @State private var selection: PhotosPickerItem?
+
+    var body: some View {
+        PhotosPicker(selection: $selection, matching: .images) {
+            if let img = image {
+                Image(platformImage: img)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 120)
+                    .cornerRadius(8)
+            } else {
+                Label(l10n.title, systemImage: "photo.on.rectangle")
+            }
+        }
+        .onChange(of: selection) { newItem in
+            guard let newItem else { return }
+            Task {
+                if let data = try? await newItem.loadTransferable(type: Data.self),
+                   let platform = PlatformImage(data: data) {
+                    image = platform
+                }
+            }
+        }
+    }
+}
+#endif

@@ -2,6 +2,10 @@
 
 RoomRoster is a SwiftUI-based inventory management application that integrates with Google Sheets as its backend data source. The app fetches inventory data from a Google Sheets spreadsheet, displays items in a list, and allows users to view detailed information and edit item details.
 
+## Platform Support
+
+RoomRoster runs on iPhone, iPad, and macOS via **Mac Catalyst**. UIKit components fall back to `PhotosPicker` on Mac so the same codebase works across devices.
+
 ## Features
 
 - **Inventory List:** Displays a list of inventory items with details such as name, status, and last known room.

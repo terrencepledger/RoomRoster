@@ -7,7 +7,9 @@
 
 import SwiftUI
 import PhotosUI
+#if canImport(UIKit)
 import UIKit
+#endif
 
 private typealias l10n = Strings.editItem
 
@@ -18,8 +20,8 @@ struct EditItemView: View {
 
     @EnvironmentObject var viewModel: InventoryViewModel
 
-    @State private var pickedImage: UIImage?
-    @State private var pickedReceiptImage: UIImage?
+    @State private var pickedImage: PlatformImage?
+    @State private var pickedReceiptImage: PlatformImage?
     @State private var pickedReceiptPDF: URL?
     @State private var isUploading = false
     @State private var isUploadingReceipt = false
@@ -133,7 +135,9 @@ struct EditItemView: View {
                         TextField(l10n.basicInfo.enter.quantity,
                                   value: $editableItem.quantity,
                                   format: .number)
+#if canImport(UIKit)
                             .keyboardType(.numberPad)
+#endif
                             .textFieldStyle(.roundedBorder)
                     }
                     VStack(alignment: .leading, spacing: 4) {
@@ -180,7 +184,9 @@ struct EditItemView: View {
                         TextField(l10n.details.enter.price,
                                   value: $editableItem.estimatedPrice,
                                   format: .number)
+#if canImport(UIKit)
                             .keyboardType(.decimalPad)
+#endif
                             .textFieldStyle(.roundedBorder)
                     }
                     VStack(alignment: .leading, spacing: 4) {
@@ -301,7 +307,7 @@ struct EditItemView: View {
     }
 
     private func uploadPickedImage() async {
-        guard let uiImage = pickedImage else { return }
+        guard let selected = pickedImage else { return }
 
         isUploading = true
         uploadError = nil
@@ -309,7 +315,7 @@ struct EditItemView: View {
         defer { isUploading = false }
         do {
             let url = try await ImageUploadService()
-                .uploadImageAsync(image: uiImage, forItemId: editableItem.id)
+                .uploadImageAsync(image: selected, forItemId: editableItem.id)
             temporaryImageURL = url.absoluteString
         } catch {
             Logger.log(error, extra: [
@@ -320,7 +326,7 @@ struct EditItemView: View {
         }
     }
 
-    private func saveReceiptImage(_ image: UIImage?) async {
+    private func saveReceiptImage(_ image: PlatformImage?) async {
         guard let image else { return }
         isUploadingReceipt = true
         receiptUploadError = nil
