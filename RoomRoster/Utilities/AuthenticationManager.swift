@@ -9,6 +9,8 @@ import Foundation
 import GoogleSignIn
 #if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
 #endif
 
 @MainActor
@@ -96,11 +98,31 @@ class AuthenticationManager: ObservableObject {
 
         let user = result.user
         updateUser(from: user)
+        #elseif canImport(AppKit)
+        guard let window = NSApplication.shared.windows.first else {
+            throw NSError(
+                domain: "Auth",
+                code: -1,
+                userInfo: [NSLocalizedDescriptionKey: "No active window found"]
+            )
+        }
+
+        let result = try await GIDSignIn.sharedInstance.signIn(
+            withPresenting: window,
+            hint: nil,
+            additionalScopes: [
+                "https://www.googleapis.com/auth/spreadsheets",
+                "https://www.googleapis.com/auth/drive.readonly",
+                "https://www.googleapis.com/auth/gmail.send",
+            ]
+        )
+
+        updateUser(from: result.user)
         #else
         throw NSError(
             domain: "Auth",
             code: -1,
-            userInfo: [NSLocalizedDescriptionKey: "Google sign-in requires UIKit"]
+            userInfo: [NSLocalizedDescriptionKey: "Google sign-in not supported"]
         )
         #endif
     }

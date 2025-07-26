@@ -122,17 +122,17 @@ struct ReportsView: View {
         .toolbar {
             if sheets.currentSheet != nil {
                 ToolbarItem(placement: toolbarSharePlacement) {
-                        Menu {
-                            Button(l10n.exportOverview) {
-                                shareURL = viewModel.exportOverviewCSV()
-                            }
-                            Button(l10n.exportCSV) {
-                                shareURL = viewModel.exportCSV()
-                            }
-                        } label: {
-                            Image(systemName: "square.and.arrow.up")
+                    Menu {
+                        Button(l10n.exportOverview) {
+                            shareURL = viewModel.exportOverviewCSV()
                         }
+                        Button(l10n.exportCSV) {
+                            shareURL = viewModel.exportCSV()
+                        }
+                    } label: {
+                        Image(systemName: "square.and.arrow.up")
                     }
+                }
             }
         }
         .sheet(item: $shareURL) { url in
