@@ -280,5 +280,8 @@ struct Strings {
         static let buyerContact = "Contact:"
         static let soldBy = "Sold By:"
         static let department = "Department:"
+        static let receiptSection = "Receipt"
+        static let editButton = "Edit"
+        static let editTitle = "Edit Sale"
     }
 }
