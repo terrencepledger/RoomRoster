@@ -138,7 +138,6 @@ struct ReportsView: View {
         .sheet(item: $shareURL) { url in
             ShareSheet(activityItems: [url])
         }
-        }
         .task {
             guard sheets.currentSheet != nil else { return }
             await viewModel.loadData()
