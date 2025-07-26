@@ -28,7 +28,7 @@ struct ReportsView: View {
                         Toggle(Strings.inventory.includeSoldToggle, isOn: $viewModel.includeSoldItems)
                             .font(.subheadline)
                     }
-
+                    
                     if !viewModel.query.isEmpty {
                         Section(header: searchHeader) {
                             ForEach(viewModel.filteredItems, id: \.id) { item in
@@ -41,81 +41,81 @@ struct ReportsView: View {
                             }
                         }
                     }
-
-                Section(header: Text(l10n.inventorySummary)) {
-                    Chart {
+                    
+                    Section(header: Text(l10n.inventorySummary)) {
+                        Chart {
+                            ForEach(Status.allCases, id: \.self) { status in
+                                let count = viewModel.statusCounts[status] ?? 0
+                                SectorMark(angle: .value("Count", count))
+                                    .foregroundStyle(by: .value("Status", status.label))
+                            }
+                        }
+                        .frame(height: 180)
+                        
                         ForEach(Status.allCases, id: \.self) { status in
-                            let count = viewModel.statusCounts[status] ?? 0
-                            SectorMark(angle: .value("Count", count))
-                                .foregroundStyle(by: .value("Status", status.label))
+                            HStack {
+                                Text(status.label)
+                                Spacer()
+                                Text(String(viewModel.statusCounts[status] ?? 0))
+                            }
                         }
-                    }
-                    .frame(height: 180)
-
-                    ForEach(Status.allCases, id: \.self) { status in
                         HStack {
-                            Text(status.label)
+                            Text(l10n.totalValue)
                             Spacer()
-                            Text(String(viewModel.statusCounts[status] ?? 0))
+                            Text("$\(viewModel.totalValue, specifier: "%.2f")")
                         }
                     }
-                    HStack {
-                        Text(l10n.totalValue)
-                        Spacer()
-                        Text("$\(viewModel.totalValue, specifier: "%.2f")")
-                    }
-                }
-
-                Section(header: Text(l10n.salesOverview)) {
-                    Chart {
-                        ForEach(viewModel.salesByMonth, id: \.date) { entry in
-                            BarMark(
-                                x: .value("Month", entry.date),
-                                y: .value("Revenue", entry.total)
-                            )
+                    
+                    Section(header: Text(l10n.salesOverview)) {
+                        Chart {
+                            ForEach(viewModel.salesByMonth, id: \.date) { entry in
+                                BarMark(
+                                    x: .value("Month", entry.date),
+                                    y: .value("Revenue", entry.total)
+                                )
+                            }
+                        }
+                        .frame(height: 180)
+                        
+                        HStack {
+                            Text(l10n.totalSold)
+                            Spacer()
+                            Text(String(viewModel.sales.count))
+                        }
+                        HStack {
+                            Text(l10n.totalRevenue)
+                            Spacer()
+                            Text("$\(viewModel.totalSalesValue, specifier: "%.2f")")
                         }
                     }
-                    .frame(height: 180)
-
-                    HStack {
-                        Text(l10n.totalSold)
-                        Spacer()
-                        Text(String(viewModel.sales.count))
-                    }
-                    HStack {
-                        Text(l10n.totalRevenue)
-                        Spacer()
-                        Text("$\(viewModel.totalSalesValue, specifier: "%.2f")")
-                    }
-                }
-
-                Section(header: Text(l10n.roomsSummary)) {
-                    Chart {
+                    
+                    Section(header: Text(l10n.roomsSummary)) {
+                        Chart {
+                            ForEach(viewModel.roomCounts.keys.sorted(by: { $0.label < $1.label }), id: \.self) { room in
+                                BarMark(
+                                    x: .value("Room", room.label),
+                                    y: .value("Items", viewModel.roomCounts[room] ?? 0)
+                                )
+                            }
+                        }
+                        .frame(height: 180)
+                        
                         ForEach(viewModel.roomCounts.keys.sorted(by: { $0.label < $1.label }), id: \.self) { room in
-                            BarMark(
-                                x: .value("Room", room.label),
-                                y: .value("Items", viewModel.roomCounts[room] ?? 0)
-                            )
+                            HStack {
+                                Text(room.label)
+                                Spacer()
+                                Text(String(viewModel.roomCounts[room] ?? 0))
+                            }
                         }
                     }
-                    .frame(height: 180)
-
-                    ForEach(viewModel.roomCounts.keys.sorted(by: { $0.label < $1.label }), id: \.self) { room in
-                        HStack {
-                            Text(room.label)
-                            Spacer()
-                            Text(String(viewModel.roomCounts[room] ?? 0))
+                    
+                    Section(header: Text(l10n.recentActivity)) {
+                        ForEach(viewModel.recentLogs, id: \.self) { log in
+                            Text(log)
+                                .font(.footnote)
                         }
                     }
                 }
-
-                Section(header: Text(l10n.recentActivity)) {
-                    ForEach(viewModel.recentLogs, id: \.self) { log in
-                        Text(log)
-                            .font(.footnote)
-                    }
-                }
-
             }
         }
         .navigationTitle(l10n.title)
