@@ -121,7 +121,6 @@ struct Strings {
         static let tag = "Property Tag:"
         static let dateAdded = "Date Added:"
         static let priceTitle = "Estimated Price:"
-        static let depreciatedPriceTitle = "Current Value:"
         static let status = "Status:"
         static let room = "Last Known Room:"
         static func dateUpdated(_ date: String) -> String {
