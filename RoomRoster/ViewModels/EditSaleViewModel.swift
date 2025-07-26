@@ -3,7 +3,7 @@ import SwiftUI
 @MainActor
 final class EditSaleViewModel: ObservableObject {
     @Published var sale: Sale
-    @Published var pickedReceiptImage: UIImage?
+    @Published var pickedReceiptImage: PlatformImage?
     @Published var pickedReceiptPDF: URL?
     @Published var isUploading: Bool = false
     @Published var uploadError: String?
@@ -21,7 +21,7 @@ final class EditSaleViewModel: ObservableObject {
         self.receiptService = receiptService
     }
 
-    func onReceiptPicked(_ image: UIImage?) {
+    func onReceiptPicked(_ image: PlatformImage?) {
         pickedReceiptImage = image
         guard let image else { return }
         Task { await uploadImage(image) }
@@ -33,7 +33,7 @@ final class EditSaleViewModel: ObservableObject {
         Task { await uploadPDF(url) }
     }
 
-    private func uploadImage(_ image: UIImage) async {
+    private func uploadImage(_ image: PlatformImage) async {
         isUploading = true
         uploadError = nil
         do {

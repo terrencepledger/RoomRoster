@@ -6,7 +6,9 @@
 //
 
 import SwiftUI
+#if canImport(UIKit)
 import UIKit
+#endif
 
 private typealias l10n = Strings.createItem
 
@@ -106,7 +108,9 @@ struct CreateItemView: View {
                                 value: $viewModel.newItem.quantity,
                                 format: .number
                             )
+#if canImport(UIKit)
                             .keyboardType(.numberPad)
+#endif
                             .textFieldStyle(.roundedBorder)
                         }
                         HStack {

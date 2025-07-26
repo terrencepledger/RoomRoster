@@ -6,7 +6,9 @@
 //
 
 import SwiftUI
+#if canImport(UIKit)
 import UIKit
+#endif
 
 private typealias l10n = Strings.itemDetails
 
@@ -183,7 +185,7 @@ struct ItemDetailsView: View {
         }
         .navigationTitle(l10n.title)
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: toolbarDetailsPlacement) {
                 let hasImage = URL(string: item.imageURL) != nil
                 let hasReceipt = item.purchaseReceiptURL != nil
 
@@ -313,6 +315,14 @@ struct ItemDetailsView: View {
         } catch {
             Logger.log(error, extra: ["description": "Failed to load sale details"])
         }
+    }
+
+    private var toolbarDetailsPlacement: ToolbarItemPlacement {
+#if os(iOS)
+        .navigationBarTrailing
+#else
+        .automatic
+#endif
     }
 }
 

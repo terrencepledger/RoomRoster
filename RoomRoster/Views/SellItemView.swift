@@ -1,5 +1,7 @@
 import SwiftUI
+#if canImport(UIKit)
 import UIKit
+#endif
 
 private typealias l10n = Strings.sellItem
 
@@ -13,7 +15,9 @@ struct SellItemView: View {
             Form {
                 Section(l10n.priceSection) {
                     TextField(l10n.price, value: $viewModel.sale.price, format: .number)
+#if canImport(UIKit)
                         .keyboardType(.decimalPad)
+#endif
                     Picker(l10n.condition, selection: $viewModel.sale.condition) {
                         ForEach(Condition.allCases, id: \.self) { condition in
                             Text(condition.label).tag(condition)
