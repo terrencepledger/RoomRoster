@@ -48,6 +48,7 @@ struct Strings {
         static let failedToLoadLogs = "Failed to load logs. Please try again."
         static let emptyState = "No items to display"
         static let selectSheetPrompt = "Select a sheet in the Sheets tab"
+        static let selectItemPrompt = "Select an item"
         struct query {
             static let name = "name"
             static let description = "description"

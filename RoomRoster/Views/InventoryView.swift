@@ -20,6 +20,9 @@ struct InventoryView: View {
     @State private var includeHistoryInSearch: Bool = false
     @State private var includeSoldItems: Bool = false
     @State private var logVersion = 0
+#if os(macOS)
+    @State private var selectedItem: Item?
+#endif
 
     var groupedItems: [(room: Room, items: [(Item, String)])] {
         let filtered = filteredItemsWithContext
@@ -30,88 +33,24 @@ struct InventoryView: View {
     }
 
     var body: some View {
-        NavigationView {
-            ZStack(alignment: .bottomTrailing) {
-                VStack {
-                    if let error = viewModel.errorMessage {
-                        ErrorBanner(message: error)
-                    }
-                    Spacer()
+        Group {
+#if os(macOS)
+            NavigationSplitView {
+                listPane
+            } detail: {
+                if let item = selectedItem {
+                    ItemDetailsView(item: item)
+                        .environmentObject(viewModel)
+                } else {
+                    Text(l10n.selectItemPrompt)
+                        .foregroundColor(.secondary)
                 }
-
-                List {
-                    if sheets.currentSheet == nil {
-                        Text(l10n.selectSheetPrompt)
-                            .foregroundColor(.secondary)
-                    } else {
-                        Section {
-                            TextField(l10n.searchPlaceholder, text: $searchText)
-                                .textFieldStyle(.roundedBorder)
-
-                            Toggle(l10n.includeHistoryToggle, isOn: $includeHistoryInSearch)
-                                .font(.subheadline)
-                                .padding(.top, 4)
-                            Toggle(l10n.includeSoldToggle, isOn: $includeSoldItems)
-                                .font(.subheadline)
-                        }
-                        .padding(.horizontal)
-
-                        if viewModel.items.isEmpty {
-                            Text(l10n.emptyState)
-                                .foregroundColor(.secondary)
-                        } else {
-                            ForEach(groupedItems, id: \.room) { group in
-                                Section(header: sectionHeader(for: group.room)) {
-                                    if expandedRooms.contains(group.room) {
-                                        ForEach(group.items, id: \.0.id) { (item, context) in
-                                            NavigationLink(destination: ItemDetailsView(item: item).environmentObject(viewModel)) {
-                                                VStack(alignment: .leading) {
-                                                    Text(item.name).font(.headline)
-                                                    Text(l10n.status(item.status.label))
-                                                    if let tag = item.propertyTag {
-                                                        Text(l10n.tag(tag.label))
-                                                            .font(.subheadline)
-                                                            .foregroundColor(.gray)
-                                                    }
-                                                    if !context.isEmpty {
-                                                        Text(l10n.matchedLabel(context))
-                                                            .font(.caption)
-                                                            .italic()
-                                                            .foregroundColor(.secondary)
-                                                    }
-                                                }
-                                            }
-                                            .simultaneousGesture(
-                                                TapGesture().onEnded { HapticManager.shared.impact() }
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                #if os(iOS)
-                if sheets.currentSheet != nil {
-                    Button(action: {
-                        Logger.action("Pressed Add Item Button")
-                        HapticManager.shared.impact()
-                        showCreateItemView.toggle()
-                    }) {
-                        Image(systemName: "plus")
-                            .font(.system(size: 24))
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(Color.blue)
-                            .clipShape(Circle())
-                            .shadow(radius: 4)
-                    }
-                    .padding()
-                }
-                #endif
             }
-        }
+#else
+            NavigationView {
+                listPane
+            }
+#endif
         .platformPopup(isPresented: $showCreateItemView) {
             CreateItemView(
                 viewModel: CreateItemViewModel(
@@ -167,6 +106,117 @@ struct InventoryView: View {
             guard sheets.currentSheet != nil else { return }
             await viewModel.fetchInventory()
             await viewModel.loadRecentLogs(for: viewModel.items)
+        }
+    }
+
+    #if os(macOS)
+    private var selectionBinding: Binding<Item?>? { $selectedItem }
+    #else
+    private var selectionBinding: Binding<Item?>? { nil }
+    #endif
+
+    @ViewBuilder
+    private var listPane: some View {
+        ZStack(alignment: .bottomTrailing) {
+            VStack {
+                if let error = viewModel.errorMessage {
+                    ErrorBanner(message: error)
+                }
+                Spacer()
+            }
+
+            List(selection: selectionBinding) {
+                if sheets.currentSheet == nil {
+                    Text(l10n.selectSheetPrompt)
+                        .foregroundColor(.secondary)
+                } else {
+                    Section {
+                        TextField(l10n.searchPlaceholder, text: $searchText)
+                            .textFieldStyle(.roundedBorder)
+
+                        Toggle(l10n.includeHistoryToggle, isOn: $includeHistoryInSearch)
+                            .font(.subheadline)
+                            .padding(.top, 4)
+                        Toggle(l10n.includeSoldToggle, isOn: $includeSoldItems)
+                            .font(.subheadline)
+                    }
+                    .padding(.horizontal)
+
+                    if viewModel.items.isEmpty {
+                        Text(l10n.emptyState)
+                            .foregroundColor(.secondary)
+                    } else {
+                        ForEach(groupedItems, id: \.room) { group in
+                            Section(header: sectionHeader(for: group.room)) {
+                                if expandedRooms.contains(group.room) {
+                                    ForEach(group.items, id: \.0.id) { (item, context) in
+#if os(macOS)
+                                        VStack(alignment: .leading) {
+                                            Text(item.name).font(.headline)
+                                            Text(l10n.status(item.status.label))
+                                            if let tag = item.propertyTag {
+                                                Text(l10n.tag(tag.label))
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.gray)
+                                            }
+                                            if !context.isEmpty {
+                                                Text(l10n.matchedLabel(context))
+                                                    .font(.caption)
+                                                    .italic()
+                                                    .foregroundColor(.secondary)
+                                            }
+                                        }
+                                        .tag(item)
+                                        .onTapGesture { HapticManager.shared.impact() }
+#else
+                                        NavigationLink(destination: ItemDetailsView(item: item).environmentObject(viewModel)) {
+                                            VStack(alignment: .leading) {
+                                                Text(item.name).font(.headline)
+                                                Text(l10n.status(item.status.label))
+                                                if let tag = item.propertyTag {
+                                                    Text(l10n.tag(tag.label))
+                                                        .font(.subheadline)
+                                                        .foregroundColor(.gray)
+                                                }
+                                                if !context.isEmpty {
+                                                    Text(l10n.matchedLabel(context))
+                                                        .font(.caption)
+                                                        .italic()
+                                                        .foregroundColor(.secondary)
+                                                }
+                                            }
+                                        }
+                                        .simultaneousGesture(
+                                            TapGesture().onEnded { HapticManager.shared.impact() }
+                                        )
+#endif
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+#endif
+
+#if os(iOS)
+            if sheets.currentSheet != nil {
+                Button(action: {
+                    Logger.action("Pressed Add Item Button")
+                    HapticManager.shared.impact()
+                    showCreateItemView.toggle()
+                }) {
+                    Image(systemName: "plus")
+                        .font(.system(size: 24))
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.blue)
+                        .clipShape(Circle())
+                        .shadow(radius: 4)
+                }
+                .padding()
+            }
+#endif
         }
     }
 
