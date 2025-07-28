@@ -1,6 +1,6 @@
 import Foundation
 
-struct Sale {
+struct Sale: Hashable {
     var itemId: String
     var date: Date
     var price: Double?
