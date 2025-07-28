@@ -225,6 +225,9 @@ struct CreateItemView: View {
                 Logger.page("CreateItemView")
             }
         }
+#if os(macOS)
+        .frame(minWidth: 600, minHeight: 650)
+#endif
     }
     
 

@@ -142,6 +142,7 @@ struct ItemDetailsView: View {
                 }
             }
 
+            #if os(iOS)
             VStack {
                 Spacer()
                 HStack {
@@ -152,10 +153,7 @@ struct ItemDetailsView: View {
                             HapticManager.shared.impact()
                             isEditing = true
                         }
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                        .platformButtonStyle()
 
                         if item.status == .sold {
                             Button(Strings.saleDetails.title) {
@@ -163,25 +161,20 @@ struct ItemDetailsView: View {
                                 HapticManager.shared.impact()
                                 showingSaleDetails = true
                             }
-                            .padding()
-                            .background(Color.green)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
+                            .platformButtonStyle()
                         } else {
                             Button(Strings.sellItem.title) {
                                 Logger.action("Pressed Sell Button")
                                 HapticManager.shared.impact()
                                 showingSellSheet = true
                             }
-                            .padding()
-                            .background(Color.green)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
+                            .platformButtonStyle()
                         }
                     }
                     .padding()
                 }
             }
+            #endif
         }
         .navigationTitle(l10n.title)
         .toolbar {
@@ -195,7 +188,12 @@ struct ItemDetailsView: View {
                             Button(l10n.downloadImage) {
                                 Task {
                                     do {
-                                        shareURL = try await viewModel.downloadImage(from: url)
+                                        let downloaded = try await viewModel.downloadImage(from: url)
+#if os(macOS)
+                                        NSWorkspace.shared.open(downloaded)
+#else
+                                        shareURL = downloaded
+#endif
                                         HapticManager.shared.success()
                                     } catch {
                                         Logger.log(error, extra: ["description": "Failed to download image"])
@@ -214,7 +212,12 @@ struct ItemDetailsView: View {
                             Button(l10n.downloadReceipt) {
                                 Task {
                                     do {
-                                        shareURL = try await viewModel.downloadReceipt(for: item.id)
+                                        let downloaded = try await viewModel.downloadReceipt(for: item.id)
+#if os(macOS)
+                                        NSWorkspace.shared.open(downloaded)
+#else
+                                        shareURL = downloaded
+#endif
                                         HapticManager.shared.success()
                                     } catch {
                                         Logger.log(error, extra: ["description": "Failed to download receipt"])
@@ -233,6 +236,32 @@ struct ItemDetailsView: View {
                     }
                 }
             }
+#if os(macOS)
+            ToolbarItemGroup(placement: .automatic) {
+                Button(l10n.editItem) {
+                    Logger.action("Pressed Edit Button")
+                    HapticManager.shared.impact()
+                    isEditing = true
+                }
+                .platformButtonStyle()
+
+                if item.status == .sold {
+                    Button(Strings.saleDetails.title) {
+                        Logger.action("Pressed Sale Details Button")
+                        HapticManager.shared.impact()
+                        showingSaleDetails = true
+                    }
+                    .platformButtonStyle()
+                } else {
+                    Button(Strings.sellItem.title) {
+                        Logger.action("Pressed Sell Button")
+                        HapticManager.shared.impact()
+                        showingSellSheet = true
+                    }
+                    .platformButtonStyle()
+                }
+            }
+#endif
         }
         .platformPopup(isPresented: $isEditing) {
             EditItemView(editableItem: item) { updatedItem in
@@ -291,9 +320,11 @@ struct ItemDetailsView: View {
                 SalesDetailsView(sale: sale, itemName: item.name)
             }
         }
+#if canImport(UIKit)
         .sheet(item: $shareURL) { url in
             ShareSheet(activityItems: [url])
         }
+#endif
         .onAppear {
             Logger.page("ItemDetailsView")
             Task { await AuthenticationManager.shared.signIn() }

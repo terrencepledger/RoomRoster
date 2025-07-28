@@ -16,7 +16,7 @@ extension View {
         @ViewBuilder content: @escaping () -> Content
     ) -> some View {
 #if os(macOS)
-        self.popover(isPresented: isPresented, content: content)
+        self.sheet(isPresented: isPresented, content: content)
 #else
         self.sheet(isPresented: isPresented, content: content)
             .presentationDetents([.medium, .large])

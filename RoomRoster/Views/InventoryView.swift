@@ -167,6 +167,8 @@ struct InventoryView: View {
                                                     .foregroundColor(.secondary)
                                             }
                                         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
                                         .tag(item)
                                         .onTapGesture { HapticManager.shared.impact() }
 #else
@@ -187,6 +189,8 @@ struct InventoryView: View {
                                                 }
                                             }
                                         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
                                         .simultaneousGesture(
                                             TapGesture().onEnded { HapticManager.shared.impact() }
                                         )
@@ -277,17 +281,8 @@ struct InventoryView: View {
             Text(room.label)
                 .font(.headline)
             Spacer()
-            Button(action: {
-                if expandedRooms.contains(room) {
-                    expandedRooms.remove(room)
-                } else {
-                    expandedRooms.insert(room)
-                }
-            }) {
-                Image(systemName: expandedRooms.contains(room) ? "chevron.down" : "chevron.right")
-                    .foregroundColor(.blue)
-            }
-            .buttonStyle(BorderlessButtonStyle())
+            Image(systemName: expandedRooms.contains(room) ? "chevron.down" : "chevron.right")
+                .foregroundColor(.blue)
         }
         .contentShape(Rectangle())
         .onTapGesture {

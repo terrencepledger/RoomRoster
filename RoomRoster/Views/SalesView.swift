@@ -75,6 +75,8 @@ struct SalesView: View {
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
                     .tag(sale)
                     .onTapGesture { HapticManager.shared.impact() }
 #else
@@ -93,6 +95,8 @@ struct SalesView: View {
                             .foregroundColor(.secondary)
                         }
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
                     .simultaneousGesture(
                         TapGesture().onEnded { HapticManager.shared.impact() }
                     )
