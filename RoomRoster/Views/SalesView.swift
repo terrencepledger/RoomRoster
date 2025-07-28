@@ -109,15 +109,6 @@ struct SalesView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .tag(sale)
                     .contentShape(Rectangle())
-                    .onTapGesture {
-                        selectedSale = sale
-                        if let idx = viewModel.sales.firstIndex(of: sale) {
-                            selectedSaleIndex = idx
-                        } else {
-                            selectedSaleIndex = nil
-                        }
-                        HapticManager.shared.impact()
-                    }
 #else
                     NavigationLink(destination: SalesDetailsView(sale: sale, itemName: viewModel.itemName(for: sale))) {
                         VStack(alignment: .leading) {

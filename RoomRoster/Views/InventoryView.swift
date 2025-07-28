@@ -270,12 +270,6 @@ struct InventoryView: View {
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .tag(item)
                                         .contentShape(Rectangle())
-                                        .onTapGesture {
-                                            selectedItem = item
-                                            selectedItemID = item.id
-                                            pane = .item(item)
-                                            HapticManager.shared.impact()
-                                        }
 #else
                                         NavigationLink(destination: ItemDetailsView(item: item).environmentObject(viewModel)) {
                                             VStack(alignment: .leading) {
