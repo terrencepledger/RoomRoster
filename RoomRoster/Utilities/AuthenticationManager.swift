@@ -99,7 +99,12 @@ class AuthenticationManager: ObservableObject {
         let user = result.user
         updateUser(from: user)
         #elseif canImport(AppKit)
-        guard let window = NSApp.keyWindow ?? NSApp.mainWindow ?? NSApp.windows.first else {
+        var window = NSApp.keyWindow ?? NSApp.mainWindow ?? NSApp.windows.first { $0.isVisible }
+        if window == nil {
+            try await Task.sleep(nanoseconds: 500_000_000)
+            window = NSApp.keyWindow ?? NSApp.mainWindow ?? NSApp.windows.first { $0.isVisible }
+        }
+        guard let presenting = window else {
             throw NSError(
                 domain: "Auth",
                 code: -1,
@@ -108,7 +113,7 @@ class AuthenticationManager: ObservableObject {
         }
 
         let result = try await GIDSignIn.sharedInstance.signIn(
-            withPresenting: window,
+            withPresenting: presenting,
             hint: nil,
             additionalScopes: [
                 "https://www.googleapis.com/auth/spreadsheets",
