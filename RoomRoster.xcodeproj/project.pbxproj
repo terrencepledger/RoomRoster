@@ -207,11 +207,8 @@
 		E32FE1D99B3B44E6A6801234 /* SalesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesViewModel.swift; sourceTree = "<group>"; };
 		E71B5019D5A040FCBB81807B /* ItemValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemValidatorTests.swift; sourceTree = "<group>"; };
 		F1DB1AD2C44D425AB9A59153 /* SellItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellItemViewModel.swift; sourceTree = "<group>"; };
-<<<<<<< HEAD
                 F2ACBFBB75EA4E3C9514A9AB /* DepreciationCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepreciationCalculatorTests.swift; sourceTree = "<group>"; };
                 AFA014E93EE2475992EB91B0 /* PlatformImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformImage.swift; sourceTree = "<group>"; };
-=======
->>>>>>> 1d15017 (Remove depreciation feature)
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -597,7 +594,6 @@
 				B6D80EFD2E28DD8D00748907 /* SpreadsheetManager.swift in Sources */,
 				B615ED222DE2BB4E009BE623 /* RoomService.swift in Sources */,
 				767E82C92D8F1AA500B48011 /* NetworkService.swift in Sources */,
-<<<<<<< HEAD
                                 B6D80EFE2E295A1600748907 /* HapticManager.swift in Sources */,
                                 0A2B89787187428E8B76DD58 /* DepreciationCalculator.swift in Sources */,
                                 8F419DC95DD3457AB0BC226A /* PlatformStyles.swift in Sources */,
@@ -606,13 +602,6 @@
                                 AA12BBCC44D055EE00112233 /* SuccessBanner.swift in Sources */,
                                 B91B2B655AA24D36A6D094DC /* Banner.swift in Sources */,
                                 B615ED1C2DE12A16009BE623 /* Status.swift in Sources */,
-=======
-				B6D80EFE2E295A1600748907 /* HapticManager.swift in Sources */,
-				767B05BF2D4C5F9E00566C25 /* GoogleSheetsResponse.swift in Sources */,
-				B6A6D6DC2DD8FD4E00378BFF /* ErrorBanner.swift in Sources */,
-				AA12BBCC44D055EE00112233 /* SuccessBanner.swift in Sources */,
-				B615ED1C2DE12A16009BE623 /* Status.swift in Sources */,
->>>>>>> 1d15017 (Remove depreciation feature)
 				B646DBB32E342D270040A437 /* EditSaleView.swift in Sources */,
 				B6A6D6D82DD7AB3800378BFF /* FieldBinding.swift in Sources */,
 				767E82D32D8F34C800B48011 /* Extensions.swift in Sources */,
