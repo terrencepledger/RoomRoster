@@ -19,6 +19,11 @@ struct CreateItemView: View {
     @FocusState private var tagFieldFocused: Bool
 
     var body: some View {
+        content
+            .macSheetFrame()
+    }
+
+    private var content: some View {
         NavigationView {
             VStack {
                 if let error = viewModel.errorMessage {
@@ -225,9 +230,6 @@ struct CreateItemView: View {
                 Logger.page("CreateItemView")
             }
         }
-#if os(macOS)
-        .frame(minWidth: 600, minHeight: 650)
-#endif
     }
     
 

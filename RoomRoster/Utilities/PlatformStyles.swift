@@ -22,4 +22,13 @@ extension View {
             .presentationDetents([.medium, .large])
 #endif
     }
+
+    /// Adds a default frame for sheets on macOS while leaving iOS unchanged.
+    func macSheetFrame() -> some View {
+#if os(macOS)
+        self.frame(minWidth: 600, minHeight: 650)
+#else
+        self
+#endif
+    }
 }
