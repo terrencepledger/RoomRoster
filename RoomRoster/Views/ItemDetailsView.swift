@@ -207,6 +207,7 @@ struct ItemDetailsView: View {
                                     }
                                 }
                             }
+                            .platformButtonStyle()
                         }
 
                         if hasReceipt {
@@ -225,6 +226,7 @@ struct ItemDetailsView: View {
                                     }
                                 }
                             }
+                            .platformButtonStyle()
                         }
                     } label: {
                         Image(systemName: "square.and.arrow.down")

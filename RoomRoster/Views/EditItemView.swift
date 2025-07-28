@@ -243,6 +243,7 @@ struct EditItemView: View {
                         }
                     }
                     .disabled(editableItem.name.isEmpty || editableItem.description.isEmpty || tagError != nil)
+                    .platformButtonStyle()
                 }
             }
             .alert(l10n.addRoomAlert.title, isPresented: $showingAddRoomPrompt, actions: {
@@ -258,6 +259,7 @@ struct EditItemView: View {
                         HapticManager.shared.success()
                     }
                 }
+                .platformButtonStyle()
                 Button(Strings.general.cancel, role: .cancel) { }
             })
             .navigationTitle(l10n.title)

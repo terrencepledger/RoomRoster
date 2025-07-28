@@ -51,6 +51,7 @@ struct SellItemView: View {
                     }
                 }
                 .disabled(viewModel.isSubmitting)
+                .platformButtonStyle()
             }
             .navigationTitle(l10n.title)
             .toolbar {

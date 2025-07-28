@@ -33,6 +33,7 @@ struct SettingsView: View {
                         sheets.signOut()
                         HapticManager.shared.success()
                     }
+                    .platformButtonStyle()
                 } else {
                     Button(l10n.signInButton) {
                         Task {
@@ -40,6 +41,7 @@ struct SettingsView: View {
                             HapticManager.shared.success()
                         }
                     }
+                    .platformButtonStyle()
                 }
             }
 

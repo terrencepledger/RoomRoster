@@ -48,6 +48,7 @@ struct EditSaleView: View {
                             }
                         }
                     }
+                    .platformButtonStyle()
                 }
             }
         }

@@ -19,6 +19,7 @@ struct Strings {
     // MARK: - MainMenu
     struct mainMenu {
         static let inventory = "Inventory"
+        static let sales = "Sales"
         static let reports = "Reports"
         static let sheets = "Sheets"
         static let settings = "Settings"

@@ -195,6 +195,7 @@ struct CreateItemView: View {
                     }
                 }
                 .disabled(viewModel.newItem.name.isEmpty || viewModel.newItem.description.isEmpty || viewModel.tagError != nil || viewModel.newItem.lastKnownRoom == Room.placeholder())
+                .platformButtonStyle()
                 }
             }
             .alert(
@@ -208,6 +209,7 @@ struct CreateItemView: View {
                     Button(l10n.addRoom.button) {
                         Task { await viewModel.addRoom() }
                     }
+                    .platformButtonStyle()
                     Button(Strings.general.cancel, role: .cancel) { }
                 }
             )

@@ -51,6 +51,7 @@ struct SalesDetailsView: View {
                                 }
                             }
                         }
+                        .platformButtonStyle()
                     }
                     if let pdf = sale.receiptPDFURL,
                        let url = URL(string: pdf) {
@@ -65,6 +66,7 @@ struct SalesDetailsView: View {
                                 }
                             }
                         }
+                        .platformButtonStyle()
                     }
                 }
             }
