@@ -56,6 +56,7 @@ struct MainMenuView: View {
                 NavigationSplitView {
                     List(MenuTab.allCases, selection: $selectedTab) { tab in
                         Label(tab.label, systemImage: tab.icon)
+                            .tag(tab)
                     }
                     .navigationTitle("Menu")
                 } detail: {

@@ -14,6 +14,10 @@ private typealias l10n = Strings.itemDetails
 
 struct ItemDetailsView: View {
     @State var item: Item
+#if os(macOS)
+    var openEdit: ((Item) -> Void)? = nil
+    var openSell: ((Item) -> Void)? = nil
+#endif
     @State private var isEditing = false
     @State private var errorMessage: String? = nil
     @State private var showingSellSheet = false
@@ -241,7 +245,7 @@ struct ItemDetailsView: View {
                 Button(l10n.editItem) {
                     Logger.action("Pressed Edit Button")
                     HapticManager.shared.impact()
-                    isEditing = true
+                    openEdit?(item)
                 }
                 .platformButtonStyle()
 
@@ -256,13 +260,14 @@ struct ItemDetailsView: View {
                     Button(Strings.sellItem.title) {
                         Logger.action("Pressed Sell Button")
                         HapticManager.shared.impact()
-                        showingSellSheet = true
+                        openSell?(item)
                     }
                     .platformButtonStyle()
                 }
             }
 #endif
         }
+        #if os(iOS)
         .platformPopup(isPresented: $isEditing) {
             EditItemView(editableItem: item) { updatedItem in
                 let oldItem = item
@@ -320,11 +325,12 @@ struct ItemDetailsView: View {
                 SalesDetailsView(sale: sale, itemName: item.name)
             }
         }
-#if canImport(UIKit)
+        #if canImport(UIKit)
         .sheet(item: $shareURL) { url in
             ShareSheet(activityItems: [url])
         }
-#endif
+        #endif
+        #endif // os(iOS)
         .onAppear {
             Logger.page("ItemDetailsView")
             Task { await AuthenticationManager.shared.signIn() }

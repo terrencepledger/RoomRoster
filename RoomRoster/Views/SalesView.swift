@@ -62,22 +62,25 @@ struct SalesView: View {
             } else {
                 ForEach(Array(viewModel.sales.enumerated()), id: \.offset) { i, sale in
 #if os(macOS)
-                    VStack(alignment: .leading) {
-                        Text(viewModel.itemName(for: sale))
-                            .font(.headline)
-                        HStack {
-                            Text(sale.date.toShortString())
-                            Spacer()
-                            if let price = sale.price {
-                                Text("$\(price, specifier: "%.2f")")
+                    Button(action: { selectedSale = sale }) {
+                        VStack(alignment: .leading) {
+                            Text(viewModel.itemName(for: sale))
+                                .font(.headline)
+                            HStack {
+                                Text(sale.date.toShortString())
+                                Spacer()
+                                if let price = sale.price {
+                                    Text("$\(price, specifier: "%.2f")")
+                                }
                             }
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
                         }
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .contentShape(Rectangle())
+                    .buttonStyle(.plain)
                     .tag(sale)
+                    .contentShape(Rectangle())
                     .onTapGesture { HapticManager.shared.impact() }
 #else
                     NavigationLink(destination: SalesDetailsView(sale: sale, itemName: viewModel.itemName(for: sale))) {
@@ -104,5 +107,8 @@ struct SalesView: View {
                 }
             }
         }
+#if os(macOS)
+        .listStyle(.inset)
+#endif
     }
 }

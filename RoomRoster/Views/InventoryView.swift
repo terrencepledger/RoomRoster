@@ -14,15 +14,22 @@ private typealias l10n = Strings.inventory
 struct InventoryView: View {
     @StateObject private var viewModel = InventoryViewModel()
     @StateObject private var sheets = SpreadsheetManager.shared
+#if os(macOS)
+    private enum Pane: Hashable {
+        case item(Item)
+        case create
+        case edit(Item)
+        case sell(Item)
+    }
+    @State private var pane: Pane?
+#else
     @State private var showCreateItemView = false
+#endif
     @State private var expandedRooms: Set<Room> = []
     @State private var searchText: String = ""
     @State private var includeHistoryInSearch: Bool = false
     @State private var includeSoldItems: Bool = false
     @State private var logVersion = 0
-#if os(macOS)
-    @State private var selectedItem: Item?
-#endif
 
     var groupedItems: [(room: Room, items: [(Item, String)])] {
         let filtered = filteredItemsWithContext
@@ -38,13 +45,7 @@ struct InventoryView: View {
             NavigationSplitView {
                 listPane
             } detail: {
-                if let item = selectedItem {
-                    ItemDetailsView(item: item)
-                        .environmentObject(viewModel)
-                } else {
-                    Text(l10n.selectItemPrompt)
-                        .foregroundColor(.secondary)
-                }
+                detailPane
             }
 #else
             NavigationView {
@@ -52,6 +53,7 @@ struct InventoryView: View {
             }
 #endif
         }
+#if !os(macOS)
         .platformPopup(isPresented: $showCreateItemView) {
             CreateItemView(
                 viewModel: CreateItemViewModel(
@@ -80,13 +82,14 @@ struct InventoryView: View {
                 )
             )
         }
+#endif
         .toolbar {
             #if os(macOS)
             ToolbarItem(placement: .primaryAction) {
                 if sheets.currentSheet != nil {
                     Button(action: {
                         Logger.action("Pressed Add Item Toolbar")
-                        showCreateItemView.toggle()
+                        pane = .create
                     }) {
                         Label(l10n.addItemButton, systemImage: "plus")
                     }
@@ -110,11 +113,70 @@ struct InventoryView: View {
         }
     }
 
-    #if os(macOS)
-    private var selectionBinding: Binding<Item?>? { $selectedItem }
-    #else
+#if os(macOS)
+    @ViewBuilder
+    private var detailPane: some View {
+        switch pane {
+        case .item(let item):
+            ItemDetailsView(
+                item: item,
+                openEdit: { pane = .edit(item) },
+                openSell: { pane = .sell(item) }
+            )
+            .environmentObject(viewModel)
+        case .create:
+            CreateItemView(
+                viewModel: CreateItemViewModel(
+                    inventoryService: InventoryService(),
+                    roomService: RoomService(),
+                    itemsProvider: { viewModel.items },
+                    onSave: { newItem in
+                        pane = .item(newItem)
+                        Task { await viewModel.fetchInventory() }
+                    }
+                )
+            )
+        case .edit(let item):
+            EditItemView(editableItem: item) { updated in
+                pane = .item(updated)
+                Task {
+                    await viewModel.fetchInventory()
+                    await viewModel.loadRecentLogs(for: viewModel.items)
+                }
+            }
+            .environmentObject(viewModel)
+        case .sell(let item):
+            SellItemView(viewModel: SellItemViewModel(item: item)) { result in
+                pane = .item(item)
+                if case let .success(updated) = result {
+                    pane = .item(updated)
+                    Task {
+                        await viewModel.fetchInventory()
+                        await viewModel.loadRecentLogs(for: viewModel.items)
+                    }
+                }
+            }
+        case nil:
+            Text(l10n.selectItemPrompt)
+                .foregroundColor(.secondary)
+        }
+    }
+#endif
+
+#if os(macOS)
+    private var selectionBinding: Binding<Item?>? {
+        Binding(
+            get: {
+                if case let .item(item) = pane { return item } else { return nil }
+            },
+            set: { newValue in
+                if let value = newValue { pane = .item(value) } else { pane = nil }
+            }
+        )
+    }
+#else
     private var selectionBinding: Binding<Item?>? { nil }
-    #endif
+#endif
 
     @ViewBuilder
     private var listPane: some View {
@@ -152,24 +214,27 @@ struct InventoryView: View {
                                 if expandedRooms.contains(group.room) {
                                     ForEach(group.items, id: \.0.id) { (item, context) in
 #if os(macOS)
-                                        VStack(alignment: .leading) {
-                                            Text(item.name).font(.headline)
-                                            Text(l10n.status(item.status.label))
-                                            if let tag = item.propertyTag {
-                                                Text(l10n.tag(tag.label))
-                                                    .font(.subheadline)
-                                                    .foregroundColor(.gray)
+                                        Button(action: { pane = .item(item) }) {
+                                            VStack(alignment: .leading) {
+                                                Text(item.name).font(.headline)
+                                                Text(l10n.status(item.status.label))
+                                                if let tag = item.propertyTag {
+                                                    Text(l10n.tag(tag.label))
+                                                        .font(.subheadline)
+                                                        .foregroundColor(.gray)
+                                                }
+                                                if !context.isEmpty {
+                                                    Text(l10n.matchedLabel(context))
+                                                        .font(.caption)
+                                                        .italic()
+                                                        .foregroundColor(.secondary)
+                                                }
                                             }
-                                            if !context.isEmpty {
-                                                Text(l10n.matchedLabel(context))
-                                                    .font(.caption)
-                                                    .italic()
-                                                    .foregroundColor(.secondary)
-                                            }
+                                            .frame(maxWidth: .infinity, alignment: .leading)
                                         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .contentShape(Rectangle())
+                                        .buttonStyle(.plain)
                                         .tag(item)
+                                        .contentShape(Rectangle())
                                         .onTapGesture { HapticManager.shared.impact() }
 #else
                                         NavigationLink(destination: ItemDetailsView(item: item).environmentObject(viewModel)) {
@@ -202,6 +267,9 @@ struct InventoryView: View {
                     }
                 }
             }
+#if os(macOS)
+            .listStyle(.inset)
+#endif
 
 #if os(iOS)
             if sheets.currentSheet != nil {
