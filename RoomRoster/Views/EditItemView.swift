@@ -293,8 +293,7 @@ struct EditItemView: View {
             .task {
                 await viewModel.loadRooms()
             }
-        }
-    }
+            }
 
     private func validateTag() {
         if propertyTagInput.isEmpty || propertyTagInput == editableItem.propertyTag?.label {

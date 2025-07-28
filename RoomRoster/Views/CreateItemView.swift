@@ -138,8 +138,6 @@ struct CreateItemView: View {
                                         withAnimation { viewModel.validateTag() }
         }
     }
-
-}
                         if viewModel.showTagError, let error = viewModel.tagError {
                             HStack {
                                 Spacer()

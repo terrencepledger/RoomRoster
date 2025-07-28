@@ -73,5 +73,3 @@ struct SellItemView: View {
             }
         }
     }
-}
-
