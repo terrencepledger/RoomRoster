@@ -234,7 +234,7 @@ struct ItemDetailsView: View {
                 }
             }
         }
-        .sheet(isPresented: $isEditing) {
+        .platformPopup(isPresented: $isEditing) {
             EditItemView(editableItem: item) { updatedItem in
                 let oldItem = item
                 Task {
@@ -263,7 +263,7 @@ struct ItemDetailsView: View {
             }
             .environmentObject(inventoryVM)
         }
-        .sheet(isPresented: $showingSellSheet) {
+        .platformPopup(isPresented: $showingSellSheet) {
             SellItemView(viewModel: SellItemViewModel(item: item)) { result in
                 showingSellSheet = false
                 switch result {
@@ -286,7 +286,7 @@ struct ItemDetailsView: View {
                 }
             }
         }
-        .sheet(isPresented: $showingSaleDetails) {
+        .platformPopup(isPresented: $showingSaleDetails) {
             if let sale {
                 SalesDetailsView(sale: sale, itemName: item.name)
             }

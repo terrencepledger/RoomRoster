@@ -92,6 +92,7 @@ struct InventoryView: View {
                     }
                 }
 
+                #if os(iOS)
                 if sheets.currentSheet != nil {
                     Button(action: {
                         Logger.action("Pressed Add Item Button")
@@ -108,9 +109,10 @@ struct InventoryView: View {
                     }
                     .padding()
                 }
+                #endif
             }
         }
-        .sheet(isPresented: $showCreateItemView) {
+        .platformPopup(isPresented: $showCreateItemView) {
             CreateItemView(
                 viewModel: CreateItemViewModel(
                     inventoryService: InventoryService(),
@@ -137,6 +139,20 @@ struct InventoryView: View {
                     }
                 )
             )
+        }
+        .toolbar {
+            #if os(macOS)
+            ToolbarItem(placement: .primaryAction) {
+                if sheets.currentSheet != nil {
+                    Button(action: {
+                        Logger.action("Pressed Add Item Toolbar")
+                        showCreateItemView.toggle()
+                    }) {
+                        Label(l10n.addItemButton, systemImage: "plus")
+                    }
+                }
+            }
+            #endif
         }
         .navigationTitle(l10n.title)
         .onAppear {

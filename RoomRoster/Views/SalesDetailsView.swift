@@ -83,7 +83,7 @@ struct SalesDetailsView: View {
                 showingEdit = true
             }
         }
-        .sheet(isPresented: $showingEdit) {
+        .platformPopup(isPresented: $showingEdit) {
             EditSaleView(viewModel: EditSaleViewModel(sale: editableSale)) { updated in
                 editableSale = updated
             }

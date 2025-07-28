@@ -9,4 +9,17 @@ extension View {
         self.buttonStyle(.borderedProminent).controlSize(.regular)
 #endif
     }
+
+    /// Presents the given content using a style appropriate for the platform.
+    func platformPopup<Content: View>(
+        isPresented: Binding<Bool>,
+        @ViewBuilder content: @escaping () -> Content
+    ) -> some View {
+#if os(macOS)
+        self.popover(isPresented: isPresented, content: content)
+#else
+        self.sheet(isPresented: isPresented, content: content)
+            .presentationDetents([.medium, .large])
+#endif
+    }
 }
