@@ -99,7 +99,7 @@ class AuthenticationManager: ObservableObject {
         let user = result.user
         updateUser(from: user)
         #elseif canImport(AppKit)
-        guard let window = NSApplication.shared.windows.first else {
+        guard let window = NSApp.keyWindow ?? NSApp.mainWindow ?? NSApp.windows.first else {
             throw NSError(
                 domain: "Auth",
                 code: -1,
