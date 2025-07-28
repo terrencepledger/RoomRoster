@@ -51,6 +51,7 @@ struct InventoryView: View {
                 listPane
             }
 #endif
+        }
         .platformPopup(isPresented: $showCreateItemView) {
             CreateItemView(
                 viewModel: CreateItemViewModel(
@@ -197,7 +198,6 @@ struct InventoryView: View {
                     }
                 }
             }
-#endif
 
 #if os(iOS)
             if sheets.currentSheet != nil {
