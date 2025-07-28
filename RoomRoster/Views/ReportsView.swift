@@ -154,7 +154,6 @@ struct ReportsView: View {
                 await viewModel.loadData()
             }
             .onAppear { Logger.page("ReportsView") }
-        }
     }
 
     private var searchHeader: some View {
