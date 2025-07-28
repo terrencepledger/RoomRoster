@@ -26,6 +26,9 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
+            if let message = auth.signInError {
+                Banner.error(message)
+            }
             Section(l10n.accountSection) {
                 if auth.isSignedIn {
                     Button(l10n.signOutButton) {
