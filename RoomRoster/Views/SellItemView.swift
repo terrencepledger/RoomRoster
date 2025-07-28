@@ -16,8 +16,15 @@ struct SellItemView: View {
     }
 
     var body: some View {
-        NavigationView {
-            Form {
+#if os(macOS)
+        content
+#else
+        NavigationStack { content }
+#endif
+    }
+
+    private var content: some View {
+        Form {
                 Section(l10n.priceSection) {
                     TextField(l10n.price, value: $viewModel.sale.price, format: .number)
 #if canImport(UIKit)

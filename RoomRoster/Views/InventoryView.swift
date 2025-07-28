@@ -15,7 +15,8 @@ struct InventoryView: View {
     @StateObject private var viewModel = InventoryViewModel()
     @StateObject private var sheets = SpreadsheetManager.shared
 #if os(macOS)
-    @Binding var selectedItem: Item?
+    @Binding var selectedItemID: String?
+    @State private var selectedItem: Item?
     private enum Pane: Hashable {
         case item(Item)
         case create
@@ -33,8 +34,9 @@ struct InventoryView: View {
     @State private var logVersion = 0
 
     #if os(macOS)
-    init(selectedItem: Binding<Item?>) {
-        self._selectedItem = selectedItem
+    init(selectedItemID: Binding<String?>) {
+        self._selectedItemID = selectedItemID
+        self._selectedItem = State(initialValue: nil)
     }
     #else
     init() {}
@@ -114,11 +116,21 @@ struct InventoryView: View {
             guard sheets.currentSheet != nil else { return }
             await viewModel.fetchInventory()
             await viewModel.loadRecentLogs(for: viewModel.items)
+            if let id = selectedItemID,
+               let match = viewModel.items.first(where: { $0.id == id }) {
+                selectedItem = match
+                pane = .item(match)
+            }
         }
         .refreshable {
             guard sheets.currentSheet != nil else { return }
             await viewModel.fetchInventory()
             await viewModel.loadRecentLogs(for: viewModel.items)
+            if let id = selectedItemID,
+               let match = viewModel.items.first(where: { $0.id == id }) {
+                selectedItem = match
+                pane = .item(match)
+            }
         }
     }
 
@@ -141,6 +153,7 @@ struct InventoryView: View {
                     itemsProvider: { viewModel.items },
                     onSave: { newItem in
                         selectedItem = newItem
+                        selectedItemID = newItem.id
                         pane = .item(newItem)
                         Task { await viewModel.fetchInventory() }
                     }
@@ -152,6 +165,7 @@ struct InventoryView: View {
                 editableItem: item,
                 onSave: { updated in
                     selectedItem = updated
+                    selectedItemID = updated.id
                     pane = .item(updated)
                     Task {
                         await viewModel.fetchInventory()
@@ -166,9 +180,11 @@ struct InventoryView: View {
                 viewModel: SellItemViewModel(item: item),
                 onComplete: { result in
                 selectedItem = item
+                selectedItemID = item.id
                 pane = .item(item)
                 if case let .success(updated) = result {
                     selectedItem = updated
+                    selectedItemID = updated.id
                     pane = .item(updated)
                     Task {
                         await viewModel.fetchInventory()
@@ -191,6 +207,7 @@ struct InventoryView: View {
             get: { selectedItem },
             set: { newValue in
                 selectedItem = newValue
+                selectedItemID = newValue?.id
                 if let value = newValue { pane = .item(value) } else { pane = nil }
             }
         )
@@ -235,7 +252,7 @@ struct InventoryView: View {
                                 if expandedRooms.contains(group.room) {
                                     ForEach(group.items, id: \.0.id) { (item, context) in
 #if os(macOS)
-                                        Button(action: { selectedItem = item; pane = .item(item) }) {
+                                        Button(action: { selectedItem = item; selectedItemID = item.id; pane = .item(item) }) {
                                             VStack(alignment: .leading) {
                                                 Text(item.name).font(.headline)
                                                 Text(l10n.status(item.status.label))

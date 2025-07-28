@@ -39,8 +39,8 @@ struct MainMenuView: View {
     @StateObject private var auth = AuthenticationManager.shared
     @State private var selectedTab: MenuTab = .inventory
 #if os(macOS)
-    @State private var selectedItem: Item?
-    @State private var selectedSale: Sale?
+    @State private var selectedItemID: String?
+    @State private var selectedSaleIndex: Int?
 #endif
 #if os(iOS)
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
@@ -103,8 +103,8 @@ struct MainMenuView: View {
     private func detailView(for tab: MenuTab) -> some View {
         switch tab {
 #if os(macOS)
-        case .inventory: InventoryView(selectedItem: $selectedItem)
-        case .sales:     SalesView(selectedSale: $selectedSale)
+        case .inventory: InventoryView(selectedItemID: $selectedItemID)
+        case .sales:     SalesView(selectedSaleIndex: $selectedSaleIndex)
 #else
         case .inventory: InventoryView()
         case .sales:     SalesView()

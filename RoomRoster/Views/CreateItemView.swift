@@ -24,12 +24,16 @@ struct CreateItemView: View {
     @FocusState private var tagFieldFocused: Bool
 
     var body: some View {
-        content
+#if os(macOS)
+        content.macSheetFrame()
+#else
+        NavigationStack { content }
             .macSheetFrame()
+#endif
     }
 
     private var content: some View {
-        NavigationView {
+        VStack {
             VStack {
                 if let error = viewModel.errorMessage {
                     ErrorBanner(message: error)
@@ -132,9 +136,10 @@ struct CreateItemView: View {
                                 .onChange(of: tagFieldFocused) { _, focused in
                                     if !focused {
                                         withAnimation { viewModel.validateTag() }
-                                    }
-                                }
-                        }
+        }
+    }
+
+}
                         if viewModel.showTagError, let error = viewModel.tagError {
                             HStack {
                                 Spacer()
@@ -236,5 +241,6 @@ struct CreateItemView: View {
             }
         }
     }
-    
+
+}
 

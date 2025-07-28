@@ -9,8 +9,15 @@ struct ReportsView: View {
     @State private var shareURL: URL?
     
     var body: some View {
-        NavigationView {
-            List {
+#if os(macOS)
+        content
+#else
+        NavigationStack { content }
+#endif
+    }
+
+    private var content: some View {
+        List {
                 if sheets.currentSheet == nil {
                     Text(Strings.inventory.selectSheetPrompt)
                         .foregroundColor(.secondary)

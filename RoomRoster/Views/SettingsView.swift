@@ -65,6 +65,7 @@ struct SettingsView: View {
                 }
             }
         }
+        .formStyle(.grouped)
         .navigationTitle(l10n.title)
         .onAppear { Logger.page("SettingsView") }
     }

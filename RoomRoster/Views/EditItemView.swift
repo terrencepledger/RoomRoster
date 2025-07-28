@@ -41,8 +41,15 @@ struct EditItemView: View {
     @FocusState private var tagFieldFocused: Bool
 
     var body: some View {
-        NavigationView {
-            Form {
+#if os(macOS)
+        content
+#else
+        NavigationStack { content }
+#endif
+    }
+
+    private var content: some View {
+        Form {
                 // MARK: – Photo Section
                 Section(header: Text(l10n.photo.title)) {
                     if let url = URL(string: editableItem.imageURL),

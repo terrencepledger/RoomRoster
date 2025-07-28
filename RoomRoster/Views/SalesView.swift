@@ -6,12 +6,14 @@ struct SalesView: View {
     @StateObject private var viewModel = SalesViewModel()
     @StateObject private var sheets = SpreadsheetManager.shared
 #if os(macOS)
-    @Binding var selectedSale: Sale?
+    @Binding var selectedSaleIndex: Int?
+    @State private var selectedSale: Sale?
 #endif
 
 #if os(macOS)
-    init(selectedSale: Binding<Sale?>) {
-        self._selectedSale = selectedSale
+    init(selectedSaleIndex: Binding<Int?>) {
+        self._selectedSaleIndex = selectedSaleIndex
+        self._selectedSale = State(initialValue: nil)
     }
 #else
     init() {}
@@ -40,16 +42,37 @@ struct SalesView: View {
         .task {
             guard sheets.currentSheet != nil else { return }
             await viewModel.loadSales()
+            if let idx = selectedSaleIndex,
+               idx < viewModel.sales.count {
+                selectedSale = viewModel.sales[idx]
+            }
         }
         .refreshable {
             guard sheets.currentSheet != nil else { return }
             await viewModel.loadSales()
+            if let idx = selectedSaleIndex,
+               idx < viewModel.sales.count {
+                selectedSale = viewModel.sales[idx]
+            }
         }
         .onAppear { Logger.page("SalesView") }
     }
 
 #if os(macOS)
-    private var selectionBinding: Binding<Sale?>? { $selectedSale }
+    private var selectionBinding: Binding<Sale?>? {
+        Binding(
+            get: { selectedSale },
+            set: { newValue in
+                selectedSale = newValue
+                if let value = newValue,
+                   let idx = viewModel.sales.firstIndex(of: value) {
+                    selectedSaleIndex = idx
+                } else {
+                    selectedSaleIndex = nil
+                }
+            }
+        )
+    }
 #else
     private var selectionBinding: Binding<Sale?>? { nil }
 #endif
@@ -70,7 +93,7 @@ struct SalesView: View {
             } else {
                 ForEach(Array(viewModel.sales.enumerated()), id: \.offset) { i, sale in
 #if os(macOS)
-                    Button(action: { selectedSale = sale }) {
+                    Button(action: { selectedSale = sale; selectedSaleIndex = i }) {
                         VStack(alignment: .leading) {
                             Text(viewModel.itemName(for: sale))
                                 .font(.headline)

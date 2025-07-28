@@ -6,8 +6,15 @@ struct EditSaleView: View {
     var onSave: (Sale) -> Void
 
     var body: some View {
-        NavigationView {
-            Form {
+#if os(macOS)
+        content
+#else
+        NavigationStack { content }
+#endif
+    }
+
+    private var content: some View {
+        Form {
                 Section("Sale Receipt") {
                     ReceiptImageView(urlString: viewModel.sale.receiptImageURL)
                     CombinedImagePickerButton(image: $viewModel.pickedReceiptImage)
