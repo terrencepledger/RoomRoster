@@ -144,6 +144,7 @@ struct InventoryView: View {
                 openEdit: { _ in pane = .edit(item) },
                 openSell: { _ in pane = .sell(item) }
             )
+            .id(item.id)
             .environmentObject(viewModel)
         case .create:
             CreateItemView(

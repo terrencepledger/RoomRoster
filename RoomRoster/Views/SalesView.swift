@@ -26,7 +26,11 @@ struct SalesView: View {
                 listPane
             } detail: {
                 if let sale = selectedSale {
-                    SalesDetailsView(sale: sale, itemName: viewModel.itemName(for: sale))
+                    SalesDetailsView(
+                        sale: sale,
+                        itemName: viewModel.itemName(for: sale)
+                    )
+                    .id(sale.itemId + sale.date.toShortString())
                 } else {
                     Text(l10n.selectSalePrompt)
                         .foregroundColor(.secondary)
