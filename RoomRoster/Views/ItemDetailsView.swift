@@ -33,6 +33,13 @@ struct ItemDetailsView: View {
     init(item: Item) {
         _item = State(initialValue: item)
     }
+#if os(macOS)
+    init(item: Item, openEdit: ((Item) -> Void)? = nil, openSell: ((Item) -> Void)? = nil) {
+        self.openEdit = openEdit
+        self.openSell = openSell
+        _item = State(initialValue: item)
+    }
+#endif
 
     var body: some View {
         ZStack {
