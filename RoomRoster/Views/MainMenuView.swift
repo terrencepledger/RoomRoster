@@ -38,6 +38,10 @@ private enum MenuTab: Int, CaseIterable, Identifiable {
 struct MainMenuView: View {
     @StateObject private var auth = AuthenticationManager.shared
     @State private var selectedTab: MenuTab = .inventory
+#if os(macOS)
+    @State private var selectedItem: Item?
+    @State private var selectedSale: Sale?
+#endif
 #if os(iOS)
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 #endif
@@ -98,8 +102,13 @@ struct MainMenuView: View {
     @ViewBuilder
     private func detailView(for tab: MenuTab) -> some View {
         switch tab {
+#if os(macOS)
+        case .inventory: InventoryView(selectedItem: $selectedItem)
+        case .sales:     SalesView(selectedSale: $selectedSale)
+#else
         case .inventory: InventoryView()
         case .sales:     SalesView()
+#endif
         case .reports:   ReportsView()
         case .sheets:    SheetsView()
         case .settings:  SettingsView()

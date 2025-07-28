@@ -6,7 +6,15 @@ struct SalesView: View {
     @StateObject private var viewModel = SalesViewModel()
     @StateObject private var sheets = SpreadsheetManager.shared
 #if os(macOS)
-    @State private var selectedSale: Sale?
+    @Binding var selectedSale: Sale?
+#endif
+
+#if os(macOS)
+    init(selectedSale: Binding<Sale?>) {
+        self._selectedSale = selectedSale
+    }
+#else
+    init() {}
 #endif
 
     var body: some View {

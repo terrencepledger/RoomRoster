@@ -17,6 +17,11 @@ struct EditItemView: View {
     @Environment(\.dismiss) private var dismiss
     @State var editableItem: Item
     var onSave: (Item) -> Void
+    var onCancel: (() -> Void)? = nil
+
+    private func close() {
+        if let onCancel { onCancel() } else { dismiss() }
+    }
 
     @EnvironmentObject var viewModel: InventoryViewModel
 
@@ -239,7 +244,7 @@ struct EditItemView: View {
                             editableItem.propertyTag = PropertyTag(rawValue: propertyTagInput)
                             onSave(editableItem)
                             HapticManager.shared.success()
-                            dismiss()
+                            close()
                         }
                     }
                     .disabled(editableItem.name.isEmpty || editableItem.description.isEmpty || tagError != nil)
@@ -265,7 +270,7 @@ struct EditItemView: View {
             .navigationTitle(l10n.title)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(Strings.general.cancel) { dismiss() }
+                    Button(Strings.general.cancel) { close() }
                 }
             }
             .onAppear {

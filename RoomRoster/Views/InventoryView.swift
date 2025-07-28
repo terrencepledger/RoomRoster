@@ -15,6 +15,7 @@ struct InventoryView: View {
     @StateObject private var viewModel = InventoryViewModel()
     @StateObject private var sheets = SpreadsheetManager.shared
 #if os(macOS)
+    @Binding var selectedItem: Item?
     private enum Pane: Hashable {
         case item(Item)
         case create
@@ -30,6 +31,14 @@ struct InventoryView: View {
     @State private var includeHistoryInSearch: Bool = false
     @State private var includeSoldItems: Bool = false
     @State private var logVersion = 0
+
+    #if os(macOS)
+    init(selectedItem: Binding<Item?>) {
+        self._selectedItem = selectedItem
+    }
+    #else
+    init() {}
+    #endif
 
     var groupedItems: [(room: Room, items: [(Item, String)])] {
         let filtered = filteredItemsWithContext
@@ -131,31 +140,44 @@ struct InventoryView: View {
                     roomService: RoomService(),
                     itemsProvider: { viewModel.items },
                     onSave: { newItem in
+                        selectedItem = newItem
                         pane = .item(newItem)
                         Task { await viewModel.fetchInventory() }
                     }
-                )
+                ),
+                onCancel: { pane = selectedItem != nil ? .item(selectedItem!) : nil }
             )
         case .edit(let item):
-            EditItemView(editableItem: item) { updated in
-                pane = .item(updated)
-                Task {
-                    await viewModel.fetchInventory()
-                    await viewModel.loadRecentLogs(for: viewModel.items)
-                }
-            }
+            EditItemView(
+                editableItem: item,
+                onSave: { updated in
+                    selectedItem = updated
+                    pane = .item(updated)
+                    Task {
+                        await viewModel.fetchInventory()
+                        await viewModel.loadRecentLogs(for: viewModel.items)
+                    }
+                },
+                onCancel: { pane = .item(item) }
+            )
             .environmentObject(viewModel)
         case .sell(let item):
-            SellItemView(viewModel: SellItemViewModel(item: item)) { result in
+            SellItemView(
+                viewModel: SellItemViewModel(item: item),
+                onComplete: { result in
+                selectedItem = item
                 pane = .item(item)
                 if case let .success(updated) = result {
+                    selectedItem = updated
                     pane = .item(updated)
                     Task {
                         await viewModel.fetchInventory()
                         await viewModel.loadRecentLogs(for: viewModel.items)
                     }
                 }
-            }
+                },
+                onCancel: { pane = .item(item) }
+            )
         case nil:
             Text(l10n.selectItemPrompt)
                 .foregroundColor(.secondary)
@@ -166,10 +188,9 @@ struct InventoryView: View {
 #if os(macOS)
     private var selectionBinding: Binding<Item?>? {
         Binding(
-            get: {
-                if case let .item(item) = pane { return item } else { return nil }
-            },
+            get: { selectedItem },
             set: { newValue in
+                selectedItem = newValue
                 if let value = newValue { pane = .item(value) } else { pane = nil }
             }
         )
@@ -214,7 +235,7 @@ struct InventoryView: View {
                                 if expandedRooms.contains(group.room) {
                                     ForEach(group.items, id: \.0.id) { (item, context) in
 #if os(macOS)
-                                        Button(action: { pane = .item(item) }) {
+                                        Button(action: { selectedItem = item; pane = .item(item) }) {
                                             VStack(alignment: .leading) {
                                                 Text(item.name).font(.headline)
                                                 Text(l10n.status(item.status.label))

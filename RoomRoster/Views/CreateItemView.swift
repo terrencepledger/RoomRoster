@@ -15,6 +15,11 @@ private typealias l10n = Strings.createItem
 struct CreateItemView: View {
     @Environment(\.dismiss) var dismiss
     @ObservedObject var viewModel: CreateItemViewModel
+    var onCancel: (() -> Void)? = nil
+
+    private func close() {
+        if let onCancel { onCancel() } else { dismiss() }
+    }
 
     @FocusState private var tagFieldFocused: Bool
 
@@ -195,7 +200,7 @@ struct CreateItemView: View {
                         await viewModel.saveItem()
                         if viewModel.errorMessage == nil {
                             HapticManager.shared.success()
-                            dismiss()
+                            close()
                         }
                     }
                 }
@@ -221,7 +226,7 @@ struct CreateItemView: View {
             .navigationTitle(l10n.title)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(Strings.general.cancel) { dismiss() }
+                    Button(Strings.general.cancel) { close() }
                 }
             }
             .onAppear {
