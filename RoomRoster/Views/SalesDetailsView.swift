@@ -77,6 +77,7 @@ struct SalesDetailsView: View {
         .overlay {
             if let errorMessage {
                 VStack { Spacer(); ErrorBanner(message: errorMessage) }
+                    .allowsHitTesting(false)
             }
         }
         .toolbar {

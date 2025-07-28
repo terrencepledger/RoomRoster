@@ -225,6 +225,7 @@ struct InventoryView: View {
                 }
                 Spacer()
             }
+            .allowsHitTesting(false)
 
             List(selection: selectionBinding) {
                 if sheets.currentSheet == nil {
