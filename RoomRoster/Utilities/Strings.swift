@@ -253,6 +253,7 @@ struct Strings {
         static let title = "Sales"
         static let emptyState = "No sales recorded"
         static let failedToLoad = "Failed to load sales. Please try again."
+        static let selectSalePrompt = "Select a sale"
     }
 
     // MARK: - SellItemView
