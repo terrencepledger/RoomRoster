@@ -410,7 +410,6 @@
 				767E82D62D8F3ABE00B48011 /* AuthenticationManager.swift */,
 				767E82D22D8F34C800B48011 /* Extensions.swift */,
 				B6E684D42DD176D900EE608B /* Logger.swift */,
-<<<<<<< HEAD
                                77809C47FCD59CC9A4E795CC /* HapticManager.swift */,
                                AFA014E93EE2475992EB91B0 /* PlatformImage.swift */,
                                8A63CDB2EA6A42EA93C1D13D /* DepreciationCalculator.swift */,
@@ -420,14 +419,6 @@
                         path = Utilities;
                         sourceTree = "<group>";
                 };
-=======
-				77809C47FCD59CC9A4E795CC /* HapticManager.swift */,
-				B61A9BD72DD6650000D04E9A /* SheetsUtils.swift */,
-			);
-			path = Utilities;
-			sourceTree = "<group>";
-		};
->>>>>>> 1d15017 (Remove depreciation feature)
 		B65F712E2DE64FBE00310D40 /* Components */ = {
 			isa = PBXGroup;
 			children = (
