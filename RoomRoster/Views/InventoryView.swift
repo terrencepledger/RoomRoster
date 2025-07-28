@@ -120,8 +120,8 @@ struct InventoryView: View {
         case .item(let item):
             ItemDetailsView(
                 item: item,
-                openEdit: { pane = .edit(item) },
-                openSell: { pane = .sell(item) }
+                openEdit: { _ in pane = .edit(item) },
+                openSell: { _ in pane = .sell(item) }
             )
             .environmentObject(viewModel)
         case .create:
