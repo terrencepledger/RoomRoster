@@ -107,13 +107,6 @@ struct ItemDetailsView: View {
                             }
                         }
 
-                        if let current = item.depreciatedValue {
-                            HStack {
-                                Text(l10n.depreciatedPriceTitle).bold()
-                                Text("$\(current, specifier: "%.2f")")
-                            }
-                        }
-
                         HStack {
                             Text(l10n.status).bold()
                             Text(item.status.label)

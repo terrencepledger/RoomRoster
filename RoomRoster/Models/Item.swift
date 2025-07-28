@@ -109,9 +109,3 @@ extension Item {
               purchaseReceiptURL: nil)
     }
 }
-
-extension Item {
-    var depreciatedValue: Double? {
-        DepreciationCalculator.depreciatedValue(for: self, annualRate: 0.1)
-    }
-}
