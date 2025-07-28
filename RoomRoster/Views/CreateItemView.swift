@@ -136,8 +136,9 @@ struct CreateItemView: View {
                                 .onChange(of: tagFieldFocused) { _, focused in
                                     if !focused {
                                         withAnimation { viewModel.validateTag() }
-        }
-    }
+                                    }
+                                }
+                        }
                         if viewModel.showTagError, let error = viewModel.tagError {
                             HStack {
                                 Spacer()
@@ -239,6 +240,4 @@ struct CreateItemView: View {
             }
         }
     }
-
-}
 
