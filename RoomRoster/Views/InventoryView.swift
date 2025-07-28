@@ -252,25 +252,22 @@ struct InventoryView: View {
                                 if expandedRooms.contains(group.room) {
                                     ForEach(group.items, id: \.0.id) { (item, context) in
 #if os(macOS)
-                                        Button(action: { selectedItem = item; selectedItemID = item.id; pane = .item(item) }) {
-                                            VStack(alignment: .leading) {
-                                                Text(item.name).font(.headline)
-                                                Text(l10n.status(item.status.label))
-                                                if let tag = item.propertyTag {
-                                                    Text(l10n.tag(tag.label))
-                                                        .font(.subheadline)
-                                                        .foregroundColor(.gray)
-                                                }
-                                                if !context.isEmpty {
-                                                    Text(l10n.matchedLabel(context))
-                                                        .font(.caption)
-                                                        .italic()
-                                                        .foregroundColor(.secondary)
-                                                }
+                                        VStack(alignment: .leading) {
+                                            Text(item.name).font(.headline)
+                                            Text(l10n.status(item.status.label))
+                                            if let tag = item.propertyTag {
+                                                Text(l10n.tag(tag.label))
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.gray)
                                             }
-                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            if !context.isEmpty {
+                                                Text(l10n.matchedLabel(context))
+                                                    .font(.caption)
+                                                    .italic()
+                                                    .foregroundColor(.secondary)
+                                            }
                                         }
-                                        .buttonStyle(.plain)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
                                         .tag(item)
                                         .contentShape(Rectangle())
                                         .onTapGesture { HapticManager.shared.impact() }
@@ -292,8 +289,8 @@ struct InventoryView: View {
                                                 }
                                             }
                                         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .contentShape(Rectangle())
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .contentShape(Rectangle())
                                         .simultaneousGesture(
                                             TapGesture().onEnded { HapticManager.shared.impact() }
                                         )

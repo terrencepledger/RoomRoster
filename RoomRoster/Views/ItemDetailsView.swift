@@ -191,7 +191,12 @@ struct ItemDetailsView: View {
         .toolbar {
             ToolbarItem(placement: toolbarDetailsPlacement) {
                 let hasImage = URL(string: item.imageURL) != nil
-                let hasReceipt = item.purchaseReceiptURL != nil
+                let hasReceipt = {
+                    if let url = item.purchaseReceiptURL {
+                        return !url.isEmpty
+                    }
+                    return false
+                }()
 
                 if hasImage || hasReceipt {
                     Menu {

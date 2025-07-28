@@ -93,23 +93,20 @@ struct SalesView: View {
             } else {
                 ForEach(Array(viewModel.sales.enumerated()), id: \.offset) { i, sale in
 #if os(macOS)
-                    Button(action: { selectedSale = sale; selectedSaleIndex = i }) {
-                        VStack(alignment: .leading) {
-                            Text(viewModel.itemName(for: sale))
-                                .font(.headline)
-                            HStack {
-                                Text(sale.date.toShortString())
-                                Spacer()
-                                if let price = sale.price {
-                                    Text("$\(price, specifier: "%.2f")")
-                                }
+                    VStack(alignment: .leading) {
+                        Text(viewModel.itemName(for: sale))
+                            .font(.headline)
+                        HStack {
+                            Text(sale.date.toShortString())
+                            Spacer()
+                            if let price = sale.price {
+                                Text("$\(price, specifier: "%.2f")")
                             }
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
                     }
-                    .buttonStyle(.plain)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .tag(sale)
                     .contentShape(Rectangle())
                     .onTapGesture { HapticManager.shared.impact() }
