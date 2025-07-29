@@ -20,6 +20,7 @@ struct SalesDetailsView: View {
     )
     @State private var shareURL: URL?
     @State private var errorMessage: String?
+    @State private var editSuccess: String?
     private let downloader = FileDownloadService()
 
     var body: some View {
@@ -79,6 +80,10 @@ struct SalesDetailsView: View {
                 VStack { Spacer(); ErrorBanner(message: errorMessage) }
                     .allowsHitTesting(false)
             }
+            if let message = editSuccess {
+                VStack { Spacer(); SuccessBanner(message: message) }
+                    .allowsHitTesting(false)
+            }
         }
         .toolbar {
             Button(l10n.editButton) {
@@ -89,6 +94,11 @@ struct SalesDetailsView: View {
         .platformPopup(isPresented: $showingEdit) {
             EditSaleView(viewModel: EditSaleViewModel(sale: editableSale)) { updated in
                 editableSale = updated
+                editSuccess = Strings.saleDetails.editSuccess
+                HapticManager.shared.success()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                    withAnimation { editSuccess = nil }
+                }
             }
         }
         .sheet(item: $shareURL) { url in

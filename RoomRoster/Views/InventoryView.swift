@@ -32,6 +32,7 @@ struct InventoryView: View {
     @State private var includeHistoryInSearch: Bool = false
     @State private var includeSoldItems: Bool = false
     @State private var logVersion = 0
+    @State private var successMessage: String?
 
     #if os(macOS)
     init(selectedItemID: Binding<String?>) {
@@ -78,6 +79,11 @@ struct InventoryView: View {
                                 let createdBy = AuthenticationManager.shared.userName
                                 await HistoryLogService().logCreation(for: newItem, createdBy: createdBy)
                                 await viewModel.fetchInventory()
+                                successMessage = Strings.createItem.success
+                                HapticManager.shared.success()
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                    withAnimation { successMessage = nil }
+                                }
                             } catch {
                                 Logger.log(error, extra: ["description": "Error creating item, updating log, or re-fetching"])
                                 withAnimation {
@@ -165,7 +171,14 @@ struct InventoryView: View {
                         selectedItem = newItem
                         selectedItemID = newItem.id
                         pane = .item(newItem)
-                        Task { await viewModel.fetchInventory() }
+                        Task {
+                            await viewModel.fetchInventory()
+                            successMessage = Strings.createItem.success
+                            HapticManager.shared.success()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                withAnimation { successMessage = nil }
+                            }
+                        }
                     }
                 ),
                 onCancel: { pane = selectedItem != nil ? .item(selectedItem!) : nil }
@@ -186,6 +199,11 @@ struct InventoryView: View {
                                 .logChanges(old: oldItem, new: updated, updatedBy: updatedBy)
                             await viewModel.fetchInventory()
                             await viewModel.loadRecentLogs(for: viewModel.items)
+                            successMessage = Strings.editItem.success
+                            HapticManager.shared.success()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                withAnimation { successMessage = nil }
+                            }
                         } catch {
                             Logger.log(error, extra: [
                                 "description": "Error updating item",
@@ -216,6 +234,11 @@ struct InventoryView: View {
                     Task {
                         await viewModel.fetchInventory()
                         await viewModel.loadRecentLogs(for: viewModel.items)
+                    }
+                    successMessage = Strings.sellItem.success
+                    HapticManager.shared.success()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                        withAnimation { successMessage = nil }
                     }
                 }
                 },
@@ -249,6 +272,9 @@ struct InventoryView: View {
             VStack {
                 if let error = viewModel.errorMessage {
                     ErrorBanner(message: error)
+                }
+                if let message = successMessage {
+                    SuccessBanner(message: message)
                 }
                 Spacer()
             }

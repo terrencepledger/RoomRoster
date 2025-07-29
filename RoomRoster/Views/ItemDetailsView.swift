@@ -25,6 +25,7 @@ struct ItemDetailsView: View {
     @State private var sale: Sale?
     @State private var saleSuccess: String?
     @State private var saleError: String?
+    @State private var editSuccess: String?
     @StateObject private var viewModel = ItemDetailsViewModel()
     @State private var shareURL: URL?
 
@@ -49,6 +50,9 @@ struct ItemDetailsView: View {
                         ErrorBanner(message: error)
                     }
                     if let message = saleSuccess {
+                        SuccessBanner(message: message)
+                    }
+                    if let message = editSuccess {
                         SuccessBanner(message: message)
                     }
                     if let sellError = saleError {
@@ -285,6 +289,11 @@ struct ItemDetailsView: View {
                             .logChanges(old: oldItem, new: updatedItem, updatedBy: updatedBy)
                         await viewModel.fetchItemHistory(for: item.id)
                         await inventoryVM.fetchInventory()
+                        editSuccess = Strings.editItem.success
+                        HapticManager.shared.success()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                            withAnimation { editSuccess = nil }
+                        }
                     } catch {
                         Logger.log(error, extra: [
                             "description": "Error updating item",
