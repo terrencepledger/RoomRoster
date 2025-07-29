@@ -37,10 +37,25 @@ class ItemDetailsViewModel: ObservableObject {
         try await downloader.download(from: url)
     }
 
-    func downloadReceipt(for itemId: String) async throws -> URL {
-        let data = try await receiptService.loadReceipt(for: itemId)
+    func downloadReceipt(for item: Item) async throws -> URL {
+        let fileType: ReceiptFileType
+        if let urlString = item.purchaseReceiptURL,
+           let url = URL(string: urlString) {
+            switch url.pathExtension.lowercased() {
+            case "jpg", "jpeg": fileType = .jpg
+            case "png": fileType = .png
+            default: fileType = .pdf
+            }
+        } else {
+            fileType = .pdf
+        }
+
+        let data = try await receiptService.loadReceipt(
+            for: item.id,
+            type: fileType
+        )
         let fileURL = FileManager.default.temporaryDirectory
-            .appendingPathComponent("\(itemId).pdf")
+            .appendingPathComponent("\(item.id).\(fileType.fileExtension)")
         try data.write(to: fileURL)
         return fileURL
     }
