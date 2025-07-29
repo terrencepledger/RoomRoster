@@ -26,6 +26,7 @@ struct ItemDetailsView: View {
     @State private var sale: Sale?
     @State private var saleSuccess: String?
     @State private var saleError: String?
+    @State private var editSuccess: String?
     @StateObject private var viewModel = ItemDetailsViewModel()
     @State private var shareURL: URL?
 
@@ -49,19 +50,10 @@ struct ItemDetailsView: View {
 #endif
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .bottom) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    if let error = viewModel.errorMessage {
-                        ErrorBanner(message: error)
-                    }
-                    if let message = saleSuccess {
-                        SuccessBanner(message: message)
-                    }
-                    if let sellError = saleError {
-                        ErrorBanner(message: sellError)
-                    }
-                    if let url = URL(string: item.imageURL), !item.imageURL.isEmpty {
+                    if let url = URL(string: item.imageURL) {
                         AsyncImage(url: url) { image in
                             image.resizable().scaledToFit()
                         } placeholder: {
@@ -193,6 +185,22 @@ struct ItemDetailsView: View {
                 }
             }
             #endif
+            VStack(spacing: 4) {
+                if let message = saleSuccess {
+                    SuccessBanner(message: message)
+                }
+                if let message = editSuccess {
+                    SuccessBanner(message: message)
+                }
+                if let sellError = saleError {
+                    ErrorBanner(message: sellError)
+                }
+                if let error = viewModel.errorMessage {
+                    ErrorBanner(message: error)
+                }
+            }
+            .allowsHitTesting(false)
+            .padding()
         }
         .navigationTitle(l10n.title)
         .toolbar {
@@ -302,6 +310,11 @@ struct ItemDetailsView: View {
                             .logChanges(old: oldItem, new: updatedItem, updatedBy: updatedBy)
                         await viewModel.fetchItemHistory(for: item.id)
                         await inventoryVM.fetchInventory()
+                        editSuccess = Strings.editItem.success
+                        HapticManager.shared.success()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                            withAnimation { editSuccess = nil }
+                        }
                     } catch {
                         Logger.log(error, extra: [
                             "description": "Error updating item",

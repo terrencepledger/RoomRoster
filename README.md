@@ -27,6 +27,7 @@ Common components like banners and buttons automatically adapt their style on ea
 - **Item Details:** Tap on any item in the list to view its detailed information, including a history log and color-coded status.
 - **Edit Items:** Use the "Edit Item" button in the details view to modify item information. Changes are applied locally and can be extended to update remotely.
 - **Sell Items:** From an item's details you can record a sale which updates the Google Sheet and emails a receipt.
+- **Banners:** Success and error banners appear over the current view so feedback is always visible on both iOS and macOS.
 
 ## Configuration
 

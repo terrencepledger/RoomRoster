@@ -33,6 +33,7 @@ struct InventoryView: View {
     @State private var includeHistoryInSearch: Bool = false
     @State private var includeSoldItems: Bool = false
     @State private var logVersion = 0
+    @State private var successMessage: String?
 
     #if os(macOS)
     init(selectedItemID: Binding<String?>) {
@@ -52,6 +53,7 @@ struct InventoryView: View {
     }
 
     var body: some View {
+        ZStack(alignment: .bottomTrailing) {
         Group {
 #if os(macOS)
             NavigationSplitView {
@@ -65,6 +67,7 @@ struct InventoryView: View {
             }
 #endif
         }
+    }
 #if !os(macOS)
         .platformPopup(isPresented: $showCreateItemView) {
             CreateItemView(
@@ -79,6 +82,11 @@ struct InventoryView: View {
                                 let createdBy = AuthenticationManager.shared.userName
                                 await HistoryLogService().logCreation(for: newItem, createdBy: createdBy)
                                 await viewModel.fetchInventory()
+                                successMessage = Strings.createItem.success
+                                HapticManager.shared.success()
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                    withAnimation { successMessage = nil }
+                                }
                             } catch {
                                 Logger.log(error, extra: ["description": "Error creating item, updating log, or re-fetching"])
                                 withAnimation {
@@ -142,6 +150,16 @@ struct InventoryView: View {
             syncSelectionWithInventory()
         }
 #endif
+        if let message = successMessage {
+            SuccessBanner(message: message)
+                .allowsHitTesting(false)
+                .padding()
+        }
+        if let error = viewModel.errorMessage {
+            ErrorBanner(message: error)
+                .allowsHitTesting(false)
+                .padding()
+        }
     }
 
 #if os(macOS)
@@ -167,7 +185,14 @@ struct InventoryView: View {
                         selectedItem = newItem
                         selectedItemID = newItem.id
                         pane = .item(newItem)
-                        Task { await viewModel.fetchInventory() }
+                        Task {
+                            await viewModel.fetchInventory()
+                            successMessage = Strings.createItem.success
+                            HapticManager.shared.success()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                withAnimation { successMessage = nil }
+                            }
+                        }
                     }
                 ),
                 onCancel: { pane = selectedItem != nil ? .item(selectedItem!) : nil }
@@ -188,6 +213,11 @@ struct InventoryView: View {
                                 .logChanges(old: oldItem, new: updated, updatedBy: updatedBy)
                             await viewModel.fetchInventory()
                             await viewModel.loadRecentLogs(for: viewModel.items)
+                            successMessage = Strings.editItem.success
+                            HapticManager.shared.success()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                withAnimation { successMessage = nil }
+                            }
                         } catch {
                             Logger.log(error, extra: [
                                 "description": "Error updating item",
@@ -218,6 +248,11 @@ struct InventoryView: View {
                     Task {
                         await viewModel.fetchInventory()
                         await viewModel.loadRecentLogs(for: viewModel.items)
+                    }
+                    successMessage = Strings.sellItem.success
+                    HapticManager.shared.success()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                        withAnimation { successMessage = nil }
                     }
                 }
                 },
@@ -250,13 +285,6 @@ struct InventoryView: View {
     @ViewBuilder
     private var listPane: some View {
         ZStack(alignment: .bottomTrailing) {
-            VStack {
-                if let error = viewModel.errorMessage {
-                    ErrorBanner(message: error)
-                }
-                Spacer()
-            }
-            .allowsHitTesting(false)
 
 #if os(macOS)
             List(selection: selectionBinding) {

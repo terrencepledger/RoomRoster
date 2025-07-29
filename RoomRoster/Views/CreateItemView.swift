@@ -33,12 +33,8 @@ struct CreateItemView: View {
     }
 
     private var content: some View {
-        VStack {
-            VStack {
-                if let error = viewModel.errorMessage {
-                    ErrorBanner(message: error)
-                }
-                Form {
+        ZStack(alignment: .bottom) {
+            Form {
                     Section {
                         CombinedImagePickerButton(image: $viewModel.pickedImage)
                             .onChange(of: viewModel.pickedImage) { _, img in
@@ -211,6 +207,11 @@ struct CreateItemView: View {
                 .disabled(viewModel.newItem.name.isEmpty || viewModel.newItem.description.isEmpty || viewModel.tagError != nil || viewModel.newItem.lastKnownRoom == Room.placeholder())
                 .platformButtonStyle()
                 }
+            }
+            if let error = viewModel.errorMessage {
+                ErrorBanner(message: error)
+                    .allowsHitTesting(false)
+                    .padding()
             }
             .alert(
                 l10n.addRoom.title,

@@ -20,6 +20,7 @@ struct SalesView: View {
 #endif
 
     var body: some View {
+        ZStack(alignment: .bottom) {
         Group {
 #if os(macOS)
             NavigationSplitView {
@@ -41,6 +42,12 @@ struct SalesView: View {
                 listPane
             }
 #endif
+        }
+        if let error = viewModel.errorMessage {
+            ErrorBanner(message: error)
+                .allowsHitTesting(false)
+                .padding()
+        }
         }
         .navigationTitle(l10n.title)
         .task {
@@ -101,10 +108,6 @@ struct SalesView: View {
 
     @ViewBuilder
     private var listContent: some View {
-        if let error = viewModel.errorMessage {
-            ErrorBanner(message: error)
-        }
-
         if sheets.currentSheet == nil {
             Text(Strings.inventory.selectSheetPrompt)
                 .foregroundColor(.secondary)

@@ -69,6 +69,7 @@ struct Strings {
         static let uploadingImage = "Uploading Image…"
         static let imageURL = "Image URL"
         static let photo = "Photo"
+        static let success = "Item created successfully"
         struct basicInfo {
             static let title = "Basic Information"
             static let name = "Name"
@@ -148,6 +149,7 @@ struct Strings {
     // MARK: - EditItemView
     struct editItem {
         static let title = "Edit Item"
+        static let success = "Item updated successfully"
         struct photo {
             static let title = "Photo"
             static let emptyState = "No Photo"
@@ -286,5 +288,6 @@ struct Strings {
         static let receiptSection = "Receipt"
         static let editButton = "Edit"
         static let editTitle = "Edit Sale"
+        static let editSuccess = "Sale updated successfully"
     }
 }
