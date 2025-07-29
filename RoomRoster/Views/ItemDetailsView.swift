@@ -54,7 +54,7 @@ struct ItemDetailsView: View {
                     if let sellError = saleError {
                         ErrorBanner(message: sellError)
                     }
-                    if let url = URL(string: item.imageURL) {
+                    if let url = URL(string: item.imageURL), !item.imageURL.isEmpty {
                         AsyncImage(url: url) { image in
                             image.resizable().scaledToFit()
                         } placeholder: {
@@ -62,6 +62,12 @@ struct ItemDetailsView: View {
                         }
                         .frame(height: 250)
                         .cornerRadius(12)
+                    } else {
+                        Text(Strings.itemDetails.noImage)
+                            .frame(maxWidth: .infinity, minHeight: 250)
+                            .foregroundColor(.secondary)
+                            .background(Color.secondary.opacity(0.1))
+                            .cornerRadius(12)
                     }
 
                     if item.purchaseReceiptURL != nil {
@@ -325,17 +331,17 @@ struct ItemDetailsView: View {
                 }
             }
         }
-        .platformPopup(isPresented: $showingSaleDetails) {
-            if let sale {
-                SalesDetailsView(sale: sale, itemName: item.name)
-            }
-        }
         #if canImport(UIKit)
         .sheet(item: $shareURL) { url in
             ShareSheet(activityItems: [url])
         }
         #endif
         #endif // os(iOS)
+        .platformPopup(isPresented: $showingSaleDetails) {
+            if let sale {
+                SalesDetailsView(sale: sale, itemName: item.name)
+            }
+        }
         .onAppear {
             Logger.page("ItemDetailsView")
             Task { await AuthenticationManager.shared.signIn() }
