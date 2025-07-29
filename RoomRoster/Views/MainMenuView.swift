@@ -58,10 +58,17 @@ struct MainMenuView: View {
         Group {
             if useSplitView {
                 NavigationSplitView {
+#if os(macOS)
                     List(MenuTab.allCases, selection: $selectedTab) { tab in
                         Label(tab.label, systemImage: tab.icon)
                             .tag(tab)
                     }
+#else
+                    List(MenuTab.allCases) { tab in
+                        Label(tab.label, systemImage: tab.icon)
+                            .tag(tab)
+                    }
+#endif
                     .navigationTitle("Menu")
                 } detail: {
                     detailView(for: selectedTab)

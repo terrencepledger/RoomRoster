@@ -46,18 +46,22 @@ struct SalesView: View {
         .task {
             guard sheets.currentSheet != nil else { return }
             await viewModel.loadSales()
+#if os(macOS)
             if let idx = selectedSaleIndex,
                idx < viewModel.sales.count {
                 selectedSale = viewModel.sales[idx]
             }
+#endif
         }
         .refreshable {
             guard sheets.currentSheet != nil else { return }
             await viewModel.loadSales()
+#if os(macOS)
             if let idx = selectedSaleIndex,
                idx < viewModel.sales.count {
                 selectedSale = viewModel.sales[idx]
             }
+#endif
         }
         .onAppear { Logger.page("SalesView") }
     }
