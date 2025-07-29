@@ -54,22 +54,27 @@ struct MainMenuView: View {
 #endif
     }
 
+    @ViewBuilder
+    private var menuList: some View {
+#if os(macOS)
+        List(MenuTab.allCases, selection: $selectedTab) { tab in
+            Label(tab.label, systemImage: tab.icon)
+                .tag(tab)
+        }
+#else
+        List(MenuTab.allCases) { tab in
+            Label(tab.label, systemImage: tab.icon)
+                .tag(tab)
+        }
+#endif
+    }
+
     var body: some View {
         Group {
             if useSplitView {
                 NavigationSplitView {
-#if os(macOS)
-                    List(MenuTab.allCases, selection: $selectedTab) { tab in
-                        Label(tab.label, systemImage: tab.icon)
-                            .tag(tab)
-                    }
-#else
-                    List(MenuTab.allCases) { tab in
-                        Label(tab.label, systemImage: tab.icon)
-                            .tag(tab)
-                    }
-#endif
-                    .navigationTitle("Menu")
+                    menuList
+                        .navigationTitle("Menu")
                 } detail: {
                     detailView(for: selectedTab)
                 }
