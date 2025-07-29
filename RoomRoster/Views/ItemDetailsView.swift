@@ -43,21 +43,9 @@ struct ItemDetailsView: View {
 #endif
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .bottom) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    if let error = viewModel.errorMessage {
-                        ErrorBanner(message: error)
-                    }
-                    if let message = saleSuccess {
-                        SuccessBanner(message: message)
-                    }
-                    if let message = editSuccess {
-                        SuccessBanner(message: message)
-                    }
-                    if let sellError = saleError {
-                        ErrorBanner(message: sellError)
-                    }
                     if let url = URL(string: item.imageURL) {
                         AsyncImage(url: url) { image in
                             image.resizable().scaledToFit()
@@ -183,6 +171,22 @@ struct ItemDetailsView: View {
                 }
             }
             #endif
+            VStack(spacing: 4) {
+                if let message = saleSuccess {
+                    SuccessBanner(message: message)
+                }
+                if let message = editSuccess {
+                    SuccessBanner(message: message)
+                }
+                if let sellError = saleError {
+                    ErrorBanner(message: sellError)
+                }
+                if let error = viewModel.errorMessage {
+                    ErrorBanner(message: error)
+                }
+            }
+            .allowsHitTesting(false)
+            .padding()
         }
         .navigationTitle(l10n.title)
         .toolbar {

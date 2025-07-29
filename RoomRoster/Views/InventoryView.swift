@@ -154,6 +154,11 @@ struct InventoryView: View {
                 .allowsHitTesting(false)
                 .padding()
         }
+        if let error = viewModel.errorMessage {
+            ErrorBanner(message: error)
+                .allowsHitTesting(false)
+                .padding()
+        }
     }
 
 #if os(macOS)
@@ -276,13 +281,6 @@ struct InventoryView: View {
     @ViewBuilder
     private var listPane: some View {
         ZStack(alignment: .bottomTrailing) {
-            VStack {
-                if let error = viewModel.errorMessage {
-                    ErrorBanner(message: error)
-                }
-                Spacer()
-            }
-            .allowsHitTesting(false)
 
 #if os(macOS)
             List(selection: selectionBinding) {
