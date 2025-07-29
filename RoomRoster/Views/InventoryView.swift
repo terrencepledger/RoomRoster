@@ -165,12 +165,29 @@ struct InventoryView: View {
             EditItemView(
                 editableItem: item,
                 onSave: { updated in
+                    let oldItem = item
                     selectedItem = updated
                     selectedItemID = updated.id
                     pane = .item(updated)
                     Task {
-                        await viewModel.fetchInventory()
-                        await viewModel.loadRecentLogs(for: viewModel.items)
+                        do {
+                            try await InventoryService().updateItem(updated)
+                            let updatedBy = AuthenticationManager.shared.userName
+                            await HistoryLogService()
+                                .logChanges(old: oldItem, new: updated, updatedBy: updatedBy)
+                            await viewModel.fetchInventory()
+                            await viewModel.loadRecentLogs(for: viewModel.items)
+                        } catch {
+                            Logger.log(error, extra: [
+                                "description": "Error updating item",
+                                "item": String(describing: updated)
+                            ])
+                            withAnimation { viewModel.errorMessage = Strings.itemDetails.failedToUpdate }
+                            HapticManager.shared.error()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                withAnimation { viewModel.errorMessage = nil }
+                            }
+                        }
                     }
                 },
                 onCancel: { pane = .item(item) }
