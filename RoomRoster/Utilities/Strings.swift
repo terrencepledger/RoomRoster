@@ -129,6 +129,7 @@ struct Strings {
         static func dateUpdated(_ date: String) -> String {
             "Last Updated: \(date)"
         }
+        static let noImage = "No Image"
         struct logs {
             static let title = "History Log"
             static let loading = "Loading history…"
