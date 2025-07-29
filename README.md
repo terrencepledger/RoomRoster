@@ -6,6 +6,10 @@ RoomRoster is a SwiftUI-based inventory management application that integrates w
 
 RoomRoster runs on iPhone, iPad, and macOS via **Mac Catalyst**. UIKit components fall back to `PhotosPicker` on Mac so the same codebase works across devices.
 
+On iPhone the app presents a classic tab bar interface. Larger screens on iPad and Mac display a sidebar-driven layout using `NavigationSplitView` so navigation feels native on every platform.
+Each platform retains its own look and feel while sharing the same codebase, letting the app take advantage of hardware keyboards and pointer interactions on macOS without sacrificing the compact experience on iOS.
+Common components like banners and buttons automatically adapt their style on each platform so alerts and dialogs look at home whether you're on iPhone or Mac.
+
 ## Features
 
 - **Inventory List:** Displays a list of inventory items with details such as name, status, and last known room.

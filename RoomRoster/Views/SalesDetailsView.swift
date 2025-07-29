@@ -35,10 +35,11 @@ struct SalesDetailsView: View {
                 row(l10n.soldBy, sale.soldBy)
                 row(l10n.department, sale.department)
             }
-            if sale.receiptImageURL != nil || sale.receiptPDFURL != nil {
+            if (sale.receiptImageURL?.isEmpty == false) || (sale.receiptPDFURL?.isEmpty == false) {
                 Section(l10n.receiptSection) {
                     ReceiptImageView(urlString: sale.receiptImageURL)
                     if let imgURLString = sale.receiptImageURL,
+                       !imgURLString.isEmpty,
                        let url = URL(string: imgURLString) {
                         Button(Strings.itemDetails.downloadImage) {
                             Task {
@@ -51,8 +52,10 @@ struct SalesDetailsView: View {
                                 }
                             }
                         }
+                        .platformButtonStyle()
                     }
                     if let pdf = sale.receiptPDFURL,
+                       !pdf.isEmpty,
                        let url = URL(string: pdf) {
                         Button(Strings.itemDetails.downloadReceipt) {
                             Task {
@@ -65,6 +68,7 @@ struct SalesDetailsView: View {
                                 }
                             }
                         }
+                        .platformButtonStyle()
                     }
                 }
             }
@@ -73,6 +77,7 @@ struct SalesDetailsView: View {
         .overlay {
             if let errorMessage {
                 VStack { Spacer(); ErrorBanner(message: errorMessage) }
+                    .allowsHitTesting(false)
             }
         }
         .toolbar {
@@ -81,7 +86,7 @@ struct SalesDetailsView: View {
                 showingEdit = true
             }
         }
-        .sheet(isPresented: $showingEdit) {
+        .platformPopup(isPresented: $showingEdit) {
             EditSaleView(viewModel: EditSaleViewModel(sale: editableSale)) { updated in
                 editableSale = updated
             }

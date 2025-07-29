@@ -15,11 +15,25 @@ private typealias l10n = Strings.createItem
 struct CreateItemView: View {
     @Environment(\.dismiss) var dismiss
     @ObservedObject var viewModel: CreateItemViewModel
+    var onCancel: (() -> Void)? = nil
+
+    private func close() {
+        if let onCancel { onCancel() } else { dismiss() }
+    }
 
     @FocusState private var tagFieldFocused: Bool
 
     var body: some View {
-        NavigationView {
+#if os(macOS)
+        content.macSheetFrame()
+#else
+        NavigationStack { content }
+            .macSheetFrame()
+#endif
+    }
+
+    private var content: some View {
+        VStack {
             VStack {
                 if let error = viewModel.errorMessage {
                     ErrorBanner(message: error)
@@ -190,11 +204,12 @@ struct CreateItemView: View {
                         await viewModel.saveItem()
                         if viewModel.errorMessage == nil {
                             HapticManager.shared.success()
-                            dismiss()
+                            close()
                         }
                     }
                 }
                 .disabled(viewModel.newItem.name.isEmpty || viewModel.newItem.description.isEmpty || viewModel.tagError != nil || viewModel.newItem.lastKnownRoom == Room.placeholder())
+                .platformButtonStyle()
                 }
             }
             .alert(
@@ -208,13 +223,14 @@ struct CreateItemView: View {
                     Button(l10n.addRoom.button) {
                         Task { await viewModel.addRoom() }
                     }
+                    .platformButtonStyle()
                     Button(Strings.general.cancel, role: .cancel) { }
                 }
             )
             .navigationTitle(l10n.title)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(Strings.general.cancel) { dismiss() }
+                    Button(Strings.general.cancel) { close() }
                 }
             }
             .onAppear {
@@ -224,5 +240,4 @@ struct CreateItemView: View {
             }
         }
     }
-    
 

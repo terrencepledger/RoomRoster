@@ -21,6 +21,7 @@ class AuthenticationManager: ObservableObject {
     @Published private(set) var accessToken: String?
     @Published private(set) var userName: String?
     @Published private(set) var email: String?
+    @Published var signInError: String?
 
     private init() {
         if let user = GIDSignIn.sharedInstance.currentUser {
@@ -35,6 +36,7 @@ class AuthenticationManager: ObservableObject {
             try await triggerSignIn()
         } catch {
             Logger.log(error, extra: ["description": "Failed signing in"])
+            signInError = error.localizedDescription
         }
     }
 
@@ -65,6 +67,7 @@ class AuthenticationManager: ObservableObject {
         self.accessToken = nil
         self.userName = nil
         self.isSignedIn = false
+        self.signInError = nil
     }
 
     private func updateUser(from user: GIDGoogleUser) {
@@ -72,6 +75,7 @@ class AuthenticationManager: ObservableObject {
         self.userName = user.profile?.name
         self.email = user.profile?.email
         self.isSignedIn = true
+        self.signInError = nil
     }
 
     private func triggerSignIn() async throws {
@@ -99,7 +103,13 @@ class AuthenticationManager: ObservableObject {
         let user = result.user
         updateUser(from: user)
         #elseif canImport(AppKit)
-        guard let window = NSApplication.shared.windows.first else {
+        var window = NSApp.keyWindow ?? NSApp.mainWindow ?? NSApp.windows.first { $0.isVisible }
+        if window == nil {
+            NSApp.activate(ignoringOtherApps: true)
+            try await Task.sleep(nanoseconds: 500_000_000)
+            window = NSApp.keyWindow ?? NSApp.mainWindow ?? NSApp.windows.first { $0.isVisible }
+        }
+        guard let presenting = window else {
             throw NSError(
                 domain: "Auth",
                 code: -1,
@@ -108,7 +118,7 @@ class AuthenticationManager: ObservableObject {
         }
 
         let result = try await GIDSignIn.sharedInstance.signIn(
-            withPresenting: window,
+            withPresenting: presenting,
             hint: nil,
             additionalScopes: [
                 "https://www.googleapis.com/auth/spreadsheets",

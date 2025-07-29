@@ -17,6 +17,11 @@ struct EditItemView: View {
     @Environment(\.dismiss) private var dismiss
     @State var editableItem: Item
     var onSave: (Item) -> Void
+    var onCancel: (() -> Void)? = nil
+
+    private func close() {
+        if let onCancel { onCancel() } else { dismiss() }
+    }
 
     @EnvironmentObject var viewModel: InventoryViewModel
 
@@ -36,8 +41,15 @@ struct EditItemView: View {
     @FocusState private var tagFieldFocused: Bool
 
     var body: some View {
-        NavigationView {
-            Form {
+#if os(macOS)
+        content
+#else
+        NavigationStack { content }
+#endif
+    }
+
+    private var content: some View {
+        Form {
                 // MARK: – Photo Section
                 Section(header: Text(l10n.photo.title)) {
                     if let url = URL(string: editableItem.imageURL),
@@ -239,10 +251,11 @@ struct EditItemView: View {
                             editableItem.propertyTag = PropertyTag(rawValue: propertyTagInput)
                             onSave(editableItem)
                             HapticManager.shared.success()
-                            dismiss()
+                            close()
                         }
                     }
                     .disabled(editableItem.name.isEmpty || editableItem.description.isEmpty || tagError != nil)
+                    .platformButtonStyle()
                 }
             }
             .alert(l10n.addRoomAlert.title, isPresented: $showingAddRoomPrompt, actions: {
@@ -258,12 +271,13 @@ struct EditItemView: View {
                         HapticManager.shared.success()
                     }
                 }
+                .platformButtonStyle()
                 Button(Strings.general.cancel, role: .cancel) { }
             })
             .navigationTitle(l10n.title)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(Strings.general.cancel) { dismiss() }
+                    Button(Strings.general.cancel) { close() }
                 }
             }
             .onAppear {
@@ -279,8 +293,7 @@ struct EditItemView: View {
             .task {
                 await viewModel.loadRooms()
             }
-        }
-    }
+            }
 
     private func validateTag() {
         if propertyTagInput.isEmpty || propertyTagInput == editableItem.propertyTag?.label {

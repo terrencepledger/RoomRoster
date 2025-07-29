@@ -26,6 +26,9 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
+            if let message = auth.signInError {
+                Banner.error(message)
+            }
             Section(l10n.accountSection) {
                 if auth.isSignedIn {
                     Button(l10n.signOutButton) {
@@ -33,6 +36,7 @@ struct SettingsView: View {
                         sheets.signOut()
                         HapticManager.shared.success()
                     }
+                    .platformButtonStyle()
                 } else {
                     Button(l10n.signInButton) {
                         Task {
@@ -40,6 +44,7 @@ struct SettingsView: View {
                             HapticManager.shared.success()
                         }
                     }
+                    .platformButtonStyle()
                 }
             }
 
@@ -63,6 +68,7 @@ struct SettingsView: View {
                 }
             }
         }
+        .formStyle(.grouped)
         .navigationTitle(l10n.title)
         .onAppear { Logger.page("SettingsView") }
     }

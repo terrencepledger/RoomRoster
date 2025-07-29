@@ -9,10 +9,22 @@ struct SellItemView: View {
     @Environment(\.dismiss) var dismiss
     @StateObject var viewModel: SellItemViewModel
     var onComplete: (Result<Item, Error>) -> Void
+    var onCancel: (() -> Void)? = nil
+
+    private func close() {
+        if let onCancel { onCancel() } else { dismiss() }
+    }
 
     var body: some View {
-        NavigationView {
-            Form {
+#if os(macOS)
+        content
+#else
+        NavigationStack { content }
+#endif
+    }
+
+    private var content: some View {
+        Form {
                 Section(l10n.priceSection) {
                     TextField(l10n.price, value: $viewModel.sale.price, format: .number)
 #if canImport(UIKit)
@@ -42,7 +54,7 @@ struct SellItemView: View {
                             let item = try await viewModel.submitSale()
                             onComplete(.success(item))
                             HapticManager.shared.success()
-                            dismiss()
+                            close()
                         } catch {
                             Logger.log(error, extra: ["description": "Failed to record sale"])
                             onComplete(.failure(error))
@@ -51,14 +63,13 @@ struct SellItemView: View {
                     }
                 }
                 .disabled(viewModel.isSubmitting)
+                .platformButtonStyle()
             }
             .navigationTitle(l10n.title)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(Strings.general.cancel) { dismiss() }
+                    Button(Strings.general.cancel) { close() }
                 }
             }
         }
     }
-}
-

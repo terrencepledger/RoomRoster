@@ -101,6 +101,8 @@
 		EC28A959CE63441E9F3C1048 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70EC0F7257914A11A7589F29 /* ShareSheet.swift */; };
                 FDB33D97700C2EF04190FA52 /* GmailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01D35FCE10EB02BEFD65D29 /* GmailService.swift */; };
                 FB42C5677D8D477793E2A66E /* PlatformImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA014E93EE2475992EB91B0 /* PlatformImage.swift */; };
+                B91B2B655AA24D36A6D094DC /* Banner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59AAECA2F774795B16E5720 /* Banner.swift */; };
+                8F419DC95DD3457AB0BC226A /* PlatformStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4581310567438BBF55B5F9 /* PlatformStyles.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -166,8 +168,10 @@
 		9062D441F4874BA89C2A0A1E /* InventoryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryServiceTests.swift; sourceTree = "<group>"; };
 		A1E0B1C14AD24FA3B4C56D7E /* ReceiptImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptImageView.swift; sourceTree = "<group>"; };
 		A4280063F1BA4122A570E8B9 /* InventoryUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryUITests.swift; sourceTree = "<group>"; };
-		AA12BBCC44D055EE00112232 /* SuccessBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessBanner.swift; sourceTree = "<group>"; };
-		B612436B2DB03BA000B9098B /* ImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
+                AA12BBCC44D055EE00112232 /* SuccessBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessBanner.swift; sourceTree = "<group>"; };
+                F59AAECA2F774795B16E5720 /* Banner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Banner.swift; sourceTree = "<group>"; };
+                B612436B2DB03BA000B9098B /* ImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
+                8D4581310567438BBF55B5F9 /* PlatformStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformStyles.swift; sourceTree = "<group>"; };
 		B615ED1B2DE12A16009BE623 /* Status.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Status.swift; sourceTree = "<group>"; };
 		B615ED1D2DE226E1009BE623 /* PropertyTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyTag.swift; sourceTree = "<group>"; };
 		B615ED1F2DE2BB15009BE623 /* Room.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Room.swift; sourceTree = "<group>"; };
@@ -407,6 +411,7 @@
                                AFA014E93EE2475992EB91B0 /* PlatformImage.swift */,
                                8A63CDB2EA6A42EA93C1D13D /* DepreciationCalculator.swift */,
                                B61A9BD72DD6650000D04E9A /* SheetsUtils.swift */,
+                               8D4581310567438BBF55B5F9 /* PlatformStyles.swift */,
                        );
                         path = Utilities;
                         sourceTree = "<group>";
@@ -415,8 +420,9 @@
 			isa = PBXGroup;
 			children = (
 				B6A6D6DB2DD8FD4E00378BFF /* ErrorBanner.swift */,
-				AA12BBCC44D055EE00112232 /* SuccessBanner.swift */,
-				A1E0B1C14AD24FA3B4C56D7E /* ReceiptImageView.swift */,
+                                AA12BBCC44D055EE00112232 /* SuccessBanner.swift */,
+                                F59AAECA2F774795B16E5720 /* Banner.swift */,
+                                A1E0B1C14AD24FA3B4C56D7E /* ReceiptImageView.swift */,
 				70EC0F7257914A11A7589F29 /* ShareSheet.swift */,
 			);
 			path = Components;
@@ -588,6 +594,14 @@
 				B6D80EFD2E28DD8D00748907 /* SpreadsheetManager.swift in Sources */,
 				B615ED222DE2BB4E009BE623 /* RoomService.swift in Sources */,
 				767E82C92D8F1AA500B48011 /* NetworkService.swift in Sources */,
+                                B6D80EFE2E295A1600748907 /* HapticManager.swift in Sources */,
+                                0A2B89787187428E8B76DD58 /* DepreciationCalculator.swift in Sources */,
+                                8F419DC95DD3457AB0BC226A /* PlatformStyles.swift in Sources */,
+                                767B05BF2D4C5F9E00566C25 /* GoogleSheetsResponse.swift in Sources */,
+                                B6A6D6DC2DD8FD4E00378BFF /* ErrorBanner.swift in Sources */,
+                                AA12BBCC44D055EE00112233 /* SuccessBanner.swift in Sources */,
+                                B91B2B655AA24D36A6D094DC /* Banner.swift in Sources */,
+                                B615ED1C2DE12A16009BE623 /* Status.swift in Sources */,
 				B6D80EFE2E295A1600748907 /* HapticManager.swift in Sources */,
 				767B05BF2D4C5F9E00566C25 /* GoogleSheetsResponse.swift in Sources */,
 				B6A6D6DC2DD8FD4E00378BFF /* ErrorBanner.swift in Sources */,
