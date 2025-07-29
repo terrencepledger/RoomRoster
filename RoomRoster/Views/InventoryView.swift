@@ -116,25 +116,31 @@ struct InventoryView: View {
             guard sheets.currentSheet != nil else { return }
             await viewModel.fetchInventory()
             await viewModel.loadRecentLogs(for: viewModel.items)
+#if os(macOS)
             if let id = selectedItemID,
                let match = viewModel.items.first(where: { $0.id == id }) {
                 selectedItem = match
                 pane = .item(match)
             }
+#endif
         }
         .refreshable {
             guard sheets.currentSheet != nil else { return }
             await viewModel.fetchInventory()
             await viewModel.loadRecentLogs(for: viewModel.items)
+#if os(macOS)
             if let id = selectedItemID,
                let match = viewModel.items.first(where: { $0.id == id }) {
                 selectedItem = match
                 pane = .item(match)
             }
+#endif
         }
+#if os(macOS)
         .onChange(of: viewModel.items) { _ in
             syncSelectionWithInventory()
         }
+#endif
     }
 
 #if os(macOS)
@@ -248,7 +254,11 @@ struct InventoryView: View {
             }
             .allowsHitTesting(false)
 
+            #if os(macOS)
             List(selection: selectionBinding) {
+            #else
+            List {
+            #endif
                 if sheets.currentSheet == nil {
                     Text(l10n.selectSheetPrompt)
                         .foregroundColor(.secondary)

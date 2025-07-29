@@ -87,7 +87,11 @@ struct SalesView: View {
 
     @ViewBuilder
     private var listPane: some View {
+        #if os(macOS)
         List(selection: selectionBinding) {
+        #else
+        List {
+        #endif
             if let error = viewModel.errorMessage {
                 ErrorBanner(message: error)
             }
@@ -142,6 +146,7 @@ struct SalesView: View {
                 }
             }
         }
+#endif
 #if os(macOS)
         .listStyle(.inset)
 #endif
