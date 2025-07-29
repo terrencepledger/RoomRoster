@@ -53,7 +53,7 @@ struct InventoryView: View {
 
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
-            Group {
+        Group {
 #if os(macOS)
             NavigationSplitView {
                 listPane
@@ -66,6 +66,7 @@ struct InventoryView: View {
             }
 #endif
         }
+    }
 #if !os(macOS)
         .platformPopup(isPresented: $showCreateItemView) {
             CreateItemView(
