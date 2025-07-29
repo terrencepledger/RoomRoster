@@ -46,18 +46,22 @@ struct SalesView: View {
         .task {
             guard sheets.currentSheet != nil else { return }
             await viewModel.loadSales()
+#if os(macOS)
             if let idx = selectedSaleIndex,
                idx < viewModel.sales.count {
                 selectedSale = viewModel.sales[idx]
             }
+#endif
         }
         .refreshable {
             guard sheets.currentSheet != nil else { return }
             await viewModel.loadSales()
+#if os(macOS)
             if let idx = selectedSaleIndex,
                idx < viewModel.sales.count {
                 selectedSale = viewModel.sales[idx]
             }
+#endif
         }
         .onAppear { Logger.page("SalesView") }
     }
@@ -83,20 +87,51 @@ struct SalesView: View {
 
     @ViewBuilder
     private var listPane: some View {
-        List(selection: selectionBinding) {
-            if let error = viewModel.errorMessage {
-                ErrorBanner(message: error)
-            }
-
-            if sheets.currentSheet == nil {
-                Text(Strings.inventory.selectSheetPrompt)
-                    .foregroundColor(.secondary)
-            } else if viewModel.sales.isEmpty {
-                Text(l10n.emptyState)
-                    .foregroundColor(.secondary)
-            } else {
-                ForEach(Array(viewModel.sales.enumerated()), id: \.offset) { i, sale in
 #if os(macOS)
+        List(selection: selectionBinding) {
+            listContent
+        }
+        .listStyle(.inset)
+#else
+        List {
+            listContent
+        }
+#endif
+    }
+
+    @ViewBuilder
+    private var listContent: some View {
+        if let error = viewModel.errorMessage {
+            ErrorBanner(message: error)
+        }
+
+        if sheets.currentSheet == nil {
+            Text(Strings.inventory.selectSheetPrompt)
+                .foregroundColor(.secondary)
+        } else if viewModel.sales.isEmpty {
+            Text(l10n.emptyState)
+                .foregroundColor(.secondary)
+        } else {
+            ForEach(Array(viewModel.sales.enumerated()), id: \.offset) { i, sale in
+#if os(macOS)
+                VStack(alignment: .leading) {
+                    Text(viewModel.itemName(for: sale))
+                        .font(.headline)
+                    HStack {
+                        Text(sale.date.toShortString())
+                        Spacer()
+                        if let price = sale.price {
+                            Text("$\(price, specifier: "%.2f")")
+                        }
+                    }
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .tag(sale)
+                .contentShape(Rectangle())
+#else
+                NavigationLink(destination: SalesDetailsView(sale: sale, itemName: viewModel.itemName(for: sale))) {
                     VStack(alignment: .leading) {
                         Text(viewModel.itemName(for: sale))
                             .font(.headline)
@@ -110,36 +145,14 @@ struct SalesView: View {
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .tag(sale)
-                    .contentShape(Rectangle())
-#else
-                    NavigationLink(destination: SalesDetailsView(sale: sale, itemName: viewModel.itemName(for: sale))) {
-                        VStack(alignment: .leading) {
-                            Text(viewModel.itemName(for: sale))
-                                .font(.headline)
-                            HStack {
-                                Text(sale.date.toShortString())
-                                Spacer()
-                                if let price = sale.price {
-                                    Text("$\(price, specifier: "%.2f")")
-                                }
-                            }
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                        }
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .contentShape(Rectangle())
-                    .simultaneousGesture(
-                        TapGesture().onEnded { HapticManager.shared.impact() }
-                    )
-#endif
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
+                .simultaneousGesture(
+                    TapGesture().onEnded { HapticManager.shared.impact() }
+                )
+#endif
             }
         }
-#if os(macOS)
-        .listStyle(.inset)
-#endif
     }
 }

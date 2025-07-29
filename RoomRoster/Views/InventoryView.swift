@@ -116,25 +116,31 @@ struct InventoryView: View {
             guard sheets.currentSheet != nil else { return }
             await viewModel.fetchInventory()
             await viewModel.loadRecentLogs(for: viewModel.items)
+#if os(macOS)
             if let id = selectedItemID,
                let match = viewModel.items.first(where: { $0.id == id }) {
                 selectedItem = match
                 pane = .item(match)
             }
+#endif
         }
         .refreshable {
             guard sheets.currentSheet != nil else { return }
             await viewModel.fetchInventory()
             await viewModel.loadRecentLogs(for: viewModel.items)
+#if os(macOS)
             if let id = selectedItemID,
                let match = viewModel.items.first(where: { $0.id == id }) {
                 selectedItem = match
                 pane = .item(match)
             }
+#endif
         }
+#if os(macOS)
         .onChange(of: viewModel.items) { _ in
             syncSelectionWithInventory()
         }
+#endif
     }
 
 #if os(macOS)
@@ -248,86 +254,16 @@ struct InventoryView: View {
             }
             .allowsHitTesting(false)
 
+#if os(macOS)
             List(selection: selectionBinding) {
-                if sheets.currentSheet == nil {
-                    Text(l10n.selectSheetPrompt)
-                        .foregroundColor(.secondary)
-                } else {
-                    Section {
-                        TextField(l10n.searchPlaceholder, text: $searchText)
-                            .textFieldStyle(.roundedBorder)
-
-                        Toggle(l10n.includeHistoryToggle, isOn: $includeHistoryInSearch)
-                            .font(.subheadline)
-                            .padding(.top, 4)
-                        Toggle(l10n.includeSoldToggle, isOn: $includeSoldItems)
-                            .font(.subheadline)
-                    }
-                    .padding(.horizontal)
-
-                    if viewModel.items.isEmpty {
-                        Text(l10n.emptyState)
-                            .foregroundColor(.secondary)
-                    } else {
-                        ForEach(groupedItems, id: \.room) { group in
-                            Section(header: sectionHeader(for: group.room)) {
-                                if expandedRooms.contains(group.room) {
-                                    ForEach(group.items, id: \.0.id) { (item, context) in
-#if os(macOS)
-                                        VStack(alignment: .leading) {
-                                            Text(item.name).font(.headline)
-                                            Text(l10n.status(item.status.label))
-                                            if let tag = item.propertyTag {
-                                                Text(l10n.tag(tag.label))
-                                                    .font(.subheadline)
-                                                    .foregroundColor(.gray)
-                                            }
-                                            if !context.isEmpty {
-                                                Text(l10n.matchedLabel(context))
-                                                    .font(.caption)
-                                                    .italic()
-                                                    .foregroundColor(.secondary)
-                                            }
-                                        }
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        .tag(item)
-                                        .contentShape(Rectangle())
-#else
-                                        NavigationLink(destination: ItemDetailsView(item: item).environmentObject(viewModel)) {
-                                            VStack(alignment: .leading) {
-                                                Text(item.name).font(.headline)
-                                                Text(l10n.status(item.status.label))
-                                                if let tag = item.propertyTag {
-                                                    Text(l10n.tag(tag.label))
-                                                        .font(.subheadline)
-                                                        .foregroundColor(.gray)
-                                                }
-                                                if !context.isEmpty {
-                                                    Text(l10n.matchedLabel(context))
-                                                        .font(.caption)
-                                                        .italic()
-                                                        .foregroundColor(.secondary)
-                                                }
-                                            }
-                                        }
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                        .contentShape(Rectangle())
-                                        .simultaneousGesture(
-                                            TapGesture().onEnded { HapticManager.shared.impact() }
-                                        )
-#endif
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                listContent
             }
-#if os(macOS)
             .listStyle(.inset)
-#endif
+#else
+            List {
+                listContent
+            }
 
-#if os(iOS)
             if sheets.currentSheet != nil {
                 Button(action: {
                     Logger.action("Pressed Add Item Button")
@@ -345,6 +281,83 @@ struct InventoryView: View {
                 .padding()
             }
 #endif
+        }
+    }
+
+    @ViewBuilder
+    private var listContent: some View {
+        if sheets.currentSheet == nil {
+            Text(l10n.selectSheetPrompt)
+                .foregroundColor(.secondary)
+        } else {
+            Section {
+                TextField(l10n.searchPlaceholder, text: $searchText)
+                    .textFieldStyle(.roundedBorder)
+
+                Toggle(l10n.includeHistoryToggle, isOn: $includeHistoryInSearch)
+                    .font(.subheadline)
+                    .padding(.top, 4)
+                Toggle(l10n.includeSoldToggle, isOn: $includeSoldItems)
+                    .font(.subheadline)
+            }
+            .padding(.horizontal)
+
+            if viewModel.items.isEmpty {
+                Text(l10n.emptyState)
+                    .foregroundColor(.secondary)
+            } else {
+                ForEach(groupedItems, id: \.room) { group in
+                    Section(header: sectionHeader(for: group.room)) {
+                        if expandedRooms.contains(group.room) {
+                            ForEach(group.items, id: \.0.id) { (item, context) in
+#if os(macOS)
+                                VStack(alignment: .leading) {
+                                    Text(item.name).font(.headline)
+                                    Text(l10n.status(item.status.label))
+                                    if let tag = item.propertyTag {
+                                        Text(l10n.tag(tag.label))
+                                            .font(.subheadline)
+                                            .foregroundColor(.gray)
+                                    }
+                                    if !context.isEmpty {
+                                        Text(l10n.matchedLabel(context))
+                                            .font(.caption)
+                                            .italic()
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .tag(item)
+                                .contentShape(Rectangle())
+#else
+                                NavigationLink(destination: ItemDetailsView(item: item).environmentObject(viewModel)) {
+                                    VStack(alignment: .leading) {
+                                        Text(item.name).font(.headline)
+                                        Text(l10n.status(item.status.label))
+                                        if let tag = item.propertyTag {
+                                            Text(l10n.tag(tag.label))
+                                                .font(.subheadline)
+                                                .foregroundColor(.gray)
+                                        }
+                                        if !context.isEmpty {
+                                            Text(l10n.matchedLabel(context))
+                                                .font(.caption)
+                                                .italic()
+                                                .foregroundColor(.secondary)
+                                        }
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .contentShape(Rectangle())
+                                .simultaneousGesture(
+                                    TapGesture().onEnded { HapticManager.shared.impact() }
+                                )
+#endif
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
