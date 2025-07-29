@@ -22,6 +22,7 @@ struct InventoryView: View {
         case create
         case edit(Item)
         case sell(Item)
+        case saleDetails(Sale, Item)
     }
     @State private var pane: Pane?
 #else
@@ -151,7 +152,8 @@ struct InventoryView: View {
             ItemDetailsView(
                 item: item,
                 openEdit: { _ in pane = .edit(item) },
-                openSell: { _ in pane = .sell(item) }
+                openSell: { _ in pane = .sell(item) },
+                openSaleDetails: { sale, item in pane = .saleDetails(sale, item) }
             )
             .id(item)
             .environmentObject(viewModel)
@@ -221,6 +223,8 @@ struct InventoryView: View {
                 },
                 onCancel: { pane = .item(item) }
             )
+        case .saleDetails(let sale, let item):
+            SalesDetailsView(sale: sale, itemName: item.name)
         case nil:
             Text(l10n.selectItemPrompt)
                 .foregroundColor(.secondary)

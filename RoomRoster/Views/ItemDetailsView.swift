@@ -17,6 +17,7 @@ struct ItemDetailsView: View {
 #if os(macOS)
     var openEdit: ((Item) -> Void)? = nil
     var openSell: ((Item) -> Void)? = nil
+    var openSaleDetails: ((Sale, Item) -> Void)? = nil
 #endif
     @State private var isEditing = false
     @State private var errorMessage: String? = nil
@@ -34,9 +35,15 @@ struct ItemDetailsView: View {
         _item = State(initialValue: item)
     }
 #if os(macOS)
-    init(item: Item, openEdit: ((Item) -> Void)? = nil, openSell: ((Item) -> Void)? = nil) {
+    init(
+        item: Item,
+        openEdit: ((Item) -> Void)? = nil,
+        openSell: ((Item) -> Void)? = nil,
+        openSaleDetails: ((Sale, Item) -> Void)? = nil
+    ) {
         self.openEdit = openEdit
         self.openSell = openSell
+        self.openSaleDetails = openSaleDetails
         _item = State(initialValue: item)
     }
 #endif
@@ -171,6 +178,7 @@ struct ItemDetailsView: View {
                                 HapticManager.shared.impact()
                                 showingSaleDetails = true
                             }
+                            .disabled(sale == nil)
                             .platformButtonStyle()
                         } else {
                             Button(Strings.sellItem.title) {
@@ -264,8 +272,11 @@ struct ItemDetailsView: View {
                     Button(Strings.saleDetails.title) {
                         Logger.action("Pressed Sale Details Button")
                         HapticManager.shared.impact()
-                        showingSaleDetails = true
+                        if let sale {
+                            openSaleDetails?(sale, item)
+                        }
                     }
+                    .disabled(sale == nil)
                     .platformButtonStyle()
                 } else {
                     Button(Strings.sellItem.title) {
@@ -337,11 +348,13 @@ struct ItemDetailsView: View {
         }
         #endif
         #endif // os(iOS)
+#if os(iOS)
         .platformPopup(isPresented: $showingSaleDetails) {
             if let sale {
                 SalesDetailsView(sale: sale, itemName: item.name)
             }
         }
+#endif
         .onAppear {
             Logger.page("ItemDetailsView")
             Task { await AuthenticationManager.shared.signIn() }
