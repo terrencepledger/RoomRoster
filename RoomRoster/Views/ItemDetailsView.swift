@@ -221,7 +221,7 @@ struct ItemDetailsView: View {
                             Button(l10n.downloadReceipt) {
                                 Task {
                                     do {
-                                        let downloaded = try await viewModel.downloadReceipt(for: item.id)
+                                        let downloaded = try await viewModel.downloadReceipt(for: item)
 #if os(macOS)
                                         NSWorkspace.shared.open(downloaded)
 #else
