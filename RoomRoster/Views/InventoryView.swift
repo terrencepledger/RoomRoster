@@ -52,7 +52,8 @@ struct InventoryView: View {
     }
 
     var body: some View {
-        Group {
+        ZStack(alignment: .bottomTrailing) {
+            Group {
 #if os(macOS)
             NavigationSplitView {
                 listPane
@@ -147,6 +148,11 @@ struct InventoryView: View {
             syncSelectionWithInventory()
         }
 #endif
+        if let message = successMessage {
+            SuccessBanner(message: message)
+                .allowsHitTesting(false)
+                .padding()
+        }
     }
 
 #if os(macOS)
@@ -272,9 +278,6 @@ struct InventoryView: View {
             VStack {
                 if let error = viewModel.errorMessage {
                     ErrorBanner(message: error)
-                }
-                if let message = successMessage {
-                    SuccessBanner(message: message)
                 }
                 Spacer()
             }
