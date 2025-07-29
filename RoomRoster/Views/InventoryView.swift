@@ -132,6 +132,9 @@ struct InventoryView: View {
                 pane = .item(match)
             }
         }
+        .onChange(of: viewModel.items) { _ in
+            syncSelectionWithInventory()
+        }
     }
 
 #if os(macOS)
@@ -144,7 +147,7 @@ struct InventoryView: View {
                 openEdit: { _ in pane = .edit(item) },
                 openSell: { _ in pane = .sell(item) }
             )
-            .id(item.id)
+            .id(item)
             .environmentObject(viewModel)
         case .create:
             CreateItemView(
@@ -395,6 +398,19 @@ struct InventoryView: View {
         }
         return nil
     }
+
+#if os(macOS)
+    private func syncSelectionWithInventory() {
+        guard let id = selectedItemID,
+              let match = viewModel.items.first(where: { $0.id == id }) else {
+            return
+        }
+        selectedItem = match
+        if case .item = pane {
+            pane = .item(match)
+        }
+    }
+#endif
 
     @ViewBuilder
     private func sectionHeader(for room: Room) -> some View {
