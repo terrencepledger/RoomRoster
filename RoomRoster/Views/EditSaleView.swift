@@ -10,11 +10,6 @@ struct EditSaleView: View {
     var body: some View {
         content
             .navigationTitle(Strings.saleDetails.editTitle)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button(Strings.general.cancel) { dismiss() }
-                }
-            }
             .overlay {
                 if let saveError {
                     VStack { Spacer(); ErrorBanner(message: saveError) }
