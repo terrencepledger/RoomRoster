@@ -289,5 +289,7 @@ struct Strings {
         static let editButton = "Edit"
         static let editTitle = "Edit Sale"
         static let editSuccess = "Sale updated successfully"
+        static let noReceipt = "No Receipt"
+        static let failedToUpdate = "Failed to update sale. Please try again."
     }
 }

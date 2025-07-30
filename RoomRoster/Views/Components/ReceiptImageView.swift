@@ -24,8 +24,9 @@ struct ReceiptImageView: View {
             Label("View Receipt", systemImage: "doc")
                 .foregroundColor(.blue)
         } else {
-            Text("No receipt")
-                .foregroundColor(.gray)
+            Text(Strings.saleDetails.noReceipt)
+                .foregroundColor(.secondary)
+                .font(.caption)
         }
     }
 }
