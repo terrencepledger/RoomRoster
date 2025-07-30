@@ -3,8 +3,13 @@ import SwiftUI
 private typealias l10n = Strings.saleDetails
 
 struct SalesDetailsView: View {
-    let sale: Sale
+    @State var sale: Sale
     let itemName: String
+
+    init(sale: Sale, itemName: String) {
+        _sale = State(initialValue: sale)
+        self.itemName = itemName
+    }
     @State private var shareURL: URL?
     @State private var errorMessage: String?
     @State private var editSuccess: String?
@@ -71,13 +76,16 @@ struct SalesDetailsView: View {
             }
         }
         .toolbar {
-            NavigationLink(destination: EditSaleView(viewModel: EditSaleViewModel(sale: sale)) { _ in
-                editSuccess = Strings.saleDetails.editSuccess
-                HapticManager.shared.success()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                    withAnimation { editSuccess = nil }
+            NavigationLink {
+                EditSaleView(viewModel: EditSaleViewModel(sale: sale)) { updated in
+                    sale = updated
+                    editSuccess = Strings.saleDetails.editSuccess
+                    HapticManager.shared.success()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                        withAnimation { editSuccess = nil }
+                    }
                 }
-            }) {
+            } label: {
                 Text(l10n.editButton)
             }
         }
