@@ -10,7 +10,7 @@ import SwiftUI
 private typealias l10n = Strings.mainMenu
 
 /// Tabs used across the main menu on all platforms.
-private enum MenuTab: Int, CaseIterable, Identifiable {
+enum MenuTab: Int, CaseIterable, Identifiable {
     case inventory, sales, reports, sheets, settings
     var id: Int { rawValue }
 
@@ -36,8 +36,8 @@ private enum MenuTab: Int, CaseIterable, Identifiable {
 }
 
 struct MainMenuView: View {
+    @EnvironmentObject private var coordinator: MainMenuCoordinator
     @StateObject private var auth = AuthenticationManager.shared
-    @State private var selectedTab: MenuTab = .inventory
 #if os(macOS)
     @State private var selectedItemID: String?
     @State private var selectedSaleIndex: Int?
@@ -57,7 +57,7 @@ struct MainMenuView: View {
     @ViewBuilder
     private var menuList: some View {
 #if os(macOS)
-        List(MenuTab.allCases, selection: $selectedTab) { tab in
+        List(MenuTab.allCases, selection: $coordinator.selectedTab) { tab in
             Label(tab.label, systemImage: tab.icon)
                 .tag(tab)
         }
@@ -76,10 +76,10 @@ struct MainMenuView: View {
                     menuList
                         .navigationTitle("Menu")
                 } detail: {
-                    detailView(for: selectedTab)
+                    detailView(for: coordinator.selectedTab)
                 }
             } else {
-                TabView(selection: $selectedTab) {
+                TabView(selection: $coordinator.selectedTab) {
                     tabContent(for: .inventory)
                         .tag(MenuTab.inventory)
 
@@ -97,7 +97,7 @@ struct MainMenuView: View {
                 }
             }
         }
-        .onChange(of: selectedTab) { _, _ in
+        .onChange(of: coordinator.selectedTab) { _, _ in
             HapticManager.shared.impact()
         }
         .onAppear {

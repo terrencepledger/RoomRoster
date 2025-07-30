@@ -27,6 +27,7 @@ struct InventoryView: View {
     @State private var pane: Pane?
 #else
     @State private var showCreateItemView = false
+    @State private var selectedItem: Item?
 #endif
     @State private var expandedRooms: Set<Room> = []
     @State private var searchText: String = ""
@@ -62,8 +63,12 @@ struct InventoryView: View {
                 detailPane
             }
 #else
-            NavigationView {
+            NavigationStack {
                 listPane
+                    .navigationDestination(item: $selectedItem) { item in
+                        ItemDetailsView(item: item)
+                            .environmentObject(viewModel)
+                    }
             }
 #endif
         }
@@ -362,28 +367,27 @@ struct InventoryView: View {
                                 .tag(item)
                                 .contentShape(Rectangle())
 #else
-                                NavigationLink(destination: ItemDetailsView(item: item).environmentObject(viewModel)) {
-                                    VStack(alignment: .leading) {
-                                        Text(item.name).font(.headline)
-                                        Text(l10n.status(item.status.label))
-                                        if let tag = item.propertyTag {
-                                            Text(l10n.tag(tag.label))
-                                                .font(.subheadline)
-                                                .foregroundColor(.gray)
-                                        }
-                                        if !context.isEmpty {
-                                            Text(l10n.matchedLabel(context))
-                                                .font(.caption)
-                                                .italic()
-                                                .foregroundColor(.secondary)
-                                        }
+                                VStack(alignment: .leading) {
+                                    Text(item.name).font(.headline)
+                                    Text(l10n.status(item.status.label))
+                                    if let tag = item.propertyTag {
+                                        Text(l10n.tag(tag.label))
+                                            .font(.subheadline)
+                                            .foregroundColor(.gray)
+                                    }
+                                    if !context.isEmpty {
+                                        Text(l10n.matchedLabel(context))
+                                            .font(.caption)
+                                            .italic()
+                                            .foregroundColor(.secondary)
                                     }
                                 }
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .contentShape(Rectangle())
-                                .simultaneousGesture(
-                                    TapGesture().onEnded { HapticManager.shared.impact() }
-                                )
+                                .onLongPressGesture {
+                                    selectedItem = item
+                                    HapticManager.shared.impact()
+                                }
 #endif
                             }
                         }
