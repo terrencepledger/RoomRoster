@@ -166,23 +166,18 @@ struct SalesView: View {
                         )
                     },
                     label: {
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text(viewModel.itemName(for: sale))
-                                    .font(.headline)
-                                HStack {
-                                    Text(sale.date.toShortString())
-                                    Spacer()
-                                    if let price = sale.price {
-                                        Text("$\(price, specifier: "%.2f")")
-                                    }
+                        VStack(alignment: .leading) {
+                            Text(viewModel.itemName(for: sale))
+                                .font(.headline)
+                            HStack {
+                                Text(sale.date.toShortString())
+                                Spacer()
+                                if let price = sale.price {
+                                    Text("$\(price, specifier: "%.2f")")
                                 }
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
                             }
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(.secondary)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
                         }
                     }
                 )
