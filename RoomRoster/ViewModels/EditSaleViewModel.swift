@@ -3,6 +3,8 @@ import SwiftUI
 @MainActor
 final class EditSaleViewModel: ObservableObject {
     @Published var sale: Sale
+    let originalReceiptImageURL: String?
+    let originalReceiptPDFURL: String?
     @Published var pickedReceiptImage: PlatformImage?
     @Published var pickedReceiptPDF: URL?
     @Published var isUploading: Bool = false
@@ -17,6 +19,8 @@ final class EditSaleViewModel: ObservableObject {
         receiptService: SaleReceiptService = .init()
     ) {
         self.sale = sale
+        self.originalReceiptImageURL = sale.receiptImageURL
+        self.originalReceiptPDFURL = sale.receiptPDFURL
         self.saleService = saleService
         self.receiptService = receiptService
     }
