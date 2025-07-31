@@ -166,26 +166,28 @@ struct SalesView: View {
                         )
                     },
                     label: {
-                        VStack(alignment: .leading) {
-                            Text(viewModel.itemName(for: sale))
-                                .font(.headline)
-                            HStack {
-                                Text(sale.date.toShortString())
-                                Spacer()
-                                if let price = sale.price {
-                                    Text("$\(price, specifier: "%.2f")")
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(viewModel.itemName(for: sale))
+                                    .font(.headline)
+                                HStack {
+                                    Text(sale.date.toShortString())
+                                    Spacer()
+                                    if let price = sale.price {
+                                        Text("$\(price, specifier: "%.2f")")
+                                    }
                                 }
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
                             }
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.secondary)
                         }
                     }
                 )
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .contentShape(Rectangle())
-                .simultaneousGesture(
-                    TapGesture().onEnded { HapticManager.shared.impact() }
-                )
 #endif
             }
         }

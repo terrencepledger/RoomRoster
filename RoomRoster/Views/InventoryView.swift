@@ -366,27 +366,29 @@ struct InventoryView: View {
                                     destination: ItemDetailsView(item: item)
                                         .environmentObject(viewModel)
                                 ) {
-                                    VStack(alignment: .leading) {
-                                        Text(item.name).font(.headline)
-                                        Text(l10n.status(item.status.label))
-                                        if let tag = item.propertyTag {
-                                            Text(l10n.tag(tag.label))
-                                                .font(.subheadline)
-                                                .foregroundColor(.gray)
+                                    HStack {
+                                        VStack(alignment: .leading) {
+                                            Text(item.name).font(.headline)
+                                            Text(l10n.status(item.status.label))
+                                            if let tag = item.propertyTag {
+                                                Text(l10n.tag(tag.label))
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.gray)
+                                            }
+                                            if !context.isEmpty {
+                                                Text(l10n.matchedLabel(context))
+                                                    .font(.caption)
+                                                    .italic()
+                                                    .foregroundColor(.secondary)
+                                            }
                                         }
-                                        if !context.isEmpty {
-                                            Text(l10n.matchedLabel(context))
-                                                .font(.caption)
-                                                .italic()
-                                                .foregroundColor(.secondary)
-                                        }
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(.secondary)
                                     }
                                 }
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .contentShape(Rectangle())
-                                .simultaneousGesture(
-                                    TapGesture().onEnded { HapticManager.shared.impact() }
-                                )
 #endif
                             }
                         }
