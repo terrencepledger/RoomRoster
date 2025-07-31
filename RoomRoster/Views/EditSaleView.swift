@@ -20,7 +20,8 @@ struct EditSaleView: View {
                         Text(Strings.saleDetails.currentReceipt)
                             .font(.caption)
                             .foregroundColor(.gray)
-                        ReceiptImageView(urlString: viewModel.originalReceiptImageURL)
+                        ReceiptImageView(urlString: viewModel.originalReceiptImageURL ??
+                            viewModel.originalReceiptPDFURL)
                     }
                     VStack(alignment: .leading, spacing: 4) {
                         Text(Strings.saleDetails.newReceipt)
