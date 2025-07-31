@@ -362,7 +362,10 @@ struct InventoryView: View {
                                 .tag(item)
                                 .contentShape(Rectangle())
 #else
-                                NavigationLink(destination: ItemDetailsView(item: item).environmentObject(viewModel)) {
+                                NavigationLink(
+                                    destination: ItemDetailsView(item: item)
+                                        .environmentObject(viewModel)
+                                ) {
                                     VStack(alignment: .leading) {
                                         Text(item.name).font(.headline)
                                         Text(l10n.status(item.status.label))
@@ -381,9 +384,6 @@ struct InventoryView: View {
                                 }
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .contentShape(Rectangle())
-                                .simultaneousGesture(
-                                    TapGesture().onEnded { HapticManager.shared.impact() }
-                                )
 #endif
                             }
                         }

@@ -22,7 +22,6 @@ struct ItemDetailsView: View {
     @State private var isEditing = false
     @State private var errorMessage: String? = nil
     @State private var showingSellSheet = false
-    @State private var showingSaleDetails = false
     @State private var sale: Sale?
     @State private var saleSuccess: String?
     @State private var saleError: String?
@@ -31,6 +30,7 @@ struct ItemDetailsView: View {
     @State private var shareURL: URL?
 
     @EnvironmentObject var inventoryVM: InventoryViewModel
+    @EnvironmentObject private var coordinator: MainMenuCoordinator
 
     init(item: Item) {
         _item = State(initialValue: item)
@@ -168,7 +168,10 @@ struct ItemDetailsView: View {
                             Button(Strings.saleDetails.title) {
                                 Logger.action("Pressed Sale Details Button")
                                 HapticManager.shared.impact()
-                                showingSaleDetails = true
+                                if let sale {
+                                    coordinator.pendingSale = sale
+                                    coordinator.selectedTab = .sales
+                                }
                             }
                             .disabled(sale == nil)
                             .platformButtonStyle()
@@ -361,13 +364,6 @@ struct ItemDetailsView: View {
         }
         #endif
         #endif // os(iOS)
-#if os(iOS)
-        .platformPopup(isPresented: $showingSaleDetails) {
-            if let sale {
-                SalesDetailsView(sale: sale, itemName: item.name)
-            }
-        }
-#endif
         .onAppear {
             Logger.page("ItemDetailsView")
             Task { await AuthenticationManager.shared.signIn() }
