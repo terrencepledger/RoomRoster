@@ -52,27 +52,31 @@ struct EditItemView: View {
         Form {
                 // MARK: – Photo Section
                 Section(header: Text(l10n.photo.title)) {
-                    if let url = URL(string: editableItem.imageURL),
-                            !editableItem.imageURL.isEmpty {
-                        AsyncImage(url: url) { img in
-                            img.resizable()
-                               .scaledToFit()
-                               .frame(height: 120)
-                               .cornerRadius(8)
-                        } placeholder: {
-                            ProgressView().frame(height: 120)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(l10n.photo.current)
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                        if let url = URL(string: editableItem.imageURL),
+                           !editableItem.imageURL.isEmpty {
+                            AsyncImage(url: url) { img in
+                                img.resizable()
+                                   .scaledToFit()
+                                   .frame(height: 120)
+                                   .cornerRadius(8)
+                            } placeholder: {
+                                ProgressView().frame(height: 120)
+                            }
+                        } else {
+                            Rectangle()
+                                .fill(Color.secondary.opacity(0.1))
+                                .frame(height: 120)
+                                .cornerRadius(8)
+                                .overlay(Text(l10n.photo.emptyState).foregroundColor(.gray))
                         }
-                    } else {
-                        Rectangle()
-                            .fill(Color.secondary.opacity(0.1))
-                            .frame(height: 120)
-                            .cornerRadius(8)
-                            .overlay(Text(l10n.photo.emptyState).foregroundColor(.gray))
                     }
 
-                    // Picker button
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(l10n.photo.enter)
+                        Text(l10n.photo.new)
                             .font(.caption)
                             .foregroundColor(.gray)
                         CombinedImagePickerButton(image: $pickedImage)
@@ -94,15 +98,19 @@ struct EditItemView: View {
 
                 // MARK: – Purchase Receipt
                 Section(header: Text("Purchase Receipt")) {
-                    ReceiptImageView(urlString: editableItem.purchaseReceiptURL)
-                    CombinedImagePickerButton(image: $pickedReceiptImage)
-                        .onChange(of: pickedReceiptImage) { _, img in
-                            Task { await saveReceiptImage(img) }
-                        }
-                    PDFPickerButton(url: $pickedReceiptPDF)
-                        .onChange(of: pickedReceiptPDF) { _, url in
-                            Task { await saveReceiptPDF(url) }
-                        }
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(Strings.saleDetails.currentReceipt)
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                        ReceiptImageView(urlString: editableItem.purchaseReceiptURL)
+                    }
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(Strings.saleDetails.newReceipt)
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                        CombinedImagePickerButton(image: $pickedReceiptImage)
+                        PDFPickerButton(url: $pickedReceiptPDF)
+                    }
 
                     if isUploadingReceipt {
                         HStack {
@@ -245,6 +253,8 @@ struct EditItemView: View {
                         Task {
                             Logger.action("Pressed Save Button")
                             await uploadPickedImage()
+                            await saveReceiptImage(pickedReceiptImage)
+                            await saveReceiptPDF(pickedReceiptPDF)
                             if let newURL = temporaryImageURL {
                                 editableItem.imageURL = newURL
                             }

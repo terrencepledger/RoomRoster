@@ -23,14 +23,10 @@ final class EditSaleViewModel: ObservableObject {
 
     func onReceiptPicked(_ image: PlatformImage?) {
         pickedReceiptImage = image
-        guard let image else { return }
-        Task { await uploadImage(image) }
     }
 
     func onReceiptPDFPicked(_ url: URL?) {
         pickedReceiptPDF = url
-        guard let url else { return }
-        Task { await uploadPDF(url) }
     }
 
     private func uploadImage(_ image: PlatformImage) async {
@@ -61,6 +57,12 @@ final class EditSaleViewModel: ObservableObject {
     }
 
     func saveUpdates() async throws {
+        if let image = pickedReceiptImage {
+            await uploadImage(image)
+        }
+        if let url = pickedReceiptPDF {
+            await uploadPDF(url)
+        }
         try await saleService.updateSale(sale)
     }
 }

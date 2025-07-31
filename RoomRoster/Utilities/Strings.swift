@@ -155,6 +155,8 @@ struct Strings {
             static let emptyState = "No Photo"
             static let enter = "Select or Take Photo"
             static let loading = "Uploading Image…"
+            static let current = "Current Photo"
+            static let new = "New Photo"
         }
         struct basicInfo {
             static let title = "Basic Information"
@@ -286,6 +288,8 @@ struct Strings {
         static let soldBy = "Sold By:"
         static let department = "Department:"
         static let receiptSection = "Receipt"
+        static let currentReceipt = "Current Receipt"
+        static let newReceipt = "New Receipt"
         static let editButton = "Edit"
         static let editTitle = "Edit Sale"
         static let editSuccess = "Sale updated successfully"
