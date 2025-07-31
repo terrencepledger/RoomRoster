@@ -43,12 +43,6 @@ struct SalesView: View {
 #else
             NavigationStack {
                 listPane
-                    .navigationDestination(item: $selectedSale) { sale in
-                        SalesDetailsView(
-                            sale: sale,
-                            itemName: viewModel.itemName(for: sale)
-                        )
-                    }
             }
 #endif
         }
@@ -162,25 +156,36 @@ struct SalesView: View {
                 .tag(sale)
                 .contentShape(Rectangle())
 #else
-                VStack(alignment: .leading) {
-                    Text(viewModel.itemName(for: sale))
-                        .font(.headline)
-                    HStack {
-                        Text(sale.date.toShortString())
-                        Spacer()
-                        if let price = sale.price {
-                            Text("$\(price, specifier: "%.2f")")
+                NavigationLink(
+                    tag: sale,
+                    selection: $selectedSale,
+                    destination: {
+                        SalesDetailsView(
+                            sale: sale,
+                            itemName: viewModel.itemName(for: sale)
+                        )
+                    },
+                    label: {
+                        VStack(alignment: .leading) {
+                            Text(viewModel.itemName(for: sale))
+                                .font(.headline)
+                            HStack {
+                                Text(sale.date.toShortString())
+                                Spacer()
+                                if let price = sale.price {
+                                    Text("$\(price, specifier: "%.2f")")
+                                }
+                            }
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
                         }
                     }
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                }
+                )
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .contentShape(Rectangle())
-                .onLongPressGesture {
-                    selectedSale = sale
-                    HapticManager.shared.impact()
-                }
+                .simultaneousGesture(
+                    TapGesture().onEnded { HapticManager.shared.impact() }
+                )
 #endif
             }
         }
