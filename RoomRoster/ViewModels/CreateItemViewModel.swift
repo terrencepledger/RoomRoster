@@ -124,7 +124,7 @@ final class CreateItemViewModel: ObservableObject {
             newItem.purchaseReceiptURL = url.absoluteString
         } catch {
             Logger.log(error, extra: ["description": "Failed to upload receipt image"])
-            receiptUploadError = error.localizedDescription
+            receiptUploadError = Strings.purchaseReceipt.errors.uploadFailed(error.localizedDescription)
             HapticManager.shared.error()
         }
         isUploadingReceipt = false
@@ -140,7 +140,7 @@ final class CreateItemViewModel: ObservableObject {
             newItem.purchaseReceiptURL = saved.absoluteString
         } catch {
             Logger.log(error, extra: ["description": "Failed to upload receipt PDF"])
-            receiptUploadError = error.localizedDescription
+            receiptUploadError = Strings.purchaseReceipt.errors.uploadFailed(error.localizedDescription)
             HapticManager.shared.error()
         }
         isUploadingReceipt = false

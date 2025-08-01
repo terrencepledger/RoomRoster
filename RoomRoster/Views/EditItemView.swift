@@ -371,7 +371,7 @@ struct EditItemView: View {
                 .uploadReceipt(image: image, for: editableItem.id)
             editableItem.purchaseReceiptURL = url.absoluteString
         } catch {
-            receiptUploadError = error.localizedDescription
+            receiptUploadError = Strings.purchaseReceipt.errors.uploadFailed(error.localizedDescription)
             HapticManager.shared.error()
         }
     }
@@ -387,7 +387,7 @@ struct EditItemView: View {
                 .uploadReceiptPDF(data, for: editableItem.id)
             editableItem.purchaseReceiptURL = saved.absoluteString
         } catch {
-            receiptUploadError = error.localizedDescription
+            receiptUploadError = Strings.purchaseReceipt.errors.uploadFailed(error.localizedDescription)
             HapticManager.shared.error()
         }
     }

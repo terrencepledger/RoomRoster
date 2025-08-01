@@ -306,5 +306,10 @@ struct Strings {
     struct purchaseReceipt {
         static let sectionTitle = "Purchase Receipt"
         static let saleSectionTitle = "Sale Receipt"
+        struct errors {
+            static func uploadFailed(_ error: String) -> String {
+                "Receipt upload failed: \(error)"
+            }
+        }
     }
 }
