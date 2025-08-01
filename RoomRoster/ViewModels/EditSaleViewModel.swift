@@ -50,7 +50,7 @@ final class EditSaleViewModel: ObservableObject {
             let url = try await receiptService.uploadReceipt(image: image, for: sale.itemId)
             sale.receiptImageURL = url.absoluteString
         } catch {
-            uploadError = error.localizedDescription
+            uploadError = Strings.purchaseReceipt.errors.uploadFailed(error.localizedDescription)
             HapticManager.shared.error()
         }
         isUploading = false
@@ -64,7 +64,7 @@ final class EditSaleViewModel: ObservableObject {
             let saved = try await receiptService.uploadReceiptPDF(data, for: sale.itemId)
             sale.receiptPDFURL = saved.absoluteString
         } catch {
-            uploadError = error.localizedDescription
+            uploadError = Strings.purchaseReceipt.errors.uploadFailed(error.localizedDescription)
             HapticManager.shared.error()
         }
         isUploading = false

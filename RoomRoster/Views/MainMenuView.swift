@@ -74,7 +74,7 @@ struct MainMenuView: View {
             if useSplitView {
                 NavigationSplitView {
                     menuList
-                        .navigationTitle("Menu")
+                        .navigationTitle(Strings.mainMenu.title)
                 } detail: {
                     detailView(for: coordinator.selectedTab)
                 }

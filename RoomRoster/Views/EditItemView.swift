@@ -49,7 +49,8 @@ struct EditItemView: View {
     }
 
     private var content: some View {
-        Form {
+        ZStack(alignment: .bottom) {
+            Form {
                 // MARK: – Photo Section
                 Section(header: Text(l10n.photo.title)) {
                     VStack(alignment: .leading, spacing: 4) {
@@ -97,7 +98,7 @@ struct EditItemView: View {
                 }
 
                 // MARK: – Purchase Receipt
-                Section(header: Text("Purchase Receipt")) {
+                Section(header: Text(Strings.purchaseReceipt.sectionTitle)) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(Strings.saleDetails.currentReceipt)
                             .font(.caption)
@@ -115,7 +116,7 @@ struct EditItemView: View {
                     if isUploadingReceipt {
                         HStack {
                             ProgressView()
-                            Text("Uploading receipt...")
+                            Text(Strings.general.uploadingReceipt)
                         }
                     }
                     if let error = receiptUploadError {
@@ -124,7 +125,7 @@ struct EditItemView: View {
                             .font(.caption)
                     }
                     HStack {
-                        Text("Receipt Path").foregroundColor(.gray)
+                        Text(Strings.general.receiptPath).foregroundColor(.gray)
                         Spacer()
                         Text(editableItem.purchaseReceiptURL ?? "")
                             .font(.caption)
@@ -268,12 +269,23 @@ struct EditItemView: View {
                     .platformButtonStyle()
                 }
             }
-            .alert(l10n.addRoomAlert.title, isPresented: $showingAddRoomPrompt, actions: {
-                TextField(l10n.addRoomAlert.placeholder, text: $newRoomName)
-                Button(l10n.addRoomAlert.add) {
-                    Task {
-                        if let newRoom = await viewModel.addRoom(name: newRoomName) {
-                            editableItem.lastKnownRoom = newRoom
+            VStack(spacing: 4) {
+                if let error = uploadError {
+                    ErrorBanner(message: error)
+                }
+                if let error = receiptUploadError {
+                    ErrorBanner(message: error)
+                }
+            }
+            .allowsHitTesting(false)
+            .padding()
+        }
+        .alert(l10n.addRoomAlert.title, isPresented: $showingAddRoomPrompt, actions: {
+            TextField(l10n.addRoomAlert.placeholder, text: $newRoomName)
+            Button(l10n.addRoomAlert.add) {
+                Task {
+                    if let newRoom = await viewModel.addRoom(name: newRoomName) {
+                        editableItem.lastKnownRoom = newRoom
                         } else {
                             editableItem.lastKnownRoom = Room.placeholder()
                         }
@@ -290,20 +302,20 @@ struct EditItemView: View {
                     Button(Strings.general.cancel) { close() }
                 }
             }
-            .onAppear {
-                Logger.page("EditItemView")
-                propertyTagInput = editableItem.propertyTag?.rawValue ?? ""
-                if let parsed = Date.fromShortString(editableItem.dateAdded) {
-                    dateAddedDate = parsed
-                }
+        .onAppear {
+            Logger.page("EditItemView")
+            propertyTagInput = editableItem.propertyTag?.rawValue ?? ""
+            if let parsed = Date.fromShortString(editableItem.dateAdded) {
+                dateAddedDate = parsed
             }
-            .task {
-                await viewModel.fetchInventory()
-            }
-            .task {
-                await viewModel.loadRooms()
-            }
-            }
+        }
+        .task {
+            await viewModel.fetchInventory()
+        }
+        .task {
+            await viewModel.loadRooms()
+        }
+    }
 
     private func validateTag() {
         if propertyTagInput.isEmpty || propertyTagInput == editableItem.propertyTag?.label {
@@ -359,7 +371,7 @@ struct EditItemView: View {
                 .uploadReceipt(image: image, for: editableItem.id)
             editableItem.purchaseReceiptURL = url.absoluteString
         } catch {
-            receiptUploadError = error.localizedDescription
+            receiptUploadError = Strings.purchaseReceipt.errors.uploadFailed(error.localizedDescription)
             HapticManager.shared.error()
         }
     }
@@ -375,7 +387,7 @@ struct EditItemView: View {
                 .uploadReceiptPDF(data, for: editableItem.id)
             editableItem.purchaseReceiptURL = saved.absoluteString
         } catch {
-            receiptUploadError = error.localizedDescription
+            receiptUploadError = Strings.purchaseReceipt.errors.uploadFailed(error.localizedDescription)
             HapticManager.shared.error()
         }
     }

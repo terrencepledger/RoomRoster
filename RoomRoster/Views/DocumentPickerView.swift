@@ -41,10 +41,11 @@ struct DocumentPickerView: UIViewControllerRepresentable {
 struct PDFPickerButton: View {
     @Binding var url: URL?
     @State private var showPicker = false
-    var label: String = "Select PDF"
+    var label: String = Strings.general.selectPDF
 
     var body: some View {
         Button {
+            HapticManager.shared.impact()
             showPicker = true
         } label: {
             if let url {
@@ -64,10 +65,11 @@ import UniformTypeIdentifiers
 
 struct PDFPickerButton: View {
     @Binding var url: URL?
-    var label: String = "Select PDF"
+    var label: String = Strings.general.selectPDF
 
     var body: some View {
         Button {
+            HapticManager.shared.impact()
             let panel = NSOpenPanel()
             panel.allowedContentTypes = [.pdf]
             panel.allowsMultipleSelection = false
