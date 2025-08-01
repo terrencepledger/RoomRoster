@@ -10,17 +10,22 @@ struct EditSaleView: View {
     var body: some View {
         content
             .navigationTitle(Strings.saleDetails.editTitle)
-            .overlay {
-                if let saveError {
-                    VStack { Spacer(); ErrorBanner(message: saveError) }
-                        .allowsHitTesting(false)
+            .overlay(alignment: .bottom) {
+                VStack(spacing: 4) {
+                    if let error = viewModel.uploadError {
+                        ErrorBanner(message: error)
+                    }
+                    if let saveError {
+                        ErrorBanner(message: saveError)
+                    }
                 }
+                .allowsHitTesting(false)
             }
     }
 
     private var content: some View {
         Form {
-                Section("Sale Receipt") {
+                Section(Strings.purchaseReceipt.saleSectionTitle) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(Strings.saleDetails.currentReceipt)
                             .font(.caption)
@@ -42,7 +47,7 @@ struct EditSaleView: View {
                     if viewModel.isUploading {
                         HStack {
                             ProgressView()
-                            Text("Uploading receipt...")
+                            Text(Strings.general.uploadingReceipt)
                         }
                     }
                     if let error = viewModel.uploadError {

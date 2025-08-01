@@ -70,7 +70,7 @@ struct ItemDetailsView: View {
                     }
 
                     if item.purchaseReceiptURL != nil {
-                        Text("Purchase Receipt")
+                        Text(Strings.purchaseReceipt.sectionTitle)
                             .font(.headline)
                         ReceiptImageView(urlString: item.purchaseReceiptURL)
                     }
