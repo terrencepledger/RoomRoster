@@ -386,6 +386,7 @@ struct InventoryView: View {
                                         }
                                     }
                                 }
+                                .buttonStyle(.plain)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .contentShape(Rectangle())
 #endif
