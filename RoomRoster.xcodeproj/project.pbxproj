@@ -16,6 +16,7 @@
 		3B334618E2334DAFB69FB690 /* SellItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68CAB974B03A4708BB968FC8 /* SellItemView.swift */; };
 		46E1F1D89FA0B254B0938408 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		4A41F16A7DFB4ABE9D824975 /* ItemValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71B5019D5A040FCBB81807B /* ItemValidatorTests.swift */; };
+		ABCDEF012345678901234569 /* PropertyTagRangeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF01234567890123456A /* PropertyTagRangeTests.swift */; };
 		5A43DC562B7C4ABC9A123456 /* SalesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32FE1D99B3B44E6A6801234 /* SalesViewModel.swift */; };
 		5E159DC99DBD4D6E817F1768 /* Sale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA2B3CF72714AF5B8CD11E0 /* Sale.swift */; };
 		62093EEF26D4F31B0F245579 /* PurchaseReceiptServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135983A51B686BEA6E40D6D4 /* PurchaseReceiptServiceTests.swift */; };
@@ -24,10 +25,10 @@
 		72BF4E5D2A924D36879BA797 /* InventoryServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9062D441F4874BA89C2A0A1E /* InventoryServiceTests.swift */; };
 		767B05902D4C5DC000566C25 /* RoomRosterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B058F2D4C5DC000566C25 /* RoomRosterApp.swift */; };
 		767B05922D4C5DC000566C25 /* InventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05912D4C5DC000566C25 /* InventoryView.swift */; };
-                767B05942D4C5DC000566C25 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05932D4C5DC000566C25 /* Item.swift */; };
-                B3C17C2B098B4B398D39C2BE /* ItemGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC23ECDFDC014EEEA305BDDB /* ItemGroup.swift */; };
-                ABCDEF012345678901234568 /* PropertyTagRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF012345678901234567 /* PropertyTagRange.swift */; };
-                767B05962D4C5DC400566C25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 767B05952D4C5DC400566C25 /* Assets.xcassets */; };
+				767B05942D4C5DC000566C25 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05932D4C5DC000566C25 /* Item.swift */; };
+				B3C17C2B098B4B398D39C2BE /* ItemGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC23ECDFDC014EEEA305BDDB /* ItemGroup.swift */; };
+		ABCDEF012345678901234568 /* PropertyTagRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF012345678901234567 /* PropertyTagRange.swift */; };
+		767B05962D4C5DC400566C25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 767B05952D4C5DC400566C25 /* Assets.xcassets */; };
 		767B059A2D4C5DC400566C25 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 767B05992D4C5DC400566C25 /* Preview Assets.xcassets */; };
 		767B05A42D4C5DC400566C25 /* RoomRosterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05A32D4C5DC400566C25 /* RoomRosterTests.swift */; };
 		767B05AE2D4C5DC400566C25 /* RoomRosterUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767B05AD2D4C5DC400566C25 /* RoomRosterUITests.swift */; };
@@ -141,15 +142,15 @@
 		70EC0F7257914A11A7589F29 /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
 		767B058C2D4C5DC000566C25 /* RoomRoster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RoomRoster.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		767B058F2D4C5DC000566C25 /* RoomRosterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomRosterApp.swift; sourceTree = "<group>"; };
-                767B05912D4C5DC000566C25 /* InventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryView.swift; sourceTree = "<group>"; };
-                767B05932D4C5DC000566C25 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
-                FC23ECDFDC014EEEA305BDDB /* ItemGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemGroup.swift; sourceTree = "<group>"; };
-                767B05952D4C5DC400566C25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		767B05912D4C5DC000566C25 /* InventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryView.swift; sourceTree = "<group>"; };
+		767B05932D4C5DC000566C25 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		FC23ECDFDC014EEEA305BDDB /* ItemGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemGroup.swift; sourceTree = "<group>"; };
+		767B05952D4C5DC400566C25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		767B05972D4C5DC400566C25 /* RoomRoster.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RoomRoster.entitlements; sourceTree = "<group>"; };
 		767B05992D4C5DC400566C25 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		767B059F2D4C5DC400566C25 /* RoomRosterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RoomRosterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		767B05A32D4C5DC400566C25 /* RoomRosterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomRosterTests.swift; sourceTree = "<group>"; };
-                ABCDEF012345678901234567 /* PropertyTagRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyTagRange.swift; sourceTree = "<group>"; };
+		ABCDEF012345678901234567 /* PropertyTagRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyTagRange.swift; sourceTree = "<group>"; };
 		767B05A92D4C5DC400566C25 /* RoomRosterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RoomRosterUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		767B05AD2D4C5DC400566C25 /* RoomRosterUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomRosterUITests.swift; sourceTree = "<group>"; };
 		767B05AF2D4C5DC400566C25 /* RoomRosterUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomRosterUITestsLaunchTests.swift; sourceTree = "<group>"; };
@@ -262,7 +263,7 @@
 				B646DBB22E342D270040A437 /* EditSaleView.swift */,
 				B612436B2DB03BA000B9098B /* ImagePickerView.swift */,
 				E0B282C5B6FF4AADB74F1234 /* DocumentPickerView.swift */,
-				767B05912D4C5DC000566C25 /* InventoryView.swift */,
+		767B05912D4C5DC000566C25 /* InventoryView.swift */,
 				767B05C02D4C666F00566C25 /* ItemDetailsView.swift */,
 				B65F71242DE6491700310D40 /* MainMenuView.swift */,
 				B65F71262DE6493600310D40 /* ReportsView.swift */,
@@ -298,9 +299,9 @@
 				B615ED1B2DE12A16009BE623 /* Status.swift */,
 				B6A6D6D72DD7AB3800378BFF /* FieldBinding.swift */,
 				767B05BE2D4C5F9E00566C25 /* GoogleSheetsResponse.swift */,
-                                767B05932D4C5DC000566C25 /* Item.swift */,
-                                FC23ECDFDC014EEEA305BDDB /* ItemGroup.swift */,
-                                ABCDEF012345678901234567 /* PropertyTagRange.swift */,
+		767B05932D4C5DC000566C25 /* Item.swift */,
+		FC23ECDFDC014EEEA305BDDB /* ItemGroup.swift */,
+		ABCDEF012345678901234567 /* PropertyTagRange.swift */,
                                 B6A6D6D52DD7AAEE00378BFF /* ItemField.swift */,
 				C66A533C9D0B40A885DA2172 /* Condition.swift */,
 				0EA2B3CF72714AF5B8CD11E0 /* Sale.swift */,
@@ -362,7 +363,7 @@
 				765183BA2D8CD20800FBA72E /* ViewModels */,
 				765183B92D8CD1F300FBA72E /* Views */,
 				767E82D12D8F34B900B48011 /* Utilities */,
-				767B05952D4C5DC400566C25 /* Assets.xcassets */,
+		767B05952D4C5DC400566C25 /* Assets.xcassets */,
 				767B05972D4C5DC400566C25 /* RoomRoster.entitlements */,
 				767B05982D4C5DC400566C25 /* Preview Content */,
 			);
@@ -384,7 +385,7 @@
 				9062D441F4874BA89C2A0A1E /* InventoryServiceTests.swift */,
 				135983A51B686BEA6E40D6D4 /* PurchaseReceiptServiceTests.swift */,
 				E71B5019D5A040FCBB81807B /* ItemValidatorTests.swift */,
-                                ABCDEF01234567890123456A /* PropertyTagRangeTests.swift */,
+				ABCDEF01234567890123456A /* PropertyTagRangeTests.swift */,
 				BF137618CD644A1997B55ED6 /* MockNetworkService.swift */,
 				614508236AFA4269887FF35A /* RoomServiceTests.swift */,
 				4AC01C73ED7A4FBC9EECB3D3 /* ViewModelTests.swift */,
@@ -596,9 +597,9 @@
 				B646DBB52E342D380040A437 /* EditItemViewModel.swift in Sources */,
 				767E82D72D8F3ABE00B48011 /* AuthenticationManager.swift in Sources */,
 				B6D80EF82E28255E00748907 /* ReceiptPDFGenerator.swift in Sources */,
-                                767B05942D4C5DC000566C25 /* Item.swift in Sources */,
-                                B3C17C2B098B4B398D39C2BE /* ItemGroup.swift in Sources */,
-                ABCDEF012345678901234568 /* PropertyTagRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF012345678901234567 /* PropertyTagRange.swift */; };
+				767B05942D4C5DC000566C25 /* Item.swift in Sources */,
+				B3C17C2B098B4B398D39C2BE /* ItemGroup.swift in Sources */,
+				ABCDEF012345678901234568 /* PropertyTagRange.swift in Sources */,
                                 B67560442DF0D231001A5D9D /* CreateItemViewModel.swift in Sources */,
 				B65F712B2DE6495900310D40 /* SettingsView.swift in Sources */,
 				B6D80EFD2E28DD8D00748907 /* SpreadsheetManager.swift in Sources */,
@@ -659,7 +660,7 @@
 				62093EEF26D4F31B0F245579 /* PurchaseReceiptServiceTests.swift in Sources */,
 				62176ADB9D7B4DF2BBE81798 /* SaleReceiptServiceTests.swift in Sources */,
 				4A41F16A7DFB4ABE9D824975 /* ItemValidatorTests.swift in Sources */,
-                                ABCDEF012345678901234569 /* PropertyTagRangeTests.swift in Sources */,
+				ABCDEF012345678901234569 /* PropertyTagRangeTests.swift in Sources */,
 				E9FBF450607D494DA1894333 /* MockNetworkService.swift in Sources */,
 				DE7D257232324BDDB96C6F37 /* RoomServiceTests.swift in Sources */,
 				7DB3EA08C76F4E048B379677 /* ViewModelTests.swift in Sources */,
