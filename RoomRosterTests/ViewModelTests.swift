@@ -48,4 +48,19 @@ final class ViewModelTests: XCTestCase {
         XCTAssertTrue(vm.showTagError)
         XCTAssertEqual(vm.tagError, Strings.createItem.errors.tag.duplicate)
     }
+
+    @MainActor
+    func testCreateItemViewModelQuantityMismatch() {
+        let vm = CreateItemViewModel(
+            inventoryService: InventoryService(sheetId: "s", networkService: MockNetworkService()),
+            roomService: RoomService(sheetId: "s", networkService: MockNetworkService()),
+            receiptService: PurchaseReceiptService(),
+            itemsProvider: { [] }
+        )
+        vm.newItem.quantity = 2
+        vm.propertyTagInput = "A0001"
+        vm.validateTag()
+        XCTAssertTrue(vm.showTagError)
+        XCTAssertEqual(vm.tagError, Strings.createItem.errors.tag.quantityMismatch)
+    }
 }

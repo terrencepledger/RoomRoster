@@ -106,6 +106,7 @@ struct Strings {
             struct tag {
                 static let format = "Invalid tag format. Use formatting like A1234."
                 static let duplicate = "That tag already exists."
+                static let quantityMismatch = "Quantity must match number of property tags."
                 static let other = "Unknown tag error."
             }
             static func imageUpload(_ error: String) -> String {
@@ -194,6 +195,7 @@ struct Strings {
             struct tag {
                 static let format = "Invalid tag format. Use formatting like A1234."
                 static let duplicate = "That tag already exists."
+                static let quantityMismatch = "Quantity must match number of property tags."
             }
             static func imageUpload(_ error: String) -> String {
                 "Upload failed: \(error)"

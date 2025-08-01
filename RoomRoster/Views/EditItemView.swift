@@ -301,22 +301,26 @@ struct EditItemView: View {
             return
         }
 
-        guard let tag = PropertyTag(rawValue: propertyTagInput) else {
-            tagError = l10n.errors.tag.format
-            return
+        do {
+            _ = try ItemValidator.validateTags(
+                propertyTagInput,
+                quantity: editableItem.quantity,
+                currentItemID: editableItem.id,
+                allItems: viewModel.items
+            )
+            tagError = nil
+        } catch {
+            switch error {
+            case .invalidTagFormat:
+                tagError = l10n.errors.tag.format
+            case .duplicateTag:
+                tagError = l10n.errors.tag.duplicate
+            case .quantityMismatch:
+                tagError = l10n.errors.tag.quantityMismatch
+            default:
+                tagError = nil
+            }
         }
-
-        let isDuplicate = viewModel.items.contains {
-            $0.id != editableItem.id &&
-            $0.propertyTag?.rawValue == tag.rawValue
-        }
-
-        if isDuplicate {
-            tagError = l10n.errors.tag.duplicate
-            return
-        }
-
-        tagError = nil
     }
 
     private func uploadPickedImage() async {

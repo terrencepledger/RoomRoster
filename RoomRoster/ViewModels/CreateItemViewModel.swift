@@ -145,12 +145,13 @@ final class CreateItemViewModel: ObservableObject {
 
     func validateTag() {
         do {
-            let tag = try ItemValidator.validateTag(
+            let tags = try ItemValidator.validateTags(
                 propertyTagInput,
+                quantity: newItem.quantity,
                 currentItemID: nil,
                 allItems: itemsProvider()
             )
-            newItem.propertyTag = tag
+            newItem.propertyTag = tags.count == 1 ? tags[0] : nil
             tagError = nil
             showTagError = false
         } catch {
@@ -159,6 +160,8 @@ final class CreateItemViewModel: ObservableObject {
                 tagError = l10n.errors.tag.format
             case .duplicateTag:
                 tagError = l10n.errors.tag.duplicate
+            case .quantityMismatch:
+                tagError = l10n.errors.tag.quantityMismatch
             default:
                 tagError = l10n.errors.tag.other
             }
