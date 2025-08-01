@@ -6,6 +6,7 @@ private typealias l10n = Strings.reports
 struct ReportsView: View {
     @StateObject private var viewModel = ReportsViewModel()
     @StateObject private var sheets = SpreadsheetManager.shared
+    @StateObject private var auth = AuthenticationManager.shared
     @State private var shareURL: URL?
     
     var body: some View {
@@ -157,6 +158,16 @@ struct ReportsView: View {
                 await viewModel.loadData()
             }
             .onAppear { Logger.page("ReportsView") }
+            .onChange(of: auth.isSignedIn) { _, signedIn in
+                if signedIn, sheets.currentSheet != nil {
+                    Task { await viewModel.loadData() }
+                }
+            }
+            .onChange(of: sheets.currentSheet?.id) { _, sheetID in
+                if sheetID != nil, auth.isSignedIn {
+                    Task { await viewModel.loadData() }
+                }
+            }
     }
 
     private var searchHeader: some View {

@@ -22,6 +22,9 @@ struct RoomRosterApp: App {
             MainMenuView()
                 .environmentObject(coordinator)
                 .preferredColorScheme(isDarkMode ? .dark : .light)
+                .task {
+                    await AuthenticationManager.shared.signIn()
+                }
         }
     }
 }

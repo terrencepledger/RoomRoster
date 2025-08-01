@@ -100,8 +100,28 @@ struct MainMenuView: View {
         .onChange(of: coordinator.selectedTab) { _, _ in
             HapticManager.shared.impact()
         }
-        .onAppear {
-            Task { await auth.signIn() }
+        .onChange(of: auth.isSignedIn) { _, signedIn in
+            if signedIn {
+                Task {
+                    await SpreadsheetManager.shared.loadSheets()
+                    let manager = SpreadsheetManager.shared
+                    if manager.spreadsheets.count == 1 && manager.currentSheet == nil {
+                        if let sheet = manager.spreadsheets.first {
+                            manager.select(sheet)
+                            coordinator.selectedTab = .inventory
+                        }
+                    } else if manager.currentSheet == nil {
+                        coordinator.selectedTab = .sheets
+                    } else {
+                        coordinator.selectedTab = .inventory
+                    }
+                }
+            } else {
+                SpreadsheetManager.shared.signOut()
+            }
+        }
+        .task {
+            await auth.signIn()
         }
     }
 

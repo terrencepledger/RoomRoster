@@ -6,6 +6,7 @@ struct SalesView: View {
     @EnvironmentObject private var coordinator: MainMenuCoordinator
     @StateObject private var viewModel = SalesViewModel()
     @StateObject private var sheets = SpreadsheetManager.shared
+    @StateObject private var auth = AuthenticationManager.shared
 #if os(macOS)
     @Binding var selectedSaleIndex: Int?
 #endif
@@ -91,6 +92,20 @@ struct SalesView: View {
                let match = viewModel.sales.firstIndex(of: pending) {
                 selectedSale = viewModel.sales[match]
                 coordinator.pendingSale = nil
+            }
+        }
+        .onChange(of: auth.isSignedIn) { _, signedIn in
+            if signedIn, sheets.currentSheet != nil {
+                Task {
+                    await viewModel.loadSales()
+                }
+            }
+        }
+        .onChange(of: sheets.currentSheet?.id) { _, sheetID in
+            if sheetID != nil, auth.isSignedIn {
+                Task {
+                    await viewModel.loadSales()
+                }
             }
         }
     }

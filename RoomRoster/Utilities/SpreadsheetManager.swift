@@ -27,6 +27,7 @@ final class SpreadsheetManager: ObservableObject {
 
     func loadSheets() async {
         guard AuthenticationManager.shared.isSignedIn else { return }
+        guard isLoading == false else { return }
         isLoading = true
         defer { isLoading = false }
         do {
