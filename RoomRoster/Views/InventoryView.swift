@@ -32,6 +32,7 @@ struct InventoryView: View {
     @State private var searchText: String = ""
     @State private var includeHistoryInSearch: Bool = false
     @State private var includeSoldItems: Bool = false
+    @State private var includeDiscardedItems: Bool = false
     @State private var logVersion = 0
     @State private var successMessage: String?
 
@@ -329,8 +330,11 @@ struct InventoryView: View {
                 Toggle(l10n.includeHistoryToggle, isOn: $includeHistoryInSearch)
                     .font(.subheadline)
                     .padding(.top, 4)
-                Toggle(l10n.includeSoldToggle, isOn: $includeSoldItems)
-                    .font(.subheadline)
+                HStack {
+                    Toggle(l10n.includeSoldToggle, isOn: $includeSoldItems)
+                    Toggle(l10n.includeDiscardedToggle, isOn: $includeDiscardedItems)
+                }
+                .font(.subheadline)
             }
             .padding(.horizontal)
 
@@ -398,6 +402,9 @@ struct InventoryView: View {
         var baseItems = viewModel.items
         if !includeSoldItems {
             baseItems = baseItems.filter { $0.status != .sold }
+        }
+        if !includeDiscardedItems {
+            baseItems = baseItems.filter { $0.status != .discarded }
         }
         guard !query.isEmpty else {
             return baseItems.map { ($0, "") }

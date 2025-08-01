@@ -32,8 +32,11 @@ struct ReportsView: View {
                         }
                         Toggle(Strings.inventory.includeHistoryToggle, isOn: $viewModel.includeHistoryInSearch)
                             .font(.subheadline)
-                        Toggle(Strings.inventory.includeSoldToggle, isOn: $viewModel.includeSoldItems)
-                            .font(.subheadline)
+                        HStack {
+                            Toggle(Strings.inventory.includeSoldToggle, isOn: $viewModel.includeSoldItems)
+                            Toggle(Strings.inventory.includeDiscardedToggle, isOn: $viewModel.includeDiscardedItems)
+                        }
+                        .font(.subheadline)
                     }
                     
                     if !viewModel.query.isEmpty {
