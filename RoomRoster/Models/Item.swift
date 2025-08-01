@@ -7,11 +7,22 @@
 
 import Foundation
 
+/// Represents a single entry in the inventory list.
+///
+/// Each item has its own identifier and optional `propertyTag`.
+/// Items that are variants of the same product can share an `ItemGroup`
+/// through `groupID`. When `quantity` is greater than `1` the record
+/// stands for multiple identical units that do **not** require individual
+/// property tags. If every unit must carry its own tag, create separate
+/// `Item` instances with the same `groupID` so they can be managed as a
+/// group while retaining unique tags.
+
 struct Item: Identifiable, Hashable {
     var id: String
     var imageURL: String
     var name: String
     var description: String
+    var groupID: String?
     var quantity: Int
     var dateAdded: String
     var estimatedPrice: Double?
@@ -21,6 +32,10 @@ struct Item: Identifiable, Hashable {
     var lastUpdated: Date?
     var propertyTag: PropertyTag?
     var purchaseReceiptURL: String?
+
+    var isGrouped: Bool {
+        groupID != nil || quantity > 1
+    }
 }
 
 extension Item {
@@ -103,7 +118,7 @@ extension Item {
     }
 
     static func empty() -> Item {
-        .init(id: "", imageURL: "", name: "", description: "", quantity: 0,
+        .init(id: "", imageURL: "", name: "", description: "", groupID: nil, quantity: 0,
               dateAdded: "", estimatedPrice: nil, status: .available,
               lastKnownRoom: .empty(), updatedBy: "", lastUpdated: nil, propertyTag: nil,
               purchaseReceiptURL: nil)

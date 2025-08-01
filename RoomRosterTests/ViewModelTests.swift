@@ -22,7 +22,26 @@ final class ViewModelTests: XCTestCase {
             inventoryService: InventoryService(sheetId: "s", networkService: MockNetworkService()),
             roomService: RoomService(sheetId: "s", networkService: MockNetworkService()),
             receiptService: PurchaseReceiptService(),
-            itemsProvider: { [Item(id: "1", imageURL: "", name: "", description: "", quantity: 1, dateAdded: "", estimatedPrice: nil, status: .available, lastKnownRoom: .empty(), updatedBy: "", lastUpdated: nil, propertyTag: PropertyTag(rawValue: "A0001"), purchaseReceiptURL: nil)] }
+            itemsProvider: {
+                [
+                    Item(
+                        id: "1",
+                        imageURL: "",
+                        name: "",
+                        description: "",
+                        groupID: "test-group",
+                        quantity: 1,
+                        dateAdded: "",
+                        estimatedPrice: nil,
+                        status: .available,
+                        lastKnownRoom: .empty(),
+                        updatedBy: "",
+                        lastUpdated: nil,
+                        propertyTag: PropertyTag(rawValue: "A0001"),
+                        purchaseReceiptURL: nil
+                    )
+                ]
+            }
         )
         vm.propertyTagInput = "A0001"
         vm.validateTag()

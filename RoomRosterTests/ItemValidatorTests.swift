@@ -9,7 +9,22 @@ final class ItemValidatorTests: XCTestCase {
     }
 
     func testValidateTagDuplicateThrows() {
-        let item = Item(id: "1", imageURL: "", name: "A", description: "", quantity: 1, dateAdded: "", estimatedPrice: nil, status: .available, lastKnownRoom: .empty(), updatedBy: "", lastUpdated: nil, propertyTag: PropertyTag(rawValue: "A0001"), purchaseReceiptURL: nil)
+        let item = Item(
+            id: "1",
+            imageURL: "",
+            name: "A",
+            description: "",
+            groupID: "test-group",
+            quantity: 1,
+            dateAdded: "",
+            estimatedPrice: nil,
+            status: .available,
+            lastKnownRoom: .empty(),
+            updatedBy: "",
+            lastUpdated: nil,
+            propertyTag: PropertyTag(rawValue: "A0001"),
+            purchaseReceiptURL: nil
+        )
         XCTAssertThrowsError(try ItemValidator.validateTag("A0001", currentItemID: nil, allItems: [item])) { error in
             XCTAssertEqual(error as? ItemValidationError, .duplicateTag)
         }

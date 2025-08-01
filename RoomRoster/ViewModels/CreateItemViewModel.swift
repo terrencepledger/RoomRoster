@@ -57,6 +57,7 @@ final class CreateItemViewModel: ObservableObject {
             imageURL: "",
             name: "",
             description: "",
+            groupID: nil,
             quantity: 1,
             dateAdded: Date().toShortString(),
             estimatedPrice: nil,
