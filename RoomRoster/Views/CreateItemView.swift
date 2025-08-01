@@ -80,7 +80,7 @@ struct CreateItemView: View {
                     if viewModel.isUploadingReceipt {
                         HStack {
                             ProgressView()
-                            Text("Uploading receipt...")
+                            Text(Strings.general.uploadingReceipt)
                         }
                     }
                     
@@ -91,14 +91,14 @@ struct CreateItemView: View {
                     }
                     
                     HStack {
-                        Text("Receipt Path").foregroundColor(.gray)
+                        Text(Strings.general.receiptPath).foregroundColor(.gray)
                         Spacer()
                         Text(viewModel.newItem.purchaseReceiptURL ?? "")
                             .font(.caption)
                             .multilineTextAlignment(.trailing)
                     }
                 } header: {
-                    Text("Purchase Receipt")
+                    Text(Strings.purchaseReceipt.sectionTitle)
                 }
                 
                 Section {

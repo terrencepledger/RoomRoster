@@ -14,10 +14,14 @@ struct Strings {
         static let cancel = "Cancel"
         static let clear = "Clear"
         static let loading = "Loading..."
+        static let uploadingReceipt = "Uploading receipt..."
+        static let receiptPath = "Receipt Path"
+        static let selectPDF = "Select PDF"
     }
 
     // MARK: - MainMenu
     struct mainMenu {
+        static let title = "Menu"
         static let inventory = "Inventory"
         static let sales = "Sales"
         static let reports = "Reports"
@@ -296,5 +300,11 @@ struct Strings {
         static let editSuccess = "Sale updated successfully"
         static let noReceipt = "No Receipt"
         static let failedToUpdate = "Failed to update sale. Please try again."
+    }
+
+    // MARK: - PurchaseReceipt
+    struct purchaseReceipt {
+        static let sectionTitle = "Purchase Receipt"
+        static let saleSectionTitle = "Sale Receipt"
     }
 }

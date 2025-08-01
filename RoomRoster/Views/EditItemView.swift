@@ -97,7 +97,7 @@ struct EditItemView: View {
                 }
 
                 // MARK: – Purchase Receipt
-                Section(header: Text("Purchase Receipt")) {
+                Section(header: Text(Strings.purchaseReceipt.sectionTitle)) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(Strings.saleDetails.currentReceipt)
                             .font(.caption)
@@ -115,7 +115,7 @@ struct EditItemView: View {
                     if isUploadingReceipt {
                         HStack {
                             ProgressView()
-                            Text("Uploading receipt...")
+                            Text(Strings.general.uploadingReceipt)
                         }
                     }
                     if let error = receiptUploadError {
@@ -124,7 +124,7 @@ struct EditItemView: View {
                             .font(.caption)
                     }
                     HStack {
-                        Text("Receipt Path").foregroundColor(.gray)
+                        Text(Strings.general.receiptPath).foregroundColor(.gray)
                         Spacer()
                         Text(editableItem.purchaseReceiptURL ?? "")
                             .font(.caption)

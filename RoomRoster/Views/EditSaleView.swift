@@ -20,7 +20,7 @@ struct EditSaleView: View {
 
     private var content: some View {
         Form {
-                Section("Sale Receipt") {
+                Section(Strings.purchaseReceipt.saleSectionTitle) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(Strings.saleDetails.currentReceipt)
                             .font(.caption)
@@ -42,7 +42,7 @@ struct EditSaleView: View {
                     if viewModel.isUploading {
                         HStack {
                             ProgressView()
-                            Text("Uploading receipt...")
+                            Text(Strings.general.uploadingReceipt)
                         }
                     }
                     if let error = viewModel.uploadError {
