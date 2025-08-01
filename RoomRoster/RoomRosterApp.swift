@@ -16,9 +16,11 @@ struct RoomRosterApp: App {
         Logger.initialize()
     }
     @AppStorage("isDarkMode") private var isDarkMode = false
+    @StateObject private var coordinator = MainMenuCoordinator()
     var body: some Scene {
         WindowGroup {
             MainMenuView()
+                .environmentObject(coordinator)
                 .preferredColorScheme(isDarkMode ? .dark : .light)
         }
     }
