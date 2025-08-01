@@ -54,14 +54,10 @@ final class EditItemViewModel: ObservableObject {
 
     func onReceiptPicked(_ image: PlatformImage?) {
         pickedReceiptImage = image
-        guard let image else { return }
-        Task { await saveReceiptImage(image) }
     }
 
     func onReceiptPDFPicked(_ url: URL?) {
         pickedReceiptPDF = url
-        guard let url else { return }
-        Task { await saveReceiptPDF(from: url) }
     }
 
     private func saveReceiptImage(_ image: PlatformImage) async {

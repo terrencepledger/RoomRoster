@@ -20,16 +20,25 @@ struct EditSaleView: View {
 
     private var content: some View {
         Form {
-            Section("Sale Receipt") {
-                    ReceiptImageView(urlString: viewModel.sale.receiptImageURL)
-                    CombinedImagePickerButton(image: $viewModel.pickedReceiptImage)
-                        .onChange(of: viewModel.pickedReceiptImage) { _, img in
-                            viewModel.onReceiptPicked(img)
-                        }
-                    PDFPickerButton(url: $viewModel.pickedReceiptPDF)
-                        .onChange(of: viewModel.pickedReceiptPDF) { _, url in
-                            viewModel.onReceiptPDFPicked(url)
-                        }
+                Section("Sale Receipt") {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(Strings.saleDetails.currentReceipt)
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                        ReceiptImageView(
+                            urlString: viewModel.sale.receiptImageURL ??
+                                viewModel.sale.receiptPDFURL ??
+                                viewModel.originalReceiptImageURL ??
+                                viewModel.originalReceiptPDFURL
+                        )
+                    }
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(Strings.saleDetails.newReceipt)
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                        CombinedImagePickerButton(image: $viewModel.pickedReceiptImage)
+                        PDFPickerButton(url: $viewModel.pickedReceiptPDF)
+                    }
                     if viewModel.isUploading {
                         HStack {
                             ProgressView()
@@ -61,6 +70,7 @@ struct EditSaleView: View {
                 }
                 .platformButtonStyle()
             }
+            .task { await viewModel.refreshSale() }
         }
     }
     }
