@@ -31,6 +31,14 @@ struct SettingsView: View {
             }
             Section(l10n.accountSection) {
                 if auth.isSignedIn {
+                    if let user = auth.userName ?? auth.email {
+                        HStack {
+                            Text(l10n.signedInAs)
+                            Spacer()
+                            Text(user)
+                                .foregroundColor(.secondary)
+                        }
+                    }
                     Button(l10n.signOutButton) {
                         auth.signOut()
                         sheets.signOut()

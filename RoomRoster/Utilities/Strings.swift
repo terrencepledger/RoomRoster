@@ -220,6 +220,7 @@ struct Strings {
         static let accountSection = "Account"
         static let signInButton = "Sign In"
         static let signOutButton = "Sign Out"
+        static let signedInAs = "Signed in as"
         static let appSettingsSection   = "App Settings"
         static let darkModeToggle       = "Dark Mode"
         static let aboutSection         = "About"
