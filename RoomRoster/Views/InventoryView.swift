@@ -382,11 +382,9 @@ struct InventoryView: View {
                                         }
                                     }
                                 }
+                                .buttonStyle(.plain)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .contentShape(Rectangle())
-                                .simultaneousGesture(
-                                    TapGesture().onEnded { HapticManager.shared.impact() }
-                                )
 #endif
                             }
                         }
