@@ -31,6 +31,7 @@ struct Strings {
         static let searchPlaceholder = "Search..."
         static let includeHistoryToggle = "Include History"
         static let includeSoldToggle = "Include Sold Items"
+        static let includeDiscardedToggle = "Include Discarded Items"
         static let addItemButton = "Add Item"
         static func status(_ status: String) -> String {
             "Status: \(status)"
