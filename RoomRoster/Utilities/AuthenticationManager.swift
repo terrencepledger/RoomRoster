@@ -7,6 +7,7 @@
 
 import Foundation
 import GoogleSignIn
+import SwiftUI
 #if canImport(UIKit)
 import UIKit
 #elseif canImport(AppKit)
@@ -18,6 +19,7 @@ class AuthenticationManager: ObservableObject {
     static let shared = AuthenticationManager()
 
     @Published private(set) var isSignedIn: Bool = false
+    @Published private(set) var isSigningIn: Bool = false
     @Published private(set) var accessToken: String?
     @Published private(set) var userName: String?
     @Published private(set) var email: String?
@@ -30,6 +32,12 @@ class AuthenticationManager: ObservableObject {
     }
 
     func signIn() async {
+        guard isSigningIn == false else { return }
+        isSigningIn = true
+        defer { isSigningIn = false }
+
+        guard isSignedIn == false else { return }
+
         if await signInSilently() { return }
 
         do {
@@ -41,20 +49,20 @@ class AuthenticationManager: ObservableObject {
     }
 
     func ensureSignedIn() async {
-        if await signInSilently() == false {
-            await signIn()
-        }
+        await signIn()
     }
 
     private func signInSilently() async -> Bool {
         if let user = GIDSignIn.sharedInstance.currentUser {
             updateUser(from: user)
+            await SpreadsheetManager.shared.loadSheets()
             return true
         }
 
         do {
             let restored = try await GIDSignIn.sharedInstance.restorePreviousSignIn()
             updateUser(from: restored)
+            await SpreadsheetManager.shared.loadSheets()
             return true
         } catch {
             Logger.log(error, extra: ["description": "Failed restoring sign in"])
@@ -102,6 +110,7 @@ class AuthenticationManager: ObservableObject {
 
         let user = result.user
         updateUser(from: user)
+        await SpreadsheetManager.shared.loadSheets()
         #elseif canImport(AppKit)
         var window = NSApp.keyWindow ?? NSApp.mainWindow ?? NSApp.windows.first { $0.isVisible }
         if window == nil {
@@ -128,6 +137,7 @@ class AuthenticationManager: ObservableObject {
         )
 
         updateUser(from: result.user)
+        await SpreadsheetManager.shared.loadSheets()
         #else
         throw NSError(
             domain: "Auth",

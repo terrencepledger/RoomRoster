@@ -14,6 +14,7 @@ private typealias l10n = Strings.inventory
 struct InventoryView: View {
     @StateObject private var viewModel = InventoryViewModel()
     @StateObject private var sheets = SpreadsheetManager.shared
+    @StateObject private var auth = AuthenticationManager.shared
 #if os(macOS)
     @Binding var selectedItemID: String?
     @State private var selectedItem: Item?
@@ -150,6 +151,22 @@ struct InventoryView: View {
             syncSelectionWithInventory()
         }
 #endif
+        .onChange(of: auth.isSignedIn) { _, signedIn in
+            if signedIn, sheets.currentSheet != nil {
+                Task {
+                    await viewModel.fetchInventory()
+                    await viewModel.loadRecentLogs(for: viewModel.items)
+                }
+            }
+        }
+        .onChange(of: sheets.currentSheet) { _, sheet in
+            if sheet != nil, auth.isSignedIn {
+                Task {
+                    await viewModel.fetchInventory()
+                    await viewModel.loadRecentLogs(for: viewModel.items)
+                }
+            }
+        }
         if let message = successMessage {
             SuccessBanner(message: message)
                 .allowsHitTesting(false)
