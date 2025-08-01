@@ -25,6 +25,16 @@ final class EditSaleViewModel: ObservableObject {
         self.receiptService = receiptService
     }
 
+    func refreshSale() async {
+        do {
+            if let fetched = try await saleService.fetchSale(for: sale.itemId) {
+                sale = fetched
+            }
+        } catch {
+            Logger.log(error, extra: ["description": "Failed to refresh sale in edit view"])
+        }
+    }
+
     func onReceiptPicked(_ image: PlatformImage?) {
         pickedReceiptImage = image
     }

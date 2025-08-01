@@ -20,8 +20,12 @@ struct EditSaleView: View {
                         Text(Strings.saleDetails.currentReceipt)
                             .font(.caption)
                             .foregroundColor(.gray)
-                        ReceiptImageView(urlString: viewModel.originalReceiptImageURL ??
-                            viewModel.originalReceiptPDFURL)
+                        ReceiptImageView(
+                            urlString: viewModel.sale.receiptImageURL ??
+                                viewModel.sale.receiptPDFURL ??
+                                viewModel.originalReceiptImageURL ??
+                                viewModel.originalReceiptPDFURL
+                        )
                     }
                     VStack(alignment: .leading, spacing: 4) {
                         Text(Strings.saleDetails.newReceipt)
@@ -63,5 +67,6 @@ struct EditSaleView: View {
                     .platformButtonStyle()
                 }
             }
+            .task { await viewModel.refreshSale() }
         }
     }
