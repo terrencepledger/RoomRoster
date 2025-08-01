@@ -159,8 +159,8 @@ struct InventoryView: View {
                 }
             }
         }
-        .onChange(of: sheets.currentSheet) { _, sheet in
-            if sheet != nil, auth.isSignedIn {
+        .onChange(of: sheets.currentSheet?.id) { _, sheetID in
+            if sheetID != nil, auth.isSignedIn {
                 Task {
                     await viewModel.fetchInventory()
                     await viewModel.loadRecentLogs(for: viewModel.items)
