@@ -120,8 +120,8 @@ struct MainMenuView: View {
                 SpreadsheetManager.shared.signOut()
             }
         }
-        .onAppear {
-            Task { await auth.signIn() }
+        .task {
+            await auth.signIn()
         }
     }
 
