@@ -217,11 +217,19 @@ struct CreateItemView: View {
                 .platformButtonStyle()
             }
             
-            if let error = viewModel.errorMessage {
-                ErrorBanner(message: error)
-                    .allowsHitTesting(false)
-                    .padding()
+            VStack(spacing: 4) {
+                if let error = viewModel.uploadError {
+                    ErrorBanner(message: error)
+                }
+                if let error = viewModel.receiptUploadError {
+                    ErrorBanner(message: error)
+                }
+                if let error = viewModel.errorMessage {
+                    ErrorBanner(message: error)
+                }
             }
+            .allowsHitTesting(false)
+            .padding()
         }
         .alert(
             l10n.addRoom.title,

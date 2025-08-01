@@ -10,11 +10,16 @@ struct EditSaleView: View {
     var body: some View {
         content
             .navigationTitle(Strings.saleDetails.editTitle)
-            .overlay {
-                if let saveError {
-                    VStack { Spacer(); ErrorBanner(message: saveError) }
-                        .allowsHitTesting(false)
+            .overlay(alignment: .bottom) {
+                VStack(spacing: 4) {
+                    if let error = viewModel.uploadError {
+                        ErrorBanner(message: error)
+                    }
+                    if let saveError {
+                        ErrorBanner(message: saveError)
+                    }
                 }
+                .allowsHitTesting(false)
             }
     }
 

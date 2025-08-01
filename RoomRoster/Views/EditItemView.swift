@@ -49,7 +49,8 @@ struct EditItemView: View {
     }
 
     private var content: some View {
-        Form {
+        ZStack(alignment: .bottom) {
+            Form {
                 // MARK: – Photo Section
                 Section(header: Text(l10n.photo.title)) {
                     VStack(alignment: .leading, spacing: 4) {
@@ -268,12 +269,23 @@ struct EditItemView: View {
                     .platformButtonStyle()
                 }
             }
-            .alert(l10n.addRoomAlert.title, isPresented: $showingAddRoomPrompt, actions: {
-                TextField(l10n.addRoomAlert.placeholder, text: $newRoomName)
-                Button(l10n.addRoomAlert.add) {
-                    Task {
-                        if let newRoom = await viewModel.addRoom(name: newRoomName) {
-                            editableItem.lastKnownRoom = newRoom
+            VStack(spacing: 4) {
+                if let error = uploadError {
+                    ErrorBanner(message: error)
+                }
+                if let error = receiptUploadError {
+                    ErrorBanner(message: error)
+                }
+            }
+            .allowsHitTesting(false)
+            .padding()
+        }
+        .alert(l10n.addRoomAlert.title, isPresented: $showingAddRoomPrompt, actions: {
+            TextField(l10n.addRoomAlert.placeholder, text: $newRoomName)
+            Button(l10n.addRoomAlert.add) {
+                Task {
+                    if let newRoom = await viewModel.addRoom(name: newRoomName) {
+                        editableItem.lastKnownRoom = newRoom
                         } else {
                             editableItem.lastKnownRoom = Room.placeholder()
                         }
@@ -290,20 +302,20 @@ struct EditItemView: View {
                     Button(Strings.general.cancel) { close() }
                 }
             }
-            .onAppear {
-                Logger.page("EditItemView")
-                propertyTagInput = editableItem.propertyTag?.rawValue ?? ""
-                if let parsed = Date.fromShortString(editableItem.dateAdded) {
-                    dateAddedDate = parsed
-                }
+        .onAppear {
+            Logger.page("EditItemView")
+            propertyTagInput = editableItem.propertyTag?.rawValue ?? ""
+            if let parsed = Date.fromShortString(editableItem.dateAdded) {
+                dateAddedDate = parsed
             }
-            .task {
-                await viewModel.fetchInventory()
-            }
-            .task {
-                await viewModel.loadRooms()
-            }
-            }
+        }
+        .task {
+            await viewModel.fetchInventory()
+        }
+        .task {
+            await viewModel.loadRooms()
+        }
+    }
 
     private func validateTag() {
         if propertyTagInput.isEmpty || propertyTagInput == editableItem.propertyTag?.label {
