@@ -124,7 +124,7 @@ struct InventoryView: View {
             Logger.page("InventoryView")
         }
         .task {
-            guard sheets.currentSheet != nil else { return }
+            guard auth.isSignedIn, sheets.currentSheet != nil else { return }
             await viewModel.fetchInventory()
             await viewModel.loadRecentLogs(for: viewModel.items)
 #if os(macOS)
@@ -136,7 +136,7 @@ struct InventoryView: View {
 #endif
         }
         .refreshable {
-            guard sheets.currentSheet != nil else { return }
+            guard auth.isSignedIn, sheets.currentSheet != nil else { return }
             await viewModel.fetchInventory()
             await viewModel.loadRecentLogs(for: viewModel.items)
 #if os(macOS)
