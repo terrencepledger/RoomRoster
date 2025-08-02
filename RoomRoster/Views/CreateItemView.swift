@@ -354,11 +354,10 @@ struct CreateItemView: View {
                 Button(Strings.general.cancel) { close() }
             }
         }
+        .task {
+            await viewModel.loadRooms()
+        }
         .onAppear {
-            Task {
-                await viewModel.signIn()
-                await viewModel.loadRooms()
-            }
             Logger.page("CreateItemView")
         }
     }

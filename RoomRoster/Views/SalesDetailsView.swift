@@ -19,8 +19,10 @@ struct SalesDetailsView: View {
     var body: some View {
 #if os(macOS)
         NavigationStack { content }
+            .navigationDestination(isPresented: $isEditing) { editSaleView }
 #else
         content
+            .navigationDestination(isPresented: $isEditing) { editSaleView }
 #endif
     }
 
@@ -92,13 +94,6 @@ struct SalesDetailsView: View {
                 Button(l10n.editButton) { isEditing = true }
             }
         }
-        .background(
-            NavigationLink(
-                destination: editSaleView,
-                isActive: $isEditing
-            ) { EmptyView() }
-            .hidden()
-        )
         .sheet(item: $shareURL) { url in
             ShareSheet(activityItems: [url])
         }

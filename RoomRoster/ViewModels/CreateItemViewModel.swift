@@ -72,6 +72,7 @@ final class CreateItemViewModel: ObservableObject {
 
     func loadRooms() async {
         do {
+            await AuthenticationManager.shared.ensureSignedIn()
             rooms = try await roomService.fetchRooms()
         } catch {
             if (error as? URLError)?.code == .cancelled || error is CancellationError {
