@@ -28,6 +28,9 @@ class InventoryViewModel: ObservableObject {
         do {
             self.rooms = try await roomService.fetchRooms()
         } catch {
+            if (error as? URLError)?.code == .cancelled || error is CancellationError {
+                return
+            }
             Logger.log(error, extra: ["description": "Failed to fetch rooms"])
             errorMessage = Strings.inventory.failedToLoadRooms
             HapticManager.shared.error()
@@ -50,6 +53,9 @@ class InventoryViewModel: ObservableObject {
             let response = try await service.fetchInventory()
             self.items = response.toItems()
         } catch {
+            if (error as? URLError)?.code == .cancelled || error is CancellationError {
+                return
+            }
             Logger.log(error, extra: [
                 "description": "Error fetching inventory"
             ])

@@ -74,6 +74,9 @@ final class CreateItemViewModel: ObservableObject {
         do {
             rooms = try await roomService.fetchRooms()
         } catch {
+            if (error as? URLError)?.code == .cancelled || error is CancellationError {
+                return
+            }
             Logger.log(error, extra: ["description": "Failed to load rooms"])
             errorMessage = l10n.errors.loadRoomsFailed
             HapticManager.shared.error()
