@@ -113,15 +113,9 @@ struct CreateItemView: View {
                         HStack {
                             Text(l10n.basicInfo.quantity)
                             Spacer()
-                            TextField(
-                                l10n.basicInfo.enter.quantity,
-                                value: $viewModel.newItem.quantity,
-                                format: .number
-                            )
-#if canImport(UIKit)
-                            .keyboardType(.numberPad)
-#endif
-                            .textFieldStyle(.roundedBorder)
+                            Stepper(value: $viewModel.newItem.quantity, in: 1...Int.max) {
+                                Text("\(viewModel.newItem.quantity)")
+                            }
                         }
                         HStack {
                             Text(l10n.basicInfo.tag)
