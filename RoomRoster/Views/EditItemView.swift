@@ -156,9 +156,12 @@ struct EditItemView: View {
 #if os(macOS)
                         HStack {
                             Spacer()
-                            Stepper(value: $editableItem.quantity, in: 1...Int.max) {
-                                Text("\(editableItem.quantity)")
-                            }
+                            Stepper(
+                                "",
+                                value: $editableItem.quantity,
+                                in: 1...Int.max
+                            )
+                            .labelsHidden()
                             Spacer()
                         }
                         .padding()

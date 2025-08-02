@@ -114,9 +114,12 @@ struct CreateItemView: View {
                         Text(l10n.basicInfo.quantity)
                         HStack {
                             Spacer()
-                            Stepper(value: $viewModel.newItem.quantity, in: 1...Int.max) {
-                                Text("\(viewModel.newItem.quantity)")
-                            }
+                            Stepper(
+                                "",
+                                value: $viewModel.newItem.quantity,
+                                in: 1...Int.max
+                            )
+                            .labelsHidden()
                             Spacer()
                         }
                         .padding()
