@@ -355,8 +355,10 @@ struct CreateItemView: View {
             }
         }
         .onAppear {
-            Task { await viewModel.signIn() }
-            Task { await viewModel.loadRooms() }
+            Task {
+                await viewModel.signIn()
+                await viewModel.loadRooms()
+            }
             Logger.page("CreateItemView")
         }
     }

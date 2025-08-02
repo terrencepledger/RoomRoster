@@ -13,6 +13,7 @@ struct SalesDetailsView: View {
     @State private var shareURL: URL?
     @State private var errorMessage: String?
     @State private var editSuccess: String?
+    @State private var isEditing = false
     private let downloader = FileDownloadService()
 
     var body: some View {
@@ -88,9 +89,16 @@ struct SalesDetailsView: View {
         }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                NavigationLink(l10n.editButton) { editSaleView }
+                Button(l10n.editButton) { isEditing = true }
             }
         }
+        .background(
+            NavigationLink(
+                destination: editSaleView,
+                isActive: $isEditing
+            ) { EmptyView() }
+            .hidden()
+        )
         .sheet(item: $shareURL) { url in
             ShareSheet(activityItems: [url])
         }
