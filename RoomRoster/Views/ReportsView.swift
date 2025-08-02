@@ -158,12 +158,12 @@ struct ReportsView: View {
                 await viewModel.loadData()
             }
             .onAppear { Logger.page("ReportsView") }
-            .onChange(of: auth.isSignedIn) { _, signedIn in
+            .onChange(of: auth.isSignedIn) { signedIn in
                 if signedIn, sheets.currentSheet != nil {
                     Task { await viewModel.loadData() }
                 }
             }
-            .onChange(of: sheets.currentSheet?.id) { _, sheetID in
+            .onChange(of: sheets.currentSheet?.id) { sheetID in
                 if sheetID != nil, auth.isSignedIn {
                     Task { await viewModel.loadData() }
                 }

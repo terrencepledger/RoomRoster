@@ -50,7 +50,7 @@ struct SheetsView: View {
             Logger.page("SheetsView")
             Task { await manager.loadSheets() }
         }
-        .onChange(of: auth.isSignedIn) { _, signedIn in
+        .onChange(of: auth.isSignedIn) { signedIn in
             if signedIn {
                 Task { await manager.loadSheets() }
             }

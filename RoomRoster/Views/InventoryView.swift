@@ -152,7 +152,7 @@ struct InventoryView: View {
             syncSelectionWithInventory()
         }
 #endif
-        .onChange(of: auth.isSignedIn) { _, signedIn in
+        .onChange(of: auth.isSignedIn) { signedIn in
             if signedIn, sheets.currentSheet != nil {
                 Task {
                     await viewModel.fetchInventory()
@@ -160,7 +160,7 @@ struct InventoryView: View {
                 }
             }
         }
-        .onChange(of: sheets.currentSheet?.id) { _, sheetID in
+        .onChange(of: sheets.currentSheet?.id) { sheetID in
             if sheetID != nil, auth.isSignedIn {
                 Task {
                     await viewModel.fetchInventory()

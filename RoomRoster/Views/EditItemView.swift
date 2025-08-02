@@ -39,6 +39,9 @@ struct EditItemView: View {
     @State private var showingAddRoomPrompt = false
     @State private var newRoomName = ""
     @FocusState private var tagFieldFocused: Bool
+#if os(macOS)
+    private let fieldWidth: CGFloat = 240.0
+#endif
 
     var body: some View {
         NavigationStack { content }
@@ -49,35 +52,20 @@ struct EditItemView: View {
         ZStack(alignment: .bottom) {
             Form {
                 // MARK: – Photo Section
-                Section(header: Text(l10n.photo.title)) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(l10n.photo.current)
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                        if let url = URL(string: editableItem.imageURL),
-                           !editableItem.imageURL.isEmpty {
-                            AsyncImage(url: url) { img in
-                                img.resizable()
-                                   .scaledToFit()
-                                   .frame(height: 120)
-                                   .cornerRadius(8)
-                            } placeholder: {
-                                ProgressView().frame(height: 120)
-                            }
-                        } else {
-                            Rectangle()
-                                .fill(Color.secondary.opacity(0.1))
-                                .frame(height: 120)
-                                .cornerRadius(8)
-                                .overlay(Text(l10n.photo.emptyState).foregroundColor(.gray))
+                Section(header: Text(l10n.photo.title).font(.headline)) {
+                    HStack(spacing: 8) {
+                        VStack {
+                            RemoteImageView(urlString: editableItem.imageURL, height: 80)
+                            Text(l10n.photo.current)
+                                .font(.caption)
+                                .foregroundColor(.gray)
                         }
-                    }
-
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(l10n.photo.new)
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                        CombinedImagePickerButton(image: $pickedImage)
+                        VStack {
+                            CombinedImagePickerButton(image: $pickedImage, height: 80)
+                            Text(l10n.photo.new)
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
                     }
 
                     // Upload status & URL display
@@ -95,20 +83,22 @@ struct EditItemView: View {
                 }
 
                 // MARK: – Purchase Receipt
-                Section(header: Text(Strings.purchaseReceipt.sectionTitle)) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(Strings.saleDetails.currentReceipt)
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                        ReceiptImageView(urlString: editableItem.purchaseReceiptURL)
+                Section(header: Text(Strings.purchaseReceipt.sectionTitle).font(.headline)) {
+                    HStack(spacing: 8) {
+                        VStack {
+                            ReceiptImageView(urlString: editableItem.purchaseReceiptURL, height: 80)
+                            Text(Strings.saleDetails.currentReceipt)
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
+                        VStack {
+                            CombinedImagePickerButton(image: $pickedReceiptImage, height: 80)
+                            Text(Strings.saleDetails.newReceipt)
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
                     }
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(Strings.saleDetails.newReceipt)
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                        CombinedImagePickerButton(image: $pickedReceiptImage)
-                        PDFPickerButton(url: $pickedReceiptPDF)
-                    }
+                    PDFPickerButton(url: $pickedReceiptPDF)
 
                     if isUploadingReceipt {
                         HStack {
@@ -123,15 +113,67 @@ struct EditItemView: View {
                     }
                     HStack {
                         Text(Strings.general.receiptPath).foregroundColor(.gray)
+                            .padding(.leading, 4)
                         Spacer()
                         Text(editableItem.purchaseReceiptURL ?? "")
                             .font(.caption)
                             .multilineTextAlignment(.trailing)
+                            .padding(.trailing, 4)
                     }
                 }
 
                 // MARK: – Basic Information
-                Section(header: Text(l10n.basicInfo.title)) {
+                Section(header: Text(l10n.basicInfo.title).font(.headline)) {
+#if os(macOS)
+                    LabeledContent {
+                        TextField(l10n.basicInfo.enter.name, text: $editableItem.name)
+                            .frame(width: fieldWidth)
+                            .padding(.trailing, 4)
+                    } label: {
+                        Text(l10n.basicInfo.name)
+                            .padding(.leading, 4)
+                    }
+                    LabeledContent {
+                        TextField(l10n.basicInfo.enter.description, text: $editableItem.description)
+                            .frame(width: fieldWidth)
+                            .padding(.trailing, 4)
+                    } label: {
+                        Text(l10n.basicInfo.description)
+                            .padding(.leading, 4)
+                    }
+                    quantityField
+                    LabeledContent {
+                        TextField(l10n.basicInfo.enter.tag, text: $propertyTagInput)
+                            .focused($tagFieldFocused)
+                            .frame(width: fieldWidth)
+                            .padding(.trailing, 4)
+                            .onChange(of: tagFieldFocused) { focused in
+                                if !focused {
+                                    withAnimation { validateTag() }
+                                }
+                            }
+                    } label: {
+                        Text(l10n.basicInfo.tag)
+                            .padding(.leading, 4)
+                    }
+                    if let error = tagError {
+                        Text(error)
+                            .foregroundColor(.red)
+                            .font(.caption)
+                            .onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                    withAnimation {
+                                        if tagError != nil {
+                                            if !tagFieldFocused {
+                                                propertyTagInput = editableItem.propertyTag?.label ?? ""
+                                            }
+                                            validateTag()
+                                        }
+                                    }
+                                }
+                            }
+                    }
+#else
                     VStack(alignment: .leading, spacing: 4) {
                         Text(l10n.basicInfo.name)
                             .font(.caption)
@@ -157,7 +199,7 @@ struct EditItemView: View {
                             .focused($tagFieldFocused)
                             .textFieldStyle(.roundedBorder)
                             .padding(.trailing)
-                            .onChange(of: tagFieldFocused) { _,focused in
+                            .onChange(of: tagFieldFocused) { focused in
                                 if !focused {
                                     withAnimation {
                                         validateTag()
@@ -182,11 +224,58 @@ struct EditItemView: View {
                                 }
                         }
                     }
-                    
+#endif
                 }
 
                 // MARK: – Details
-                Section(header: Text(l10n.details.title)) {
+                Section(header: Text(l10n.details.title).font(.headline)) {
+#if os(macOS)
+                    LabeledContent {
+                        TextField(l10n.details.enter.price,
+                                  value: $editableItem.estimatedPrice,
+                                  format: .number)
+                            .frame(width: fieldWidth)
+                            .padding(.trailing, 4)
+                    } label: {
+                        Text(l10n.details.price)
+                            .padding(.leading, 4)
+                    }
+                    LabeledContent {
+                        Picker(l10n.details.enter.status, selection: $editableItem.status) {
+                            ForEach(Status.allCases, id: \.self) { status in
+                                Text(status.label).tag(status)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .frame(width: fieldWidth)
+                        .padding(.trailing, 4)
+                    } label: {
+                        Text(l10n.details.status)
+                            .padding(.leading, 4)
+                    }
+                    LabeledContent {
+                        if !viewModel.rooms.isEmpty {
+                            Picker(l10n.details.room.subtitle, selection: $editableItem.lastKnownRoom) {
+                                ForEach(viewModel.rooms, id: \.id) { room in
+                                    Text(room.label).tag(room)
+                                }
+                                Text(l10n.details.room.add).tag(Room(name: "__add_new__"))
+                            }
+                            .frame(width: fieldWidth)
+                            .onChange(of: editableItem.lastKnownRoom) { newValue in
+                                if newValue.name == "__add_new__" {
+                                    showingAddRoomPrompt = true
+                                }
+                            }
+                        } else {
+                            ProgressView(l10n.details.room.loading)
+                                .frame(width: fieldWidth)
+                        }
+                    } label: {
+                        Text(l10n.details.room.title)
+                            .padding(.leading, 4)
+                    }
+#else
                     VStack(alignment: .leading, spacing: 4) {
                         Text(l10n.details.price)
                             .font(.caption)
@@ -222,7 +311,7 @@ struct EditItemView: View {
                                 }
                                 Text(l10n.details.room.add).tag(Room(name: "__add_new__"))
                             }
-                            .onChange(of: editableItem.lastKnownRoom) { _,newValue in
+                            .onChange(of: editableItem.lastKnownRoom) { newValue in
                                 if newValue.name == "__add_new__" {
                                     showingAddRoomPrompt = true
                                 }
@@ -231,6 +320,7 @@ struct EditItemView: View {
                             ProgressView(l10n.details.room.loading)
                         }
                     }
+#endif
                 }
 
                 // MARK: – Save Button
@@ -308,21 +398,18 @@ struct EditItemView: View {
     }
 
 #if os(macOS)
-    @ViewBuilder
     private var quantityField: some View {
-        HStack {
-            Text(l10n.basicInfo.quantity)
-                .font(.caption)
-                .foregroundColor(.gray)
-            Spacer()
-            HStack(spacing: 8) {
+        LabeledContent {
+            Stepper(value: $editableItem.quantity, in: 1...Int.max) {
                 Text("\(editableItem.quantity)")
                     .frame(width: 40, alignment: .trailing)
-                Stepper("", value: $editableItem.quantity, in: 1...Int.max)
-                    .labelsHidden()
             }
+            .frame(width: fieldWidth)
+            .padding(.trailing, 4)
+        } label: {
+            Text(l10n.basicInfo.quantity)
+                .padding(.leading, 4)
         }
-        .padding(.trailing)
         .onChange(of: editableItem.quantity) { _ in
             validateTag()
         }
