@@ -56,20 +56,33 @@ struct EditItemView: View {
                             .foregroundColor(.gray)
                         if let url = URL(string: editableItem.imageURL),
                            !editableItem.imageURL.isEmpty {
-                            AsyncImage(url: url) { img in
-                                img.resizable()
-                                   .scaledToFit()
-                                   .frame(height: 120)
-                                   .cornerRadius(8)
-                            } placeholder: {
-                                ProgressView().frame(height: 120)
+                            AsyncImage(url: url) { phase in
+                                switch phase {
+                                case .success(let img):
+                                    img.resizable()
+                                        .scaledToFit()
+                                        .frame(height: 120)
+                                        .cornerRadius(8)
+                                case .failure:
+                                    Image(systemName: "xmark.octagon")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 120)
+                                        .foregroundColor(.red.opacity(0.8))
+                                default:
+                                    Image(systemName: "photo")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 120)
+                                        .foregroundColor(.secondary.opacity(0.5))
+                                }
                             }
                         } else {
-                            Rectangle()
-                                .fill(Color.secondary.opacity(0.1))
+                            Image(systemName: "photo")
+                                .resizable()
+                                .scaledToFit()
                                 .frame(height: 120)
-                                .cornerRadius(8)
-                                .overlay(Text(l10n.photo.emptyState).foregroundColor(.gray))
+                                .foregroundColor(.secondary.opacity(0.5))
                         }
                     }
 
@@ -132,6 +145,41 @@ struct EditItemView: View {
 
                 // MARK: – Basic Information
                 Section(header: Text(l10n.basicInfo.title)) {
+#if os(macOS)
+                    LabeledContent(l10n.basicInfo.name) {
+                        TextField(l10n.basicInfo.enter.name, text: $editableItem.name)
+                    }
+                    LabeledContent(l10n.basicInfo.description) {
+                        TextField(l10n.basicInfo.enter.description, text: $editableItem.description)
+                    }
+                    quantityField
+                    LabeledContent(l10n.basicInfo.tag) {
+                        TextField(l10n.basicInfo.enter.tag, text: $propertyTagInput)
+                            .focused($tagFieldFocused)
+                            .onChange(of: tagFieldFocused) { _,focused in
+                                if !focused {
+                                    withAnimation { validateTag() }
+                                }
+                            }
+                    }
+                    if let error = tagError {
+                        Text(error)
+                            .foregroundColor(.red)
+                            .font(.caption)
+                            .onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                    withAnimation {
+                                        if tagError != nil {
+                                            if !tagFieldFocused {
+                                                propertyTagInput = editableItem.propertyTag?.label ?? ""
+                                            }
+                                            validateTag()
+                                        }
+                                    }
+                                }
+                            }
+                    }
+#else
                     VStack(alignment: .leading, spacing: 4) {
                         Text(l10n.basicInfo.name)
                             .font(.caption)
@@ -182,11 +230,43 @@ struct EditItemView: View {
                                 }
                         }
                     }
-                    
+#endif
                 }
 
                 // MARK: – Details
                 Section(header: Text(l10n.details.title)) {
+#if os(macOS)
+                    LabeledContent(l10n.details.price) {
+                        TextField(l10n.details.enter.price,
+                                  value: $editableItem.estimatedPrice,
+                                  format: .number)
+                    }
+                    LabeledContent(l10n.details.status) {
+                        Picker(l10n.details.enter.status, selection: $editableItem.status) {
+                            ForEach(Status.allCases, id: \.self) { status in
+                                Text(status.label).tag(status)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                    }
+                    LabeledContent(l10n.details.room.title) {
+                        if !viewModel.rooms.isEmpty {
+                            Picker(l10n.details.room.subtitle, selection: $editableItem.lastKnownRoom) {
+                                ForEach(viewModel.rooms, id: \.id) { room in
+                                    Text(room.label).tag(room)
+                                }
+                                Text(l10n.details.room.add).tag(Room(name: "__add_new__"))
+                            }
+                            .onChange(of: editableItem.lastKnownRoom) { _,newValue in
+                                if newValue.name == "__add_new__" {
+                                    showingAddRoomPrompt = true
+                                }
+                            }
+                        } else {
+                            ProgressView(l10n.details.room.loading)
+                        }
+                    }
+#else
                     VStack(alignment: .leading, spacing: 4) {
                         Text(l10n.details.price)
                             .font(.caption)
@@ -231,6 +311,7 @@ struct EditItemView: View {
                             ProgressView(l10n.details.room.loading)
                         }
                     }
+#endif
                 }
 
                 // MARK: – Save Button
@@ -308,21 +389,14 @@ struct EditItemView: View {
     }
 
 #if os(macOS)
-    @ViewBuilder
     private var quantityField: some View {
-        HStack {
-            Text(l10n.basicInfo.quantity)
-                .font(.caption)
-                .foregroundColor(.gray)
-            Spacer()
-            HStack(spacing: 8) {
+        LabeledContent(l10n.basicInfo.quantity) {
+            Stepper(value: $editableItem.quantity, in: 1...Int.max) {
                 Text("\(editableItem.quantity)")
                     .frame(width: 40, alignment: .trailing)
-                Stepper("", value: $editableItem.quantity, in: 1...Int.max)
-                    .labelsHidden()
             }
+            .labelsHidden()
         }
-        .padding(.trailing)
         .onChange(of: editableItem.quantity) { _ in
             validateTag()
         }

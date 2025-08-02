@@ -11,22 +11,32 @@ struct ReceiptImageView: View {
                 switch phase {
                 case .success(let image):
                     image.resizable()
-                         .scaledToFit()
-                         .frame(height: 120)
-                         .cornerRadius(8)
+                        .scaledToFit()
+                        .frame(height: 120)
+                        .cornerRadius(8)
                 case .failure:
-                    Image(systemName: "xmark.octagon").foregroundColor(.red)
+                    Image(systemName: "xmark.octagon")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 120)
+                        .foregroundColor(.red.opacity(0.8))
                 default:
-                    ProgressView().frame(height: 120)
+                    Image(systemName: "photo")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 120)
+                        .foregroundColor(.secondary.opacity(0.5))
                 }
             }
         } else if let urlString, !urlString.isEmpty {
             Label("View Receipt", systemImage: "doc")
                 .foregroundColor(.blue)
         } else {
-            Text(Strings.saleDetails.noReceipt)
-                .foregroundColor(.secondary)
-                .font(.caption)
+            Image(systemName: "photo")
+                .resizable()
+                .scaledToFit()
+                .frame(height: 120)
+                .foregroundColor(.secondary.opacity(0.5))
         }
     }
 }

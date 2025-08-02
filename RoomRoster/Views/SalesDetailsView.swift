@@ -13,10 +13,17 @@ struct SalesDetailsView: View {
     @State private var shareURL: URL?
     @State private var errorMessage: String?
     @State private var editSuccess: String?
-    @State private var showEdit = false
     private let downloader = FileDownloadService()
 
     var body: some View {
+#if os(macOS)
+        NavigationStack { content }
+#else
+        content
+#endif
+    }
+
+    private var content: some View {
         List {
             Section {
                 row(l10n.date, sale.date.toShortString())
@@ -78,16 +85,9 @@ struct SalesDetailsView: View {
         }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-#if os(macOS)
-                Button(l10n.editButton) { showEdit = true }
-#else
-                NavigationLink { editSaleView } label: { Text(l10n.editButton) }
-#endif
+                NavigationLink(l10n.editButton) { editSaleView }
             }
         }
-#if os(macOS)
-        .sheet(isPresented: $showEdit) { editSaleView }
-#endif
         .sheet(item: $shareURL) { url in
             ShareSheet(activityItems: [url])
         }

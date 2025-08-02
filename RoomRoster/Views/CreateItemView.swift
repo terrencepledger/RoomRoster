@@ -110,6 +110,27 @@ struct CreateItemView: View {
             }
 
             Section {
+#if os(macOS)
+                LabeledContent(l10n.basicInfo.name) {
+                    TextField(l10n.basicInfo.enter.name, text: $viewModel.newItem.name)
+                }
+
+                LabeledContent(l10n.basicInfo.description) {
+                    TextField(l10n.basicInfo.enter.description, text: $viewModel.newItem.description)
+                }
+
+                quantityField
+
+                LabeledContent(l10n.basicInfo.tag) {
+                    TextField(l10n.basicInfo.enter.tag, text: $viewModel.propertyTagInput)
+                        .focused($tagFieldFocused)
+                        .onChange(of: tagFieldFocused) { _, focused in
+                            if !focused {
+                                withAnimation { viewModel.validateTag() }
+                            }
+                        }
+                }
+#else
                 HStack {
                     Text(l10n.basicInfo.name)
                     Spacer()
@@ -141,6 +162,7 @@ struct CreateItemView: View {
                             }
                         }
                 }
+#endif
 
                 if viewModel.showTagError, let error = viewModel.tagError {
                     HStack {
@@ -167,6 +189,38 @@ struct CreateItemView: View {
             }
 
             Section {
+#if os(macOS)
+                LabeledContent(l10n.details.price) {
+                    TextField(
+                        l10n.details.enter.price,
+                        value: $viewModel.newItem.estimatedPrice,
+                        format: .number
+                    )
+                }
+
+                Picker(l10n.details.status, selection: $viewModel.newItem.status) {
+                    ForEach(Status.allCases, id: \.self) { status in
+                        Text(status.label).tag(status)
+                    }
+                }
+
+                Picker(l10n.details.room.title, selection: $viewModel.newItem.lastKnownRoom) {
+                    if viewModel.newItem.lastKnownRoom == Room.placeholder() {
+                        Text(l10n.details.enter.room).tag(Room.placeholder())
+                    }
+                    ForEach(viewModel.rooms, id: \.self) { room in
+                        Text(room.label).tag(room)
+                    }
+                    Text(l10n.details.room.add)
+                        .foregroundColor(.blue)
+                        .tag(Room(name: "__add_new__"))
+                }
+                .onChange(of: viewModel.newItem.lastKnownRoom) { _, newValue in
+                    if newValue.name == "__add_new__" {
+                        viewModel.showingAddRoomPrompt = true
+                    }
+                }
+#else
                 HStack {
                     Text(l10n.details.price)
                     Spacer()
@@ -201,6 +255,7 @@ struct CreateItemView: View {
                         viewModel.showingAddRoomPrompt = true
                     }
                 }
+#endif
             } header: {
                 Text(l10n.details.title)
             }
@@ -255,19 +310,14 @@ struct CreateItemView: View {
     }
 
 #if os(macOS)
-    @ViewBuilder
     private var quantityField: some View {
-        HStack {
-            Text(l10n.basicInfo.quantity)
-            Spacer()
-            HStack(spacing: 8) {
+        LabeledContent(l10n.basicInfo.quantity) {
+            Stepper(value: $viewModel.newItem.quantity, in: 1...Int.max) {
                 Text("\(viewModel.newItem.quantity)")
                     .frame(width: 40, alignment: .trailing)
-                Stepper("", value: $viewModel.newItem.quantity, in: 1...Int.max)
-                    .labelsHidden()
             }
+            .labelsHidden()
         }
-        .padding(.trailing)
         .onChange(of: viewModel.newItem.quantity) { _ in
             viewModel.validateTag()
         }
