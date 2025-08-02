@@ -58,11 +58,11 @@ struct SettingsView: View {
 
             Section(l10n.appSettingsSection) {
                 Toggle(l10n.darkModeToggle, isOn: $isDarkMode)
-                    .onChange(of: isDarkMode) { _, _ in
+                    .onChange(of: isDarkMode) { _ in
                         HapticManager.shared.impact()
                     }
                 Toggle(l10n.hapticsToggle, isOn: $hapticsEnabled)
-                    .onChange(of: hapticsEnabled) { _, _ in
+                    .onChange(of: hapticsEnabled) { _ in
                         HapticManager.shared.impact()
                     }
             }

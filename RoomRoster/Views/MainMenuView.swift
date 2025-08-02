@@ -97,10 +97,10 @@ struct MainMenuView: View {
                 }
             }
         }
-        .onChange(of: coordinator.selectedTab) { _, _ in
+        .onChange(of: coordinator.selectedTab) { _ in
             HapticManager.shared.impact()
         }
-        .onChange(of: auth.isSignedIn) { _, signedIn in
+        .onChange(of: auth.isSignedIn) { signedIn in
             if signedIn {
                 Task {
                     await SpreadsheetManager.shared.loadSheets()

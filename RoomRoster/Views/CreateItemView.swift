@@ -16,6 +16,9 @@ struct CreateItemView: View {
 
     @FocusState private var tagFieldFocused: Bool
     @State private var successMessage: String?
+#if os(macOS)
+    private let fieldWidth: CGFloat = 240.0
+#endif
 
     var body: some View {
 #if os(macOS)
@@ -44,8 +47,8 @@ struct CreateItemView: View {
     private var content: some View {
         Form {
             Section {
-                CombinedImagePickerButton(image: $viewModel.pickedImage)
-                    .onChange(of: viewModel.pickedImage) { _, img in
+                CombinedImagePickerButton(image: $viewModel.pickedImage, height: 80)
+                    .onChange(of: viewModel.pickedImage) { img in
                         viewModel.onImagePicked(img)
                     }
 
@@ -64,24 +67,29 @@ struct CreateItemView: View {
 
                 HStack {
                     Text(l10n.imageURL).foregroundColor(.gray)
+                        .padding(.leading, 4)
                     Spacer()
                     Text(viewModel.newItem.imageURL)
                         .font(.caption)
                         .multilineTextAlignment(.trailing)
+                        .padding(.trailing, 4)
                 }
             } header: {
                 Text(l10n.photo)
+                    .font(.headline)
             }
 
             Section {
-                ReceiptImageView(urlString: viewModel.newItem.purchaseReceiptURL)
-                CombinedImagePickerButton(image: $viewModel.pickedReceiptImage)
-                    .onChange(of: viewModel.pickedReceiptImage) { _, img in
-                        viewModel.onReceiptPicked(img)
-                    }
+                HStack(spacing: 8) {
+                    ReceiptImageView(urlString: viewModel.newItem.purchaseReceiptURL, height: 80)
+                    CombinedImagePickerButton(image: $viewModel.pickedReceiptImage, height: 80)
+                }
+                .onChange(of: viewModel.pickedReceiptImage) { img in
+                    viewModel.onReceiptPicked(img)
+                }
 
                 PDFPickerButton(url: $viewModel.pickedReceiptPDF)
-                    .onChange(of: viewModel.pickedReceiptPDF) { _, url in
+                    .onChange(of: viewModel.pickedReceiptPDF) { url in
                         viewModel.onReceiptPDFPicked(url)
                     }
 
@@ -100,16 +108,55 @@ struct CreateItemView: View {
 
                 HStack {
                     Text(Strings.general.receiptPath).foregroundColor(.gray)
+                        .padding(.leading, 4)
                     Spacer()
                     Text(viewModel.newItem.purchaseReceiptURL ?? "")
                         .font(.caption)
                         .multilineTextAlignment(.trailing)
+                        .padding(.trailing, 4)
                 }
             } header: {
                 Text(Strings.purchaseReceipt.sectionTitle)
+                    .font(.headline)
             }
 
             Section {
+#if os(macOS)
+                LabeledContent {
+                    TextField(l10n.basicInfo.enter.name, text: $viewModel.newItem.name)
+                        .frame(width: fieldWidth)
+                        .padding(.trailing, 4)
+                } label: {
+                    Text(l10n.basicInfo.name)
+                        .padding(.leading, 4)
+                }
+
+                LabeledContent {
+                    TextField(l10n.basicInfo.enter.description, text: $viewModel.newItem.description)
+                        .frame(width: fieldWidth)
+                        .padding(.trailing, 4)
+                } label: {
+                    Text(l10n.basicInfo.description)
+                        .padding(.leading, 4)
+                }
+
+                quantityField
+
+                LabeledContent {
+                    TextField(l10n.basicInfo.enter.tag, text: $viewModel.propertyTagInput)
+                        .focused($tagFieldFocused)
+                        .frame(width: fieldWidth)
+                        .padding(.trailing, 4)
+                        .onChange(of: tagFieldFocused) { focused in
+                            if !focused {
+                                withAnimation { viewModel.validateTag() }
+                            }
+                        }
+                } label: {
+                    Text(l10n.basicInfo.tag)
+                        .padding(.leading, 4)
+                }
+#else
                 HStack {
                     Text(l10n.basicInfo.name)
                     Spacer()
@@ -135,12 +182,13 @@ struct CreateItemView: View {
                         .focused($tagFieldFocused)
                         .multilineTextAlignment(.trailing)
                         .padding(.trailing)
-                        .onChange(of: tagFieldFocused) { _, focused in
+                        .onChange(of: tagFieldFocused) { focused in
                             if !focused {
                                 withAnimation { viewModel.validateTag() }
                             }
                         }
                 }
+#endif
 
                 if viewModel.showTagError, let error = viewModel.tagError {
                     HStack {
@@ -164,8 +212,65 @@ struct CreateItemView: View {
                 }
             } header: {
                 Text(l10n.basicInfo.title)
+                    .font(.headline)
             }
 
+            #if os(macOS)
+            Section {
+                LabeledContent {
+                    TextField(
+                        l10n.details.enter.price,
+                        value: $viewModel.newItem.estimatedPrice,
+                        format: .number
+                    )
+                    .frame(width: fieldWidth)
+                    .padding(.trailing, 4)
+                } label: {
+                    Text(l10n.details.price)
+                        .padding(.leading, 4)
+                }
+
+                LabeledContent {
+                    Picker(l10n.details.enter.status, selection: $viewModel.newItem.status) {
+                        ForEach(Status.allCases, id: \.self) { status in
+                            Text(status.label).tag(status)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .frame(width: fieldWidth)
+                    .padding(.trailing, 4)
+                } label: {
+                    Text(l10n.details.status)
+                        .padding(.leading, 4)
+                }
+
+                LabeledContent {
+                    Picker("Room", selection: Binding<Room>(
+                        get: { viewModel.newItem.lastKnownRoom },
+                        set: { viewModel.newItem.lastKnownRoom = $0 }
+                    )) {
+                        Text("Placeholder").tag(Room.placeholder())
+                        ForEach(viewModel.rooms, id: \.self) { room in
+                            Text(room.label).tag(room)
+                        }
+                        Text("Add new room").tag(Room(name: "__add_new__"))
+                    }
+                    .frame(width: fieldWidth)
+                    .padding(.trailing, 4)
+                    .onChange(of: viewModel.newItem.lastKnownRoom) { _,newValue in
+                        if newValue.name == "__add_new__" {
+                            viewModel.showingAddRoomPrompt = true
+                        }
+                    }
+                } label: {
+                    Text(l10n.details.room.title)
+                        .padding(.leading, 4)
+                }
+            } header: {
+                Text(l10n.details.title)
+                    .font(.headline)
+            }
+            #else
             Section {
                 HStack {
                     Text(l10n.details.price)
@@ -196,14 +301,16 @@ struct CreateItemView: View {
                         .foregroundColor(.blue)
                         .tag(Room(name: "__add_new__"))
                 }
-                .onChange(of: viewModel.newItem.lastKnownRoom) { _, newValue in
+                .onChange(of: viewModel.newItem.lastKnownRoom) { newValue in
                     if newValue.name == "__add_new__" {
                         viewModel.showingAddRoomPrompt = true
                     }
                 }
             } header: {
                 Text(l10n.details.title)
+                    .font(.headline)
             }
+            #endif
 
             Button(Strings.general.save) {
                 Task {
@@ -255,19 +362,18 @@ struct CreateItemView: View {
     }
 
 #if os(macOS)
-    @ViewBuilder
     private var quantityField: some View {
-        HStack {
-            Text(l10n.basicInfo.quantity)
-            Spacer()
-            HStack(spacing: 8) {
+        LabeledContent {
+            Stepper(value: $viewModel.newItem.quantity, in: 1...Int.max) {
                 Text("\(viewModel.newItem.quantity)")
                     .frame(width: 40, alignment: .trailing)
-                Stepper("", value: $viewModel.newItem.quantity, in: 1...Int.max)
-                    .labelsHidden()
             }
+            .frame(width: fieldWidth)
+            .padding(.trailing, 4)
+        } label: {
+            Text(l10n.basicInfo.quantity)
+                .padding(.leading, 4)
         }
-        .padding(.trailing)
         .onChange(of: viewModel.newItem.quantity) { _ in
             viewModel.validateTag()
         }
