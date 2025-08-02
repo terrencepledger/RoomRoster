@@ -7,11 +7,28 @@
 
 import Foundation
 
+/// Represents a single unit of inventory or a collection of identical
+/// units that do not need their own property tags.
+///
+/// - Each item always has a unique `id` and may optionally belong to an
+///   `ItemGroup` via `groupID` when multiple records describe the same
+///   product.
+/// - If `quantity` is greater than `1`, the record indicates a stack of
+///   identical items that share all attributes and **have no individual
+///   `PropertyTag` values**. Use this when tracking generics like cables
+///   or low‑value parts.
+/// - When every unit requires a distinct tag, create separate `Item`
+///   instances, each with `quantity == 1` and its own `propertyTag`, but
+///   reuse the same `groupID` so the items can be managed collectively.
+///   Bulk creation helpers (e.g., `PropertyTagRange`) can generate these
+///   items from a list or range of tags.
+
 struct Item: Identifiable, Hashable {
     var id: String
     var imageURL: String
     var name: String
     var description: String
+    var groupID: String?
     var quantity: Int
     var dateAdded: String
     var estimatedPrice: Double?
@@ -21,6 +38,10 @@ struct Item: Identifiable, Hashable {
     var lastUpdated: Date?
     var propertyTag: PropertyTag?
     var purchaseReceiptURL: String?
+
+    var isGrouped: Bool {
+        groupID != nil || quantity > 1
+    }
 }
 
 extension Item {
@@ -103,7 +124,7 @@ extension Item {
     }
 
     static func empty() -> Item {
-        .init(id: "", imageURL: "", name: "", description: "", quantity: 0,
+        .init(id: "", imageURL: "", name: "", description: "", groupID: nil, quantity: 0,
               dateAdded: "", estimatedPrice: nil, status: .available,
               lastKnownRoom: .empty(), updatedBy: "", lastUpdated: nil, propertyTag: nil,
               purchaseReceiptURL: nil)

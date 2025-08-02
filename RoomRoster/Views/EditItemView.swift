@@ -153,13 +153,12 @@ struct EditItemView: View {
                         Text(l10n.basicInfo.quantity)
                             .font(.caption)
                             .foregroundColor(.gray)
-                        TextField(l10n.basicInfo.enter.quantity,
-                                  value: $editableItem.quantity,
-                                  format: .number)
-#if canImport(UIKit)
-                            .keyboardType(.numberPad)
-#endif
-                            .textFieldStyle(.roundedBorder)
+                        Stepper(value: $editableItem.quantity, in: 1...Int.max) {
+                            Text("\(editableItem.quantity)")
+                        }
+                        .onChange(of: editableItem.quantity) { _, _ in
+                            validateTag()
+                        }
                     }
                     VStack(alignment: .leading, spacing: 4) {
                         Text(l10n.basicInfo.tag)
@@ -323,22 +322,30 @@ struct EditItemView: View {
             return
         }
 
-        guard let tag = PropertyTag(rawValue: propertyTagInput) else {
-            tagError = l10n.errors.tag.format
-            return
+        do {
+            _ = try ItemValidator.validateTags(
+                propertyTagInput,
+                quantity: editableItem.quantity,
+                currentItemID: editableItem.id,
+                allItems: viewModel.items
+            )
+            tagError = nil
+        } catch {
+            if let validationError = error as? ItemValidationError {
+                switch validationError {
+                case .invalidTagFormat:
+                    tagError = l10n.errors.tag.format
+                case .duplicateTag:
+                    tagError = l10n.errors.tag.duplicate
+                case .quantityMismatch:
+                    tagError = l10n.errors.tag.quantityMismatch
+                default:
+                    tagError = nil
+                }
+            } else {
+                tagError = nil
+            }
         }
-
-        let isDuplicate = viewModel.items.contains {
-            $0.id != editableItem.id &&
-            $0.propertyTag?.rawValue == tag.rawValue
-        }
-
-        if isDuplicate {
-            tagError = l10n.errors.tag.duplicate
-            return
-        }
-
-        tagError = nil
     }
 
     private func uploadPickedImage() async {

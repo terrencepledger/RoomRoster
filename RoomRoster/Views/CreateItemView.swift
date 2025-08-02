@@ -1,10 +1,3 @@
-//
-//  CreateItemView.swift
-//  RoomRoster
-//
-//  Created by Terrence Pledger on 4/11/25.
-//
-
 import SwiftUI
 #if canImport(UIKit)
 import UIKit
@@ -13,7 +6,7 @@ import UIKit
 private typealias l10n = Strings.createItem
 
 struct CreateItemView: View {
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) private var dismiss
     @ObservedObject var viewModel: CreateItemViewModel
     var onCancel: (() -> Void)? = nil
     
@@ -213,7 +206,12 @@ struct CreateItemView: View {
                         }
                     }
                 }
-                .disabled(viewModel.newItem.name.isEmpty || viewModel.newItem.description.isEmpty || viewModel.tagError != nil || viewModel.newItem.lastKnownRoom == Room.placeholder())
+                .disabled(
+                    viewModel.newItem.name.isEmpty ||
+                    viewModel.newItem.description.isEmpty ||
+                    viewModel.tagError != nil ||
+                    viewModel.newItem.lastKnownRoom == Room.placeholder()
+                )
                 .platformButtonStyle()
             }
             

@@ -57,6 +57,7 @@ final class CreateItemViewModel: ObservableObject {
             imageURL: "",
             name: "",
             description: "",
+            groupID: nil,
             quantity: 1,
             dateAdded: Date().toShortString(),
             estimatedPrice: nil,
@@ -148,21 +149,28 @@ final class CreateItemViewModel: ObservableObject {
 
     func validateTag() {
         do {
-            let tag = try ItemValidator.validateTag(
+            let tags = try ItemValidator.validateTags(
                 propertyTagInput,
+                quantity: newItem.quantity,
                 currentItemID: nil,
                 allItems: itemsProvider()
             )
-            newItem.propertyTag = tag
+            newItem.propertyTag = tags.count == 1 ? tags[0] : nil
             tagError = nil
             showTagError = false
         } catch {
-            switch error {
-            case .invalidTagFormat:
-                tagError = l10n.errors.tag.format
-            case .duplicateTag:
-                tagError = l10n.errors.tag.duplicate
-            default:
+            if let validationError = error as? ItemValidationError {
+                switch validationError {
+                case .invalidTagFormat:
+                    tagError = l10n.errors.tag.format
+                case .duplicateTag:
+                    tagError = l10n.errors.tag.duplicate
+                case .quantityMismatch:
+                    tagError = l10n.errors.tag.quantityMismatch
+                default:
+                    tagError = l10n.errors.tag.other
+                }
+            } else {
                 tagError = l10n.errors.tag.other
             }
             showTagError = true
