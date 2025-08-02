@@ -112,6 +112,11 @@ struct CreateItemView: View {
                     HStack {
                         Text(l10n.basicInfo.quantity)
                         Spacer()
+#if os(macOS)
+                        Stepper(value: $viewModel.newItem.quantity, in: 1...Int.max) {
+                            Text("\(viewModel.newItem.quantity)")
+                        }
+#else
                         TextField(
                             l10n.basicInfo.enter.quantity,
                             value: $viewModel.newItem.quantity,
@@ -121,6 +126,10 @@ struct CreateItemView: View {
                         .keyboardType(.numberPad)
 #endif
                         .textFieldStyle(.roundedBorder)
+#endif
+                    }
+                    .onChange(of: viewModel.newItem.quantity) { _, _ in
+                        viewModel.validateTag()
                     }
                     
                     HStack {
