@@ -10,6 +10,9 @@ struct CreateItemView: View {
     @ObservedObject var viewModel: CreateItemViewModel
     var onCancel: (() -> Void)? = nil
 
+    @StateObject private var sheets = SpreadsheetManager.shared
+    @StateObject private var auth = AuthenticationManager.shared
+
     private func close() {
         if let onCancel { onCancel() } else { dismiss() }
     }
@@ -245,21 +248,26 @@ struct CreateItemView: View {
                 }
 
                 LabeledContent {
-                    Picker("Room", selection: Binding<Room>(
-                        get: { viewModel.newItem.lastKnownRoom },
-                        set: { viewModel.newItem.lastKnownRoom = $0 }
-                    )) {
-                        Text("Placeholder").tag(Room.placeholder())
-                        ForEach(viewModel.rooms, id: \.self) { room in
-                            Text(room.label).tag(room)
+                    if viewModel.rooms.isEmpty {
+                        ProgressView()
+                            .frame(width: fieldWidth)
+                    } else {
+                        Picker("Room", selection: Binding<Room>(
+                            get: { viewModel.newItem.lastKnownRoom },
+                            set: { viewModel.newItem.lastKnownRoom = $0 }
+                        )) {
+                            Text("Placeholder").tag(Room.placeholder())
+                            ForEach(viewModel.rooms, id: \.id) { room in
+                                Text(room.label).tag(room)
+                            }
+                            Text("Add new room").tag(Room(name: "__add_new__"))
                         }
-                        Text("Add new room").tag(Room(name: "__add_new__"))
-                    }
-                    .frame(width: fieldWidth)
-                    .padding(.trailing, 4)
-                    .onChange(of: viewModel.newItem.lastKnownRoom) { _,newValue in
-                        if newValue.name == "__add_new__" {
-                            viewModel.showingAddRoomPrompt = true
+                        .frame(width: fieldWidth)
+                        .padding(.trailing, 4)
+                        .onChange(of: viewModel.newItem.lastKnownRoom) { _, newValue in
+                            if newValue.name == "__add_new__" {
+                                viewModel.showingAddRoomPrompt = true
+                            }
                         }
                     }
                 } label: {
@@ -290,20 +298,24 @@ struct CreateItemView: View {
                     }
                 }
 
-                Picker(l10n.details.room.title, selection: $viewModel.newItem.lastKnownRoom) {
-                    if viewModel.newItem.lastKnownRoom == Room.placeholder() {
-                        Text(l10n.details.enter.room).tag(Room.placeholder())
+                if viewModel.rooms.isEmpty {
+                    ProgressView()
+                } else {
+                    Picker(l10n.details.room.title, selection: $viewModel.newItem.lastKnownRoom) {
+                        if viewModel.newItem.lastKnownRoom == Room.placeholder() {
+                            Text(l10n.details.enter.room).tag(Room.placeholder())
+                        }
+                        ForEach(viewModel.rooms, id: \.id) { room in
+                            Text(room.label).tag(room)
+                        }
+                        Text(l10n.details.room.add)
+                            .foregroundColor(.blue)
+                            .tag(Room(name: "__add_new__"))
                     }
-                    ForEach(viewModel.rooms, id: \.self) { room in
-                        Text(room.label).tag(room)
-                    }
-                    Text(l10n.details.room.add)
-                        .foregroundColor(.blue)
-                        .tag(Room(name: "__add_new__"))
-                }
-                .onChange(of: viewModel.newItem.lastKnownRoom) { newValue in
-                    if newValue.name == "__add_new__" {
-                        viewModel.showingAddRoomPrompt = true
+                    .onChange(of: viewModel.newItem.lastKnownRoom) { newValue in
+                        if newValue.name == "__add_new__" {
+                            viewModel.showingAddRoomPrompt = true
+                        }
                     }
                 }
             } header: {
@@ -354,11 +366,15 @@ struct CreateItemView: View {
                 Button(Strings.general.cancel) { close() }
             }
         }
-        .task {
-            await viewModel.loadRooms()
-        }
         .onAppear {
+            Task { await viewModel.loadRooms() }
             Logger.page("CreateItemView")
+        }
+        .onChange(of: auth.isSignedIn) { _ in
+            Task { await viewModel.loadRooms() }
+        }
+        .onChange(of: sheets.currentSheet?.id) { _ in
+            Task { await viewModel.loadRooms() }
         }
     }
 

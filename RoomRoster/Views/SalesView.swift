@@ -11,6 +11,10 @@ struct SalesView: View {
     @Binding var selectedSaleIndex: Int?
 #endif
     @State private var selectedSale: Sale?
+#if os(macOS)
+    @State private var editingSale: Sale?
+#endif
+    @State private var successMessage: String?
 
 #if os(macOS)
     init(selectedSaleIndex: Binding<Int?>) {
@@ -30,10 +34,23 @@ struct SalesView: View {
             NavigationSplitView {
                 listPane
             } detail: {
-                if let sale = selectedSale {
+                if let sale = editingSale {
+                    EditSaleView(
+                        viewModel: EditSaleViewModel(sale: sale)
+                    ) { updated in
+                        selectedSale = updated
+                        editingSale = nil
+                        successMessage = Strings.saleDetails.editSuccess
+                        HapticManager.shared.success()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                            withAnimation { successMessage = nil }
+                        }
+                    }
+                } else if let sale = selectedSale {
                     SalesDetailsView(
                         sale: sale,
-                        itemName: viewModel.itemName(for: sale)
+                        itemName: viewModel.itemName(for: sale),
+                        openEdit: { editingSale = $0 }
                     )
                     .id(sale.itemId + sale.date.toShortString())
                 } else {
@@ -46,6 +63,11 @@ struct SalesView: View {
                 listPane
             }
 #endif
+        }
+        if let message = successMessage {
+            SuccessBanner(message: message)
+                .allowsHitTesting(false)
+                .padding()
         }
         if let error = viewModel.errorMessage {
             ErrorBanner(message: error)
