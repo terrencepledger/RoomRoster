@@ -11,6 +11,7 @@ final class ReportsViewModel: ObservableObject {
     @Published var query: String = ""
     @Published var includeHistoryInSearch: Bool = false
     @Published var includeSoldItems: Bool = false
+    @Published var includeDiscardedItems: Bool = false
     @Published var sales: [Sale] = []
     @Published var totalSalesValue: Double = 0
 
@@ -88,6 +89,9 @@ final class ReportsViewModel: ObservableObject {
         var base = items
         if !includeSoldItems {
             base = base.filter { $0.status != .sold }
+        }
+        if !includeDiscardedItems {
+            base = base.filter { $0.status != .discarded }
         }
         guard !q.isEmpty else { return base }
 

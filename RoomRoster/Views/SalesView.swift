@@ -3,12 +3,14 @@ import SwiftUI
 private typealias l10n = Strings.sales
 
 struct SalesView: View {
+    @EnvironmentObject private var coordinator: MainMenuCoordinator
     @StateObject private var viewModel = SalesViewModel()
     @StateObject private var sheets = SpreadsheetManager.shared
+    @StateObject private var auth = AuthenticationManager.shared
 #if os(macOS)
     @Binding var selectedSaleIndex: Int?
-    @State private var selectedSale: Sale?
 #endif
+    @State private var selectedSale: Sale?
 
 #if os(macOS)
     init(selectedSaleIndex: Binding<Int?>) {
@@ -16,7 +18,9 @@ struct SalesView: View {
         self._selectedSale = State(initialValue: nil)
     }
 #else
-    init() {}
+    init() {
+        self._selectedSale = State(initialValue: nil)
+    }
 #endif
 
     var body: some View {
@@ -38,7 +42,7 @@ struct SalesView: View {
                 }
             }
 #else
-            NavigationView {
+            NavigationStack {
                 listPane
             }
 #endif
@@ -58,6 +62,12 @@ struct SalesView: View {
                idx < viewModel.sales.count {
                 selectedSale = viewModel.sales[idx]
             }
+#else
+            if let pending = coordinator.pendingSale,
+               let match = viewModel.sales.firstIndex(of: pending) {
+                selectedSale = viewModel.sales[match]
+                coordinator.pendingSale = nil
+            }
 #endif
         }
         .refreshable {
@@ -68,9 +78,36 @@ struct SalesView: View {
                idx < viewModel.sales.count {
                 selectedSale = viewModel.sales[idx]
             }
+#else
+            if let pending = coordinator.pendingSale,
+               let match = viewModel.sales.firstIndex(of: pending) {
+                selectedSale = viewModel.sales[match]
+                coordinator.pendingSale = nil
+            }
 #endif
         }
         .onAppear { Logger.page("SalesView") }
+        .onChange(of: coordinator.pendingSale) { _, newValue in
+            if let pending = newValue,
+               let match = viewModel.sales.firstIndex(of: pending) {
+                selectedSale = viewModel.sales[match]
+                coordinator.pendingSale = nil
+            }
+        }
+        .onChange(of: auth.isSignedIn) { _, signedIn in
+            if signedIn, sheets.currentSheet != nil {
+                Task {
+                    await viewModel.loadSales()
+                }
+            }
+        }
+        .onChange(of: sheets.currentSheet?.id) { _, sheetID in
+            if sheetID != nil, auth.isSignedIn {
+                Task {
+                    await viewModel.loadSales()
+                }
+            }
+        }
     }
 
 #if os(macOS)
@@ -134,26 +171,34 @@ struct SalesView: View {
                 .tag(sale)
                 .contentShape(Rectangle())
 #else
-                NavigationLink(destination: SalesDetailsView(sale: sale, itemName: viewModel.itemName(for: sale))) {
-                    VStack(alignment: .leading) {
-                        Text(viewModel.itemName(for: sale))
-                            .font(.headline)
-                        HStack {
-                            Text(sale.date.toShortString())
-                            Spacer()
-                            if let price = sale.price {
-                                Text("$\(price, specifier: "%.2f")")
+                NavigationLink(
+                    tag: sale,
+                    selection: $selectedSale,
+                    destination: {
+                        SalesDetailsView(
+                            sale: sale,
+                            itemName: viewModel.itemName(for: sale)
+                        )
+                    },
+                    label: {
+                        VStack(alignment: .leading) {
+                            Text(viewModel.itemName(for: sale))
+                                .font(.headline)
+                            HStack {
+                                Text(sale.date.toShortString())
+                                Spacer()
+                                if let price = sale.price {
+                                    Text("$\(price, specifier: "%.2f")")
+                                }
                             }
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
                         }
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
                     }
-                }
+                )
+                .buttonStyle(.plain)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .contentShape(Rectangle())
-                .simultaneousGesture(
-                    TapGesture().onEnded { HapticManager.shared.impact() }
-                )
 #endif
             }
         }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Spreadsheet: Identifiable {
+struct Spreadsheet: Identifiable, Equatable {
     let id: String
     let name: String
 }

@@ -5,30 +5,49 @@ struct EditSaleView: View {
     @StateObject var viewModel: EditSaleViewModel
     var onSave: (Sale) -> Void
 
+    @State private var saveError: String?
+
     var body: some View {
-#if os(macOS)
         content
-#else
-        NavigationStack { content }
-#endif
+            .navigationTitle(Strings.saleDetails.editTitle)
+            .overlay(alignment: .bottom) {
+                VStack(spacing: 4) {
+                    if let error = viewModel.uploadError {
+                        ErrorBanner(message: error)
+                    }
+                    if let saveError {
+                        ErrorBanner(message: saveError)
+                    }
+                }
+                .allowsHitTesting(false)
+            }
     }
 
     private var content: some View {
         Form {
-                Section("Sale Receipt") {
-                    ReceiptImageView(urlString: viewModel.sale.receiptImageURL)
-                    CombinedImagePickerButton(image: $viewModel.pickedReceiptImage)
-                        .onChange(of: viewModel.pickedReceiptImage) { _, img in
-                            viewModel.onReceiptPicked(img)
-                        }
-                    PDFPickerButton(url: $viewModel.pickedReceiptPDF)
-                        .onChange(of: viewModel.pickedReceiptPDF) { _, url in
-                            viewModel.onReceiptPDFPicked(url)
-                        }
+                Section(Strings.purchaseReceipt.saleSectionTitle) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(Strings.saleDetails.currentReceipt)
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                        ReceiptImageView(
+                            urlString: viewModel.sale.receiptImageURL ??
+                                viewModel.sale.receiptPDFURL ??
+                                viewModel.originalReceiptImageURL ??
+                                viewModel.originalReceiptPDFURL
+                        )
+                    }
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(Strings.saleDetails.newReceipt)
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                        CombinedImagePickerButton(image: $viewModel.pickedReceiptImage)
+                        PDFPickerButton(url: $viewModel.pickedReceiptPDF)
+                    }
                     if viewModel.isUploading {
                         HStack {
                             ProgressView()
-                            Text("Uploading receipt...")
+                            Text(Strings.general.uploadingReceipt)
                         }
                     }
                     if let error = viewModel.uploadError {
@@ -37,26 +56,26 @@ struct EditSaleView: View {
                             .font(.caption)
                     }
                 }
-            }
-            .navigationTitle(Strings.saleDetails.editTitle)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
-                        Task {
-                            do {
-                                try await viewModel.saveUpdates()
-                                onSave(viewModel.sale)
-                                dismiss()
-                            } catch {
-                                HapticManager.shared.error()
+
+            Section {
+                Button(Strings.general.save) {
+                    Task {
+                        do {
+                            try await viewModel.saveUpdates()
+                            onSave(viewModel.sale)
+                            dismiss()
+                        } catch {
+                            saveError = Strings.saleDetails.failedToUpdate
+                            HapticManager.shared.error()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                withAnimation { saveError = nil }
                             }
                         }
                     }
-                    .platformButtonStyle()
                 }
+                .platformButtonStyle()
             }
+            .task { await viewModel.refreshSale() }
         }
+    }
     }

@@ -60,6 +60,7 @@ struct CombinedImagePickerButton: View {
     var body: some View {
         Button {
             Logger.action("Selected Image Picker")
+            HapticManager.shared.impact()
             showSourceDialog = true
         } label: {
             if let img = image {
@@ -75,11 +76,13 @@ struct CombinedImagePickerButton: View {
         .confirmationDialog(l10n.dialog.title, isPresented: $showSourceDialog) {
             if UIImagePickerController.isSourceTypeAvailable(.camera) {
                 Button(l10n.dialog.capture) {
+                    HapticManager.shared.impact()
                     sourceType = .camera
                     showPicker = true
                 }
             }
             Button(l10n.dialog.library) {
+                HapticManager.shared.impact()
                 sourceType = .photoLibrary
                 showPicker = true
             }
@@ -109,12 +112,14 @@ struct CombinedImagePickerButton: View {
                 Label(l10n.title, systemImage: "photo.on.rectangle")
             }
         }
+        .onTapGesture { HapticManager.shared.impact() }
         .onChange(of: selection) { newItem in
             guard let newItem else { return }
             Task {
                 if let data = try? await newItem.loadTransferable(type: Data.self),
                    let platform = PlatformImage(data: data) {
                     image = platform
+                    HapticManager.shared.success()
                 }
             }
         }

@@ -3,6 +3,8 @@ import SwiftUI
 @MainActor
 final class EditSaleViewModel: ObservableObject {
     @Published var sale: Sale
+    let originalReceiptImageURL: String?
+    let originalReceiptPDFURL: String?
     @Published var pickedReceiptImage: PlatformImage?
     @Published var pickedReceiptPDF: URL?
     @Published var isUploading: Bool = false
@@ -17,20 +19,28 @@ final class EditSaleViewModel: ObservableObject {
         receiptService: SaleReceiptService = .init()
     ) {
         self.sale = sale
+        self.originalReceiptImageURL = sale.receiptImageURL
+        self.originalReceiptPDFURL = sale.receiptPDFURL
         self.saleService = saleService
         self.receiptService = receiptService
     }
 
+    func refreshSale() async {
+        do {
+            if let fetched = try await saleService.fetchSale(for: sale.itemId) {
+                sale = fetched
+            }
+        } catch {
+            Logger.log(error, extra: ["description": "Failed to refresh sale in edit view"])
+        }
+    }
+
     func onReceiptPicked(_ image: PlatformImage?) {
         pickedReceiptImage = image
-        guard let image else { return }
-        Task { await uploadImage(image) }
     }
 
     func onReceiptPDFPicked(_ url: URL?) {
         pickedReceiptPDF = url
-        guard let url else { return }
-        Task { await uploadPDF(url) }
     }
 
     private func uploadImage(_ image: PlatformImage) async {
@@ -40,7 +50,7 @@ final class EditSaleViewModel: ObservableObject {
             let url = try await receiptService.uploadReceipt(image: image, for: sale.itemId)
             sale.receiptImageURL = url.absoluteString
         } catch {
-            uploadError = error.localizedDescription
+            uploadError = Strings.purchaseReceipt.errors.uploadFailed(error.localizedDescription)
             HapticManager.shared.error()
         }
         isUploading = false
@@ -54,13 +64,19 @@ final class EditSaleViewModel: ObservableObject {
             let saved = try await receiptService.uploadReceiptPDF(data, for: sale.itemId)
             sale.receiptPDFURL = saved.absoluteString
         } catch {
-            uploadError = error.localizedDescription
+            uploadError = Strings.purchaseReceipt.errors.uploadFailed(error.localizedDescription)
             HapticManager.shared.error()
         }
         isUploading = false
     }
 
     func saveUpdates() async throws {
+        if let image = pickedReceiptImage {
+            await uploadImage(image)
+        }
+        if let url = pickedReceiptPDF {
+            await uploadPDF(url)
+        }
         try await saleService.updateSale(sale)
     }
 }

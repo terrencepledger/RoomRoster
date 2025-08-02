@@ -54,14 +54,10 @@ final class EditItemViewModel: ObservableObject {
 
     func onReceiptPicked(_ image: PlatformImage?) {
         pickedReceiptImage = image
-        guard let image else { return }
-        Task { await saveReceiptImage(image) }
     }
 
     func onReceiptPDFPicked(_ url: URL?) {
         pickedReceiptPDF = url
-        guard let url else { return }
-        Task { await saveReceiptPDF(from: url) }
     }
 
     private func saveReceiptImage(_ image: PlatformImage) async {
@@ -71,7 +67,7 @@ final class EditItemViewModel: ObservableObject {
             let url = try await receiptService.uploadReceipt(image: image, for: editableItem.id)
             editableItem.purchaseReceiptURL = url.absoluteString
         } catch {
-            receiptUploadError = error.localizedDescription
+            receiptUploadError = Strings.purchaseReceipt.errors.uploadFailed(error.localizedDescription)
             HapticManager.shared.error()
         }
         isUploadingReceipt = false
@@ -85,7 +81,7 @@ final class EditItemViewModel: ObservableObject {
             let saved = try await receiptService.uploadReceiptPDF(data, for: editableItem.id)
             editableItem.purchaseReceiptURL = saved.absoluteString
         } catch {
-            receiptUploadError = error.localizedDescription
+            receiptUploadError = Strings.purchaseReceipt.errors.uploadFailed(error.localizedDescription)
             HapticManager.shared.error()
         }
         isUploadingReceipt = false

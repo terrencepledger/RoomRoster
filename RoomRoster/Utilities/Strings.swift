@@ -14,10 +14,14 @@ struct Strings {
         static let cancel = "Cancel"
         static let clear = "Clear"
         static let loading = "Loading..."
+        static let uploadingReceipt = "Uploading receipt..."
+        static let receiptPath = "Receipt Path"
+        static let selectPDF = "Select PDF"
     }
 
     // MARK: - MainMenu
     struct mainMenu {
+        static let title = "Menu"
         static let inventory = "Inventory"
         static let sales = "Sales"
         static let reports = "Reports"
@@ -31,6 +35,7 @@ struct Strings {
         static let searchPlaceholder = "Search..."
         static let includeHistoryToggle = "Include History"
         static let includeSoldToggle = "Include Sold Items"
+        static let includeDiscardedToggle = "Include Discarded"
         static let addItemButton = "Add Item"
         static func status(_ status: String) -> String {
             "Status: \(status)"
@@ -156,6 +161,8 @@ struct Strings {
             static let emptyState = "No Photo"
             static let enter = "Select or Take Photo"
             static let loading = "Uploading Image…"
+            static let current = "Current Photo"
+            static let new = "New Photo"
         }
         struct basicInfo {
             static let title = "Basic Information"
@@ -219,6 +226,7 @@ struct Strings {
         static let accountSection = "Account"
         static let signInButton = "Sign In"
         static let signOutButton = "Sign Out"
+        static let signedInAs = "Signed in as"
         static let appSettingsSection   = "App Settings"
         static let darkModeToggle       = "Dark Mode"
         static let aboutSection         = "About"
@@ -288,8 +296,23 @@ struct Strings {
         static let soldBy = "Sold By:"
         static let department = "Department:"
         static let receiptSection = "Receipt"
+        static let currentReceipt = "Current Receipt"
+        static let newReceipt = "New Receipt"
         static let editButton = "Edit"
         static let editTitle = "Edit Sale"
         static let editSuccess = "Sale updated successfully"
+        static let noReceipt = "No Receipt"
+        static let failedToUpdate = "Failed to update sale. Please try again."
+    }
+
+    // MARK: - PurchaseReceipt
+    struct purchaseReceipt {
+        static let sectionTitle = "Purchase Receipt"
+        static let saleSectionTitle = "Sale Receipt"
+        struct errors {
+            static func uploadFailed(_ error: String) -> String {
+                "Receipt upload failed: \(error)"
+            }
+        }
     }
 }

@@ -14,6 +14,7 @@ private typealias l10n = Strings.inventory
 struct InventoryView: View {
     @StateObject private var viewModel = InventoryViewModel()
     @StateObject private var sheets = SpreadsheetManager.shared
+    @StateObject private var auth = AuthenticationManager.shared
 #if os(macOS)
     @Binding var selectedItemID: String?
     @State private var selectedItem: Item?
@@ -32,6 +33,7 @@ struct InventoryView: View {
     @State private var searchText: String = ""
     @State private var includeHistoryInSearch: Bool = false
     @State private var includeSoldItems: Bool = false
+    @State private var includeDiscardedItems: Bool = false
     @State private var logVersion = 0
     @State private var successMessage: String?
 
@@ -150,6 +152,22 @@ struct InventoryView: View {
             syncSelectionWithInventory()
         }
 #endif
+        .onChange(of: auth.isSignedIn) { _, signedIn in
+            if signedIn, sheets.currentSheet != nil {
+                Task {
+                    await viewModel.fetchInventory()
+                    await viewModel.loadRecentLogs(for: viewModel.items)
+                }
+            }
+        }
+        .onChange(of: sheets.currentSheet?.id) { _, sheetID in
+            if sheetID != nil, auth.isSignedIn {
+                Task {
+                    await viewModel.fetchInventory()
+                    await viewModel.loadRecentLogs(for: viewModel.items)
+                }
+            }
+        }
         if let message = successMessage {
             SuccessBanner(message: message)
                 .allowsHitTesting(false)
@@ -329,8 +347,11 @@ struct InventoryView: View {
                 Toggle(l10n.includeHistoryToggle, isOn: $includeHistoryInSearch)
                     .font(.subheadline)
                     .padding(.top, 4)
-                Toggle(l10n.includeSoldToggle, isOn: $includeSoldItems)
-                    .font(.subheadline)
+                HStack {
+                    Toggle(l10n.includeSoldToggle, isOn: $includeSoldItems)
+                    Toggle(l10n.includeDiscardedToggle, isOn: $includeDiscardedItems)
+                }
+                .font(.subheadline)
             }
             .padding(.horizontal)
 
@@ -362,7 +383,10 @@ struct InventoryView: View {
                                 .tag(item)
                                 .contentShape(Rectangle())
 #else
-                                NavigationLink(destination: ItemDetailsView(item: item).environmentObject(viewModel)) {
+                                NavigationLink(
+                                    destination: ItemDetailsView(item: item)
+                                        .environmentObject(viewModel)
+                                ) {
                                     VStack(alignment: .leading) {
                                         Text(item.name).font(.headline)
                                         Text(l10n.status(item.status.label))
@@ -379,11 +403,9 @@ struct InventoryView: View {
                                         }
                                     }
                                 }
+                                .buttonStyle(.plain)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .contentShape(Rectangle())
-                                .simultaneousGesture(
-                                    TapGesture().onEnded { HapticManager.shared.impact() }
-                                )
 #endif
                             }
                         }
@@ -398,6 +420,9 @@ struct InventoryView: View {
         var baseItems = viewModel.items
         if !includeSoldItems {
             baseItems = baseItems.filter { $0.status != .sold }
+        }
+        if !includeDiscardedItems {
+            baseItems = baseItems.filter { $0.status != .discarded }
         }
         guard !query.isEmpty else {
             return baseItems.map { ($0, "") }

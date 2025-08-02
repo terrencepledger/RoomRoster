@@ -74,6 +74,7 @@ final class CreateItemViewModel: ObservableObject {
         do {
             rooms = try await roomService.fetchRooms()
         } catch {
+            Logger.log(error, extra: ["description": "Failed to load rooms"])
             errorMessage = l10n.errors.loadRoomsFailed
             HapticManager.shared.error()
         }
@@ -108,6 +109,7 @@ final class CreateItemViewModel: ObservableObject {
             )
             newItem.imageURL = url.absoluteString
         } catch {
+            Logger.log(error, extra: ["description": "Failed to upload image"])
             uploadError = Strings.createItem.errors.imageUpload(error.localizedDescription)
             HapticManager.shared.error()
         }
@@ -122,7 +124,8 @@ final class CreateItemViewModel: ObservableObject {
             let url = try await receiptService.uploadReceipt(image: image, for: newItem.id)
             newItem.purchaseReceiptURL = url.absoluteString
         } catch {
-            receiptUploadError = error.localizedDescription
+            Logger.log(error, extra: ["description": "Failed to upload receipt image"])
+            receiptUploadError = Strings.purchaseReceipt.errors.uploadFailed(error.localizedDescription)
             HapticManager.shared.error()
         }
         isUploadingReceipt = false
@@ -137,7 +140,8 @@ final class CreateItemViewModel: ObservableObject {
             let saved = try await receiptService.uploadReceiptPDF(data, for: newItem.id)
             newItem.purchaseReceiptURL = saved.absoluteString
         } catch {
-            receiptUploadError = error.localizedDescription
+            Logger.log(error, extra: ["description": "Failed to upload receipt PDF"])
+            receiptUploadError = Strings.purchaseReceipt.errors.uploadFailed(error.localizedDescription)
             HapticManager.shared.error()
         }
         isUploadingReceipt = false
@@ -180,6 +184,7 @@ final class CreateItemViewModel: ObservableObject {
             newItem.lastKnownRoom = newRoom
             rooms.append(newRoom)
         } catch {
+            Logger.log(error, extra: ["description": "Failed to add room"])
             newItem.lastKnownRoom = Room.placeholder()
             errorMessage = l10n.errors.addRoomFailed
             HapticManager.shared.error()
@@ -195,6 +200,7 @@ final class CreateItemViewModel: ObservableObject {
             try await inventoryService.createItem(newItem)
             onSave?(newItem)
         } catch {
+            Logger.log(error, extra: ["description": "Failed to save item"])
             errorMessage = l10n.errors.saveFailed
             HapticManager.shared.error()
         }

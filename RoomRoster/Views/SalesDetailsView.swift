@@ -3,21 +3,13 @@ import SwiftUI
 private typealias l10n = Strings.saleDetails
 
 struct SalesDetailsView: View {
-    let sale: Sale
+    @State var sale: Sale
     let itemName: String
-    @State private var showingEdit = false
-    @State private var editableSale = Sale(
-        itemId: "",
-        date: Date(),
-        price: nil,
-        condition: .new,
-        buyerName: "",
-        buyerContact: nil,
-        soldBy: "",
-        department: "",
-        receiptImageURL: nil,
-        receiptPDFURL: nil
-    )
+
+    init(sale: Sale, itemName: String) {
+        _sale = State(initialValue: sale)
+        self.itemName = itemName
+    }
     @State private var shareURL: URL?
     @State private var errorMessage: String?
     @State private var editSuccess: String?
@@ -36,12 +28,11 @@ struct SalesDetailsView: View {
                 row(l10n.soldBy, sale.soldBy)
                 row(l10n.department, sale.department)
             }
-            if (sale.receiptImageURL?.isEmpty == false) || (sale.receiptPDFURL?.isEmpty == false) {
-                Section(l10n.receiptSection) {
-                    ReceiptImageView(urlString: sale.receiptImageURL)
-                    if let imgURLString = sale.receiptImageURL,
-                       !imgURLString.isEmpty,
-                       let url = URL(string: imgURLString) {
+            Section(l10n.receiptSection) {
+                ReceiptImageView(urlString: sale.receiptImageURL)
+                if let imgURLString = sale.receiptImageURL,
+                   !imgURLString.isEmpty,
+                   let url = URL(string: imgURLString) {
                         Button(Strings.itemDetails.downloadImage) {
                             Task {
                                 do {
@@ -54,10 +45,10 @@ struct SalesDetailsView: View {
                             }
                         }
                         .platformButtonStyle()
-                    }
-                    if let pdf = sale.receiptPDFURL,
-                       !pdf.isEmpty,
-                       let url = URL(string: pdf) {
+                }
+                if let pdf = sale.receiptPDFURL,
+                   !pdf.isEmpty,
+                   let url = URL(string: pdf) {
                         Button(Strings.itemDetails.downloadReceipt) {
                             Task {
                                 do {
@@ -71,7 +62,6 @@ struct SalesDetailsView: View {
                         }
                         .platformButtonStyle()
                     }
-                }
             }
         }
         .navigationTitle(itemName)
@@ -86,19 +76,17 @@ struct SalesDetailsView: View {
             }
         }
         .toolbar {
-            Button(l10n.editButton) {
-                editableSale = sale
-                showingEdit = true
-            }
-        }
-        .platformPopup(isPresented: $showingEdit) {
-            EditSaleView(viewModel: EditSaleViewModel(sale: editableSale)) { updated in
-                editableSale = updated
-                editSuccess = Strings.saleDetails.editSuccess
-                HapticManager.shared.success()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                    withAnimation { editSuccess = nil }
+            NavigationLink {
+                EditSaleView(viewModel: EditSaleViewModel(sale: sale)) { updated in
+                    sale = updated
+                    editSuccess = Strings.saleDetails.editSuccess
+                    HapticManager.shared.success()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                        withAnimation { editSuccess = nil }
+                    }
                 }
+            } label: {
+                Text(l10n.editButton)
             }
         }
         .sheet(item: $shareURL) { url in
