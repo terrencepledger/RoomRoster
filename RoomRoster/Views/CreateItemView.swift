@@ -213,8 +213,8 @@ struct CreateItemView: View {
                     .font(.headline)
             }
 
+            #if os(macOS)
             Section {
-#if os(macOS)
                 LabeledContent {
                     TextField(
                         l10n.details.enter.price,
@@ -265,7 +265,12 @@ struct CreateItemView: View {
                     Text(l10n.details.room.title)
                         .padding(.leading, 4)
                 }
-#else
+            } header: {
+                Text(l10n.details.title)
+                    .font(.headline)
+            }
+            #else
+            Section {
                 HStack {
                     Text(l10n.details.price)
                     Spacer()
@@ -300,11 +305,11 @@ struct CreateItemView: View {
                         viewModel.showingAddRoomPrompt = true
                     }
                 }
-#endif
             } header: {
                 Text(l10n.details.title)
                     .font(.headline)
             }
+            #endif
 
             Button(Strings.general.save) {
                 Task {
