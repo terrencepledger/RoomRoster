@@ -303,9 +303,7 @@ struct EditItemView: View {
             await viewModel.fetchInventory()
         }
         .task {
-            if viewModel.rooms.isEmpty {
-                await viewModel.loadRooms()
-            }
+            await viewModel.loadRooms()
         }
     }
 
