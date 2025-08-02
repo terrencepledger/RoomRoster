@@ -234,5 +234,4 @@ struct CreateItemView: View {
                 Logger.page("CreateItemView")
             }
         }
-    }
 
