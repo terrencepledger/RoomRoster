@@ -267,6 +267,9 @@ struct EditItemView: View {
                     }
                     .disabled(editableItem.name.isEmpty || editableItem.description.isEmpty || tagError != nil)
                     .platformButtonStyle()
+
+                    Button(Strings.general.cancel) { close() }
+                        .platformButtonStyle()
                 }
             }
             VStack(spacing: 4) {
@@ -308,12 +311,6 @@ struct EditItemView: View {
             if let parsed = Date.fromShortString(editableItem.dateAdded) {
                 dateAddedDate = parsed
             }
-        }
-        .task {
-            await viewModel.fetchInventory()
-        }
-        .task {
-            await viewModel.loadRooms()
         }
     }
 
