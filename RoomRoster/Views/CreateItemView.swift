@@ -111,34 +111,7 @@ struct CreateItemView: View {
                             .padding(.trailing)
                     }
 
-                    #if os(macOS)
-                    HStack {
-                        Text(l10n.basicInfo.quantity)
-                        Spacer()
-                        Stepper(value: $viewModel.newItem.quantity, in: 1...Int.max) {
-                            Text("\(viewModel.newItem.quantity)")
-                        }
-                    }
-                    .padding(.trailing)
-                    #else
-                    HStack {
-                        Text(l10n.basicInfo.quantity)
-                        Spacer()
-                        TextField(
-                            l10n.basicInfo.enter.quantity,
-                            value: $viewModel.newItem.quantity,
-                            format: .number
-                        )
-    #if canImport(UIKit)
-                        .keyboardType(.numberPad)
-    #endif
-                        .textFieldStyle(.roundedBorder)
-                        .padding(.trailing)
-                    }
-                    #endif
-                    .onChange(of: viewModel.newItem.quantity) { _, _ in
-                        viewModel.validateTag()
-                    }
+                    quantityField
 
                     HStack {
                         Text(l10n.basicInfo.tag)
@@ -276,4 +249,43 @@ struct CreateItemView: View {
             Logger.page("CreateItemView")
         }
     }
+
+#if os(macOS)
+    @ViewBuilder
+    private var quantityField: some View {
+        HStack {
+            Text(l10n.basicInfo.quantity)
+            Spacer()
+            Stepper(value: $viewModel.newItem.quantity, in: 1...Int.max) {
+                Text("\(viewModel.newItem.quantity)")
+                    .frame(width: 40)
+            }
+        }
+        .padding(.trailing)
+        .onChange(of: viewModel.newItem.quantity) { _ in
+            viewModel.validateTag()
+        }
+    }
+#else
+    @ViewBuilder
+    private var quantityField: some View {
+        HStack {
+            Text(l10n.basicInfo.quantity)
+            Spacer()
+            TextField(
+                l10n.basicInfo.enter.quantity,
+                value: $viewModel.newItem.quantity,
+                format: .number
+            )
+#if canImport(UIKit)
+            .keyboardType(.numberPad)
+#endif
+            .textFieldStyle(.roundedBorder)
+            .padding(.trailing)
+        }
+        .onChange(of: viewModel.newItem.quantity) { _ in
+            viewModel.validateTag()
+        }
+    }
+#endif
 }

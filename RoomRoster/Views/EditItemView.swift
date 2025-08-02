@@ -151,35 +151,7 @@ struct EditItemView: View {
                             .textFieldStyle(.roundedBorder)
                             .padding(.trailing)
                     }
-                    #if os(macOS)
-                    HStack {
-                        Text(l10n.basicInfo.quantity)
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                        Spacer()
-                        Stepper(value: $editableItem.quantity, in: 1...Int.max) {
-                            Text("\(editableItem.quantity)")
-                        }
-                    }
-                    .padding(.trailing)
-                    #else
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(l10n.basicInfo.quantity)
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                        TextField(l10n.basicInfo.enter.quantity,
-                                  value: $editableItem.quantity,
-                                  format: .number)
-#if canImport(UIKit)
-                        .keyboardType(.numberPad)
-#endif
-                        .textFieldStyle(.roundedBorder)
-                        .padding(.trailing)
-                    }
-                    #endif
-                    .onChange(of: editableItem.quantity) { _, _ in
-                        validateTag()
-                    }
+                    quantityField
                     VStack(alignment: .leading, spacing: 4) {
                         Text(l10n.basicInfo.tag)
                             .font(.caption)
@@ -337,6 +309,48 @@ struct EditItemView: View {
             await viewModel.loadRooms()
         }
     }
+
+#if os(macOS)
+    @ViewBuilder
+    private var quantityField: some View {
+        HStack {
+            Text(l10n.basicInfo.quantity)
+                .font(.caption)
+                .foregroundColor(.gray)
+            Spacer()
+            Stepper(value: $editableItem.quantity, in: 1...Int.max) {
+                Text("\(editableItem.quantity)")
+                    .frame(width: 40)
+            }
+        }
+        .padding(.trailing)
+        .onChange(of: editableItem.quantity) { _ in
+            validateTag()
+        }
+    }
+#else
+    @ViewBuilder
+    private var quantityField: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(l10n.basicInfo.quantity)
+                .font(.caption)
+                .foregroundColor(.gray)
+            TextField(
+                l10n.basicInfo.enter.quantity,
+                value: $editableItem.quantity,
+                format: .number
+            )
+#if canImport(UIKit)
+            .keyboardType(.numberPad)
+#endif
+            .textFieldStyle(.roundedBorder)
+            .padding(.trailing)
+        }
+        .onChange(of: editableItem.quantity) { _ in
+            validateTag()
+        }
+    }
+#endif
 
     private func validateTag() {
         if propertyTagInput.isEmpty || propertyTagInput == editableItem.propertyTag?.label {
