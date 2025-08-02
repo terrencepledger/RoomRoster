@@ -147,6 +147,9 @@ struct EditItemView: View {
                         Stepper(value: $editableItem.quantity, in: 1...Int.max) {
                             Text("\(editableItem.quantity)")
                         }
+                        .onChange(of: editableItem.quantity) { _, _ in
+                            validateTag()
+                        }
                     }
                     VStack(alignment: .leading, spacing: 4) {
                         Text(l10n.basicInfo.tag)

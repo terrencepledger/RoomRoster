@@ -164,6 +164,9 @@ struct CreateItemView: View {
                 Stepper(value: $viewModel.newItem.quantity, in: 1...Int.max) {
                     Text("\(viewModel.newItem.quantity)")
                 }
+                .onChange(of: viewModel.newItem.quantity) { _, _ in
+                    viewModel.validateTag()
+                }
             }
             VStack(alignment: .leading, spacing: 4) {
                 Text(l10n.basicInfo.tag)
