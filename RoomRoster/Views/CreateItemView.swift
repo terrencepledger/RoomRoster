@@ -15,14 +15,10 @@ struct CreateItemView: View {
     }
     
     @FocusState private var tagFieldFocused: Bool
-    
+
     var body: some View {
-#if os(macOS)
-        content.macSheetFrame()
-#else
         NavigationStack { content }
             .macSheetFrame()
-#endif
     }
     
     private var content: some View {
@@ -256,9 +252,11 @@ struct CreateItemView: View {
         HStack {
             Text(l10n.basicInfo.quantity)
             Spacer()
-            Stepper(value: $viewModel.newItem.quantity, in: 1...Int.max) {
+            HStack(spacing: 8) {
                 Text("\(viewModel.newItem.quantity)")
-                    .frame(width: 40)
+                    .frame(width: 40, alignment: .trailing)
+                Stepper("", value: $viewModel.newItem.quantity, in: 1...Int.max)
+                    .labelsHidden()
             }
         }
         .padding(.trailing)

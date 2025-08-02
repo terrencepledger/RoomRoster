@@ -13,6 +13,7 @@ struct SalesDetailsView: View {
     @State private var shareURL: URL?
     @State private var errorMessage: String?
     @State private var editSuccess: String?
+    @State private var showEdit = false
     private let downloader = FileDownloadService()
 
     var body: some View {
@@ -76,19 +77,17 @@ struct SalesDetailsView: View {
             }
         }
         .toolbar {
-            NavigationLink {
-                EditSaleView(viewModel: EditSaleViewModel(sale: sale)) { updated in
-                    sale = updated
-                    editSuccess = Strings.saleDetails.editSuccess
-                    HapticManager.shared.success()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                        withAnimation { editSuccess = nil }
-                    }
-                }
-            } label: {
-                Text(l10n.editButton)
+            ToolbarItem(placement: .primaryAction) {
+#if os(macOS)
+                Button(l10n.editButton) { showEdit = true }
+#else
+                NavigationLink { editSaleView } label: { Text(l10n.editButton) }
+#endif
             }
         }
+#if os(macOS)
+        .sheet(isPresented: $showEdit) { editSaleView }
+#endif
         .sheet(item: $shareURL) { url in
             ShareSheet(activityItems: [url])
         }
@@ -100,6 +99,17 @@ struct SalesDetailsView: View {
             Text(title).bold()
             Spacer()
             Text(value)
+        }
+    }
+
+    private var editSaleView: some View {
+        EditSaleView(viewModel: EditSaleViewModel(sale: sale)) { updated in
+            sale = updated
+            editSuccess = Strings.saleDetails.editSuccess
+            HapticManager.shared.success()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                withAnimation { editSuccess = nil }
+            }
         }
     }
 }

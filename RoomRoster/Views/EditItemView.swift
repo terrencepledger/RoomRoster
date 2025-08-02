@@ -41,11 +41,8 @@ struct EditItemView: View {
     @FocusState private var tagFieldFocused: Bool
 
     var body: some View {
-#if os(macOS)
-        content
-#else
         NavigationStack { content }
-#endif
+            .macSheetFrame()
     }
 
     private var content: some View {
@@ -318,9 +315,11 @@ struct EditItemView: View {
                 .font(.caption)
                 .foregroundColor(.gray)
             Spacer()
-            Stepper(value: $editableItem.quantity, in: 1...Int.max) {
+            HStack(spacing: 8) {
                 Text("\(editableItem.quantity)")
-                    .frame(width: 40)
+                    .frame(width: 40, alignment: .trailing)
+                Stepper("", value: $editableItem.quantity, in: 1...Int.max)
+                    .labelsHidden()
             }
         }
         .padding(.trailing)
