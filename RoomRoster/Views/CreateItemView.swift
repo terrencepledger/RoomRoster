@@ -9,25 +9,40 @@ struct CreateItemView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var viewModel: CreateItemViewModel
     var onCancel: (() -> Void)? = nil
-    
+
     private func close() {
         if let onCancel { onCancel() } else { dismiss() }
     }
-    
+
     @FocusState private var tagFieldFocused: Bool
+    @State private var successMessage: String?
     
     var body: some View {
 #if os(macOS)
-        content.macSheetFrame()
+        content
+            .macSheetFrame()
+            .overlay {
+                VStack {
+                    Spacer()
+                    bannerStack
+                }
+                .allowsHitTesting(false)
+            }
 #else
         NavigationStack { content }
             .macSheetFrame()
+            .overlay {
+                VStack {
+                    Spacer()
+                    bannerStack
+                }
+                .allowsHitTesting(false)
+            }
 #endif
     }
-    
+
     private var content: some View {
-        ZStack(alignment: .bottom) {
-            Form {
+        Form {
                 Section {
                     CombinedImagePickerButton(image: $viewModel.pickedImage)
                         .onChange(of: viewModel.pickedImage) { _, img in
@@ -201,8 +216,12 @@ struct CreateItemView: View {
                     Task {
                         await viewModel.saveItem()
                         if viewModel.errorMessage == nil {
+                            withAnimation { successMessage = l10n.success }
                             HapticManager.shared.success()
-                            close()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                withAnimation { successMessage = nil }
+                                close()
+                            }
                         }
                     }
                 }
@@ -214,20 +233,6 @@ struct CreateItemView: View {
                 )
                 .platformButtonStyle()
             }
-            
-            VStack(spacing: 4) {
-                if let error = viewModel.uploadError {
-                    ErrorBanner(message: error)
-                }
-                if let error = viewModel.receiptUploadError {
-                    ErrorBanner(message: error)
-                }
-                if let error = viewModel.errorMessage {
-                    ErrorBanner(message: error)
-                }
-            }
-            .allowsHitTesting(false)
-            .padding()
         }
         .alert(
             l10n.addRoom.title,
@@ -255,5 +260,23 @@ struct CreateItemView: View {
             Task { await viewModel.loadRooms() }
             Logger.page("CreateItemView")
         }
+    }
+
+    private var bannerStack: some View {
+        VStack(spacing: 4) {
+            if let message = successMessage {
+                SuccessBanner(message: message)
+            }
+            if let error = viewModel.uploadError {
+                ErrorBanner(message: error)
+            }
+            if let error = viewModel.receiptUploadError {
+                ErrorBanner(message: error)
+            }
+            if let error = viewModel.errorMessage {
+                ErrorBanner(message: error)
+            }
+        }
+        .padding()
     }
 }
