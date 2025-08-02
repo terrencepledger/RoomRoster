@@ -87,21 +87,21 @@ struct SalesView: View {
 #endif
         }
         .onAppear { Logger.page("SalesView") }
-        .onChange(of: coordinator.pendingSale) { _, newValue in
+        .onChange(of: coordinator.pendingSale) { newValue in
             if let pending = newValue,
                let match = viewModel.sales.firstIndex(of: pending) {
                 selectedSale = viewModel.sales[match]
                 coordinator.pendingSale = nil
             }
         }
-        .onChange(of: auth.isSignedIn) { _, signedIn in
+        .onChange(of: auth.isSignedIn) { signedIn in
             if signedIn, sheets.currentSheet != nil {
                 Task {
                     await viewModel.loadSales()
                 }
             }
         }
-        .onChange(of: sheets.currentSheet?.id) { _, sheetID in
+        .onChange(of: sheets.currentSheet?.id) { sheetID in
             if sheetID != nil, auth.isSignedIn {
                 Task {
                     await viewModel.loadSales()

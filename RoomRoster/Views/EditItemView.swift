@@ -144,7 +144,7 @@ struct EditItemView: View {
                             .focused($tagFieldFocused)
                             .frame(width: fieldWidth)
                             .padding(.trailing, 4)
-                            .onChange(of: tagFieldFocused) { _,focused in
+                            .onChange(of: tagFieldFocused) { focused in
                                 if !focused {
                                     withAnimation { validateTag() }
                                 }
@@ -196,7 +196,7 @@ struct EditItemView: View {
                             .focused($tagFieldFocused)
                             .textFieldStyle(.roundedBorder)
                             .padding(.trailing)
-                            .onChange(of: tagFieldFocused) { _,focused in
+                            .onChange(of: tagFieldFocused) { focused in
                                 if !focused {
                                     withAnimation {
                                         validateTag()
@@ -259,7 +259,7 @@ struct EditItemView: View {
                                 Text(l10n.details.room.add).tag(Room(name: "__add_new__"))
                             }
                             .frame(width: fieldWidth)
-                            .onChange(of: editableItem.lastKnownRoom) { _,newValue in
+                            .onChange(of: editableItem.lastKnownRoom) { newValue in
                                 if newValue.name == "__add_new__" {
                                     showingAddRoomPrompt = true
                                 }
@@ -308,7 +308,7 @@ struct EditItemView: View {
                                 }
                                 Text(l10n.details.room.add).tag(Room(name: "__add_new__"))
                             }
-                            .onChange(of: editableItem.lastKnownRoom) { _,newValue in
+                            .onChange(of: editableItem.lastKnownRoom) { newValue in
                                 if newValue.name == "__add_new__" {
                                     showingAddRoomPrompt = true
                                 }

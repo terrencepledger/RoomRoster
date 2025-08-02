@@ -48,7 +48,7 @@ struct CreateItemView: View {
         Form {
             Section {
                 CombinedImagePickerButton(image: $viewModel.pickedImage)
-                    .onChange(of: viewModel.pickedImage) { _, img in
+                    .onChange(of: viewModel.pickedImage) { img in
                         viewModel.onImagePicked(img)
                     }
 
@@ -82,12 +82,12 @@ struct CreateItemView: View {
             Section {
                 ReceiptImageView(urlString: viewModel.newItem.purchaseReceiptURL)
                 CombinedImagePickerButton(image: $viewModel.pickedReceiptImage)
-                    .onChange(of: viewModel.pickedReceiptImage) { _, img in
+                    .onChange(of: viewModel.pickedReceiptImage) { img in
                         viewModel.onReceiptPicked(img)
                     }
 
                 PDFPickerButton(url: $viewModel.pickedReceiptPDF)
-                    .onChange(of: viewModel.pickedReceiptPDF) { _, url in
+                    .onChange(of: viewModel.pickedReceiptPDF) { url in
                         viewModel.onReceiptPDFPicked(url)
                     }
 
@@ -145,7 +145,7 @@ struct CreateItemView: View {
                         .focused($tagFieldFocused)
                         .frame(width: fieldWidth)
                         .padding(.trailing, 4)
-                        .onChange(of: tagFieldFocused) { _, focused in
+                        .onChange(of: tagFieldFocused) { focused in
                             if !focused {
                                 withAnimation { viewModel.validateTag() }
                             }
@@ -180,7 +180,7 @@ struct CreateItemView: View {
                         .focused($tagFieldFocused)
                         .multilineTextAlignment(.trailing)
                         .padding(.trailing)
-                        .onChange(of: tagFieldFocused) { _, focused in
+                        .onChange(of: tagFieldFocused) { focused in
                             if !focused {
                                 withAnimation { viewModel.validateTag() }
                             }
@@ -256,7 +256,7 @@ struct CreateItemView: View {
                     }
                     .frame(width: fieldWidth)
                     .padding(.trailing, 4)
-                    .onChange(of: viewModel.newItem.lastKnownRoom) { _, newValue in
+                    .onChange(of: viewModel.newItem.lastKnownRoom) { newValue in
                         if newValue.name == "__add_new__" {
                             viewModel.showingAddRoomPrompt = true
                         }
@@ -295,7 +295,7 @@ struct CreateItemView: View {
                         .foregroundColor(.blue)
                         .tag(Room(name: "__add_new__"))
                 }
-                .onChange(of: viewModel.newItem.lastKnownRoom) { _, newValue in
+                .onChange(of: viewModel.newItem.lastKnownRoom) { newValue in
                     if newValue.name == "__add_new__" {
                         viewModel.showingAddRoomPrompt = true
                     }
