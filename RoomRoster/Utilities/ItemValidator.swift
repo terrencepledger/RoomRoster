@@ -54,12 +54,10 @@ struct ItemValidator {
 
         var seen: Set<String> = []
         for tag in range.tags {
-            // check duplicates within the range
             if !seen.insert(tag.rawValue.uppercased()).inserted {
                 throw ItemValidationError.duplicateTag
             }
 
-            // check duplicates against existing items
             let isDuplicate = allItems.contains {
                 $0.id != currentItemID &&
                 $0.propertyTag?.rawValue.caseInsensitiveCompare(tag.rawValue) == .orderedSame

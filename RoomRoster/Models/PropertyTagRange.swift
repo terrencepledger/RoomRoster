@@ -1,12 +1,13 @@
 import Foundation
 
-/// Utility type for parsing comma separated lists and ranges of
-/// property tags.
+/// Parses comma‑separated lists and ranges of `PropertyTag` values.
 ///
-/// Input such as `"A0001-A0005,B0001"` expands into a collection of
-/// `PropertyTag` values. This makes it easy to create multiple `Item`
-/// records in an `ItemGroup` while ensuring each item receives its own
-/// unique tag.
+/// Use this when bulk‑creating items. A string like `"A0001-A0005,B0001"`
+/// expands to `[A0001, A0002, A0003, A0004, A0005, B0001]`. These tags can
+/// then be validated and used to instantiate individual `Item` records
+/// that share an `ItemGroup`. By centralizing the parsing logic here, the
+/// UI can accept flexible input while keeping property tags unique and
+/// correctly counted against the desired quantity.
 
 struct PropertyTagRange: Hashable, Sequence {
     var tags: [PropertyTag]

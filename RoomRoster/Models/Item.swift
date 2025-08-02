@@ -7,15 +7,21 @@
 
 import Foundation
 
-/// Represents a single entry in the inventory list.
+/// Represents a single unit of inventory or a collection of identical
+/// units that do not need their own property tags.
 ///
-/// Each item has its own identifier and optional `propertyTag`.
-/// Items that are variants of the same product can share an `ItemGroup`
-/// through `groupID`. When `quantity` is greater than `1` the record
-/// stands for multiple identical units that do **not** require individual
-/// property tags. If every unit must carry its own tag, create separate
-/// `Item` instances with the same `groupID` so they can be managed as a
-/// group while retaining unique tags.
+/// - Each item always has a unique `id` and may optionally belong to an
+///   `ItemGroup` via `groupID` when multiple records describe the same
+///   product.
+/// - If `quantity` is greater than `1`, the record indicates a stack of
+///   identical items that share all attributes and **have no individual
+///   `PropertyTag` values**. Use this when tracking generics like cables
+///   or low‑value parts.
+/// - When every unit requires a distinct tag, create separate `Item`
+///   instances, each with `quantity == 1` and its own `propertyTag`, but
+///   reuse the same `groupID` so the items can be managed collectively.
+///   Bulk creation helpers (e.g., `PropertyTagRange`) can generate these
+///   items from a list or range of tags.
 
 struct Item: Identifiable, Hashable {
     var id: String

@@ -310,14 +310,18 @@ struct EditItemView: View {
             )
             tagError = nil
         } catch {
-            switch error {
-            case .invalidTagFormat:
-                tagError = l10n.errors.tag.format
-            case .duplicateTag:
-                tagError = l10n.errors.tag.duplicate
-            case .quantityMismatch:
-                tagError = l10n.errors.tag.quantityMismatch
-            default:
+            if let validationError = error as? ItemValidationError {
+                switch validationError {
+                case .invalidTagFormat:
+                    tagError = l10n.errors.tag.format
+                case .duplicateTag:
+                    tagError = l10n.errors.tag.duplicate
+                case .quantityMismatch:
+                    tagError = l10n.errors.tag.quantityMismatch
+                default:
+                    tagError = nil
+                }
+            } else {
                 tagError = nil
             }
         }

@@ -1,12 +1,19 @@
 import Foundation
 
-/// Describes attributes shared by multiple inventory items.
+/// Collection of shared attributes for a set of related items.
 ///
-/// `ItemGroup` instances are never persisted directly. Instead, each
-/// `Item` references a group via its `groupID`. When adding many of the
-/// same product, create one group and then generate individual `Item`
-/// records—each may supply its own `propertyTag` if needed—so that the
-/// data is normalized but items can still be tracked separately.
+/// An `ItemGroup` stores common metadata—name, description, images—that
+/// would otherwise be duplicated on every `Item`. The group itself is
+/// **not** persisted to the backend. Instead each `Item` stores the ID of
+/// its group in `groupID` so the UI can display them together.
+///
+/// Workflow guidelines:
+/// - When you have multiple identical products that need individual
+///   property tags, create a single `ItemGroup` and then create separate
+///   `Item` records referencing that group. Tools like `PropertyTagRange`
+///   can help generate the items in bulk.
+/// - For loose items without tags, you can either omit the group entirely
+///   or store them as a single `Item` with a `quantity` greater than `1`.
 
 struct ItemGroup: Identifiable, Hashable {
     var id: String
