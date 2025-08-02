@@ -109,25 +109,34 @@ struct CreateItemView: View {
                             .multilineTextAlignment(.trailing)
                     }
                     
+                    #if os(macOS)
+                    VStack {
+                        Text(l10n.basicInfo.quantity)
+                        HStack {
+                            Spacer()
+                            Stepper(value: $viewModel.newItem.quantity, in: 1...Int.max) {
+                                Text("\(viewModel.newItem.quantity)")
+                            }
+                            Spacer()
+                        }
+                        .padding()
+                    }
+                    .frame(maxWidth: .infinity)
+                    #else
                     HStack {
                         Text(l10n.basicInfo.quantity)
                         Spacer()
-#if os(macOS)
-                        Stepper(value: $viewModel.newItem.quantity, in: 1...Int.max) {
-                            Text("\(viewModel.newItem.quantity)")
-                        }
-#else
                         TextField(
                             l10n.basicInfo.enter.quantity,
                             value: $viewModel.newItem.quantity,
                             format: .number
                         )
-#if canImport(UIKit)
+    #if canImport(UIKit)
                         .keyboardType(.numberPad)
-#endif
+    #endif
                         .textFieldStyle(.roundedBorder)
-#endif
                     }
+                    #endif
                     .onChange(of: viewModel.newItem.quantity) { _, _ in
                         viewModel.validateTag()
                     }

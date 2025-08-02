@@ -153,12 +153,28 @@ struct EditItemView: View {
                         Text(l10n.basicInfo.quantity)
                             .font(.caption)
                             .foregroundColor(.gray)
-                        Stepper(value: $editableItem.quantity, in: 1...Int.max) {
-                            Text("\(editableItem.quantity)")
+#if os(macOS)
+                        HStack {
+                            Spacer()
+                            Stepper(value: $editableItem.quantity, in: 1...Int.max) {
+                                Text("\(editableItem.quantity)")
+                            }
+                            Spacer()
                         }
-                        .onChange(of: editableItem.quantity) { _, _ in
-                            validateTag()
-                        }
+                        .padding()
+                        .frame(maxWidth: .infinity)
+#else
+                        TextField(l10n.basicInfo.enter.quantity,
+                                  value: $editableItem.quantity,
+                                  format: .number)
+#if canImport(UIKit)
+                        .keyboardType(.numberPad)
+#endif
+                        .textFieldStyle(.roundedBorder)
+#endif
+                    }
+                    .onChange(of: editableItem.quantity) { _, _ in
+                        validateTag()
                     }
                     VStack(alignment: .leading, spacing: 4) {
                         Text(l10n.basicInfo.tag)
