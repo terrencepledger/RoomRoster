@@ -141,6 +141,7 @@ struct EditItemView: View {
                             .foregroundColor(.gray)
                         TextField(l10n.basicInfo.enter.name, text: $editableItem.name)
                             .textFieldStyle(.roundedBorder)
+                            .padding(.trailing)
                     }
                     VStack(alignment: .leading, spacing: 4) {
                         Text(l10n.basicInfo.description)
@@ -148,25 +149,24 @@ struct EditItemView: View {
                             .foregroundColor(.gray)
                         TextField(l10n.basicInfo.enter.description, text: $editableItem.description)
                             .textFieldStyle(.roundedBorder)
+                            .padding(.trailing)
                     }
+                    #if os(macOS)
+                    HStack {
+                        Text(l10n.basicInfo.quantity)
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                        Spacer()
+                        Stepper(value: $editableItem.quantity, in: 1...Int.max) {
+                            Text("\(editableItem.quantity)")
+                        }
+                    }
+                    .padding(.trailing)
+                    #else
                     VStack(alignment: .leading, spacing: 4) {
                         Text(l10n.basicInfo.quantity)
                             .font(.caption)
                             .foregroundColor(.gray)
-#if os(macOS)
-                        HStack {
-                            Spacer()
-                            Stepper(
-                                "",
-                                value: $editableItem.quantity,
-                                in: 1...Int.max
-                            )
-                            .labelsHidden()
-                            Spacer()
-                        }
-                        .padding()
-                        .frame(maxWidth: .infinity)
-#else
                         TextField(l10n.basicInfo.enter.quantity,
                                   value: $editableItem.quantity,
                                   format: .number)
@@ -174,8 +174,9 @@ struct EditItemView: View {
                         .keyboardType(.numberPad)
 #endif
                         .textFieldStyle(.roundedBorder)
-#endif
+                        .padding(.trailing)
                     }
+                    #endif
                     .onChange(of: editableItem.quantity) { _, _ in
                         validateTag()
                     }
@@ -186,6 +187,7 @@ struct EditItemView: View {
                         TextField(l10n.basicInfo.enter.tag, text: $propertyTagInput)
                             .focused($tagFieldFocused)
                             .textFieldStyle(.roundedBorder)
+                            .padding(.trailing)
                             .onChange(of: tagFieldFocused) { _,focused in
                                 if !focused {
                                     withAnimation {
@@ -227,6 +229,7 @@ struct EditItemView: View {
                             .keyboardType(.decimalPad)
 #endif
                             .textFieldStyle(.roundedBorder)
+                            .padding(.trailing)
                     }
                     VStack(alignment: .leading, spacing: 4) {
                         Text(l10n.details.status)

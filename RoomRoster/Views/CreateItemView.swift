@@ -100,31 +100,26 @@ struct CreateItemView: View {
                         Spacer()
                         TextField(l10n.basicInfo.enter.name, text: $viewModel.newItem.name)
                             .multilineTextAlignment(.trailing)
+                            .padding(.trailing)
                     }
-                    
+
                     HStack {
                         Text(l10n.basicInfo.description)
                         Spacer()
                         TextField(l10n.basicInfo.enter.description, text: $viewModel.newItem.description)
                             .multilineTextAlignment(.trailing)
+                            .padding(.trailing)
                     }
-                    
+
                     #if os(macOS)
-                    VStack {
+                    HStack {
                         Text(l10n.basicInfo.quantity)
-                        HStack {
-                            Spacer()
-                            Stepper(
-                                "",
-                                value: $viewModel.newItem.quantity,
-                                in: 1...Int.max
-                            )
-                            .labelsHidden()
-                            Spacer()
+                        Spacer()
+                        Stepper(value: $viewModel.newItem.quantity, in: 1...Int.max) {
+                            Text("\(viewModel.newItem.quantity)")
                         }
-                        .padding()
                     }
-                    .frame(maxWidth: .infinity)
+                    .padding(.trailing)
                     #else
                     HStack {
                         Text(l10n.basicInfo.quantity)
@@ -138,18 +133,20 @@ struct CreateItemView: View {
                         .keyboardType(.numberPad)
     #endif
                         .textFieldStyle(.roundedBorder)
+                        .padding(.trailing)
                     }
                     #endif
                     .onChange(of: viewModel.newItem.quantity) { _, _ in
                         viewModel.validateTag()
                     }
-                    
+
                     HStack {
                         Text(l10n.basicInfo.tag)
                         Spacer()
                         TextField(l10n.basicInfo.enter.tag, text: $viewModel.propertyTagInput)
                             .focused($tagFieldFocused)
                             .multilineTextAlignment(.trailing)
+                            .padding(.trailing)
                             .onChange(of: tagFieldFocused) { _, focused in
                                 if !focused {
                                     withAnimation { viewModel.validateTag() }
@@ -189,7 +186,9 @@ struct CreateItemView: View {
                             l10n.details.enter.price,
                             value: $viewModel.newItem.estimatedPrice,
                             format: .number
-                        ).multilineTextAlignment(.trailing)
+                        )
+                        .multilineTextAlignment(.trailing)
+                        .padding(.trailing)
                     }
                     
                     Picker(l10n.details.status, selection: $viewModel.newItem.status) {
