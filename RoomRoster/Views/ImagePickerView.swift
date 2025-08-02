@@ -56,6 +56,7 @@ struct CombinedImagePickerButton: View {
     @State private var showSourceDialog = false
     @State private var showPicker = false
     @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    var height: CGFloat = 120
 
     var body: some View {
         Button {
@@ -67,13 +68,13 @@ struct CombinedImagePickerButton: View {
                 Image(platformImage: img)
                     .resizable()
                     .scaledToFit()
-                    .frame(height: 120)
+                    .frame(width: height, height: height)
                     .cornerRadius(8)
             } else {
                 Image(systemName: "photo")
                     .resizable()
                     .scaledToFit()
-                    .frame(height: 120)
+                    .frame(width: height, height: height)
                     .foregroundColor(.secondary.opacity(0.5))
             }
         }
@@ -103,6 +104,7 @@ struct CombinedImagePickerButton: View {
 struct CombinedImagePickerButton: View {
     @Binding var image: PlatformImage?
     @State private var selection: PhotosPickerItem?
+    var height: CGFloat = 120
 
     var body: some View {
         PhotosPicker(selection: $selection, matching: .images) {
@@ -110,13 +112,13 @@ struct CombinedImagePickerButton: View {
                 Image(platformImage: img)
                     .resizable()
                     .scaledToFit()
-                    .frame(height: 120)
+                    .frame(width: height, height: height)
                     .cornerRadius(8)
             } else {
                 Image(systemName: "photo")
                     .resizable()
                     .scaledToFit()
-                    .frame(height: 120)
+                    .frame(width: height, height: height)
                     .foregroundColor(.secondary.opacity(0.5))
             }
         }

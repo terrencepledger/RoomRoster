@@ -47,7 +47,7 @@ struct CreateItemView: View {
     private var content: some View {
         Form {
             Section {
-                CombinedImagePickerButton(image: $viewModel.pickedImage)
+                CombinedImagePickerButton(image: $viewModel.pickedImage, height: 80)
                     .onChange(of: viewModel.pickedImage) { img in
                         viewModel.onImagePicked(img)
                     }
@@ -80,11 +80,13 @@ struct CreateItemView: View {
             }
 
             Section {
-                ReceiptImageView(urlString: viewModel.newItem.purchaseReceiptURL)
-                CombinedImagePickerButton(image: $viewModel.pickedReceiptImage)
-                    .onChange(of: viewModel.pickedReceiptImage) { img in
-                        viewModel.onReceiptPicked(img)
-                    }
+                HStack(spacing: 8) {
+                    ReceiptImageView(urlString: viewModel.newItem.purchaseReceiptURL, height: 80)
+                    CombinedImagePickerButton(image: $viewModel.pickedReceiptImage, height: 80)
+                }
+                .onChange(of: viewModel.pickedReceiptImage) { img in
+                    viewModel.onReceiptPicked(img)
+                }
 
                 PDFPickerButton(url: $viewModel.pickedReceiptPDF)
                     .onChange(of: viewModel.pickedReceiptPDF) { url in

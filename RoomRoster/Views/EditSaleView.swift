@@ -26,24 +26,27 @@ struct EditSaleView: View {
     private var content: some View {
         Form {
                 Section {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(Strings.saleDetails.currentReceipt)
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                        ReceiptImageView(
-                            urlString: viewModel.sale.receiptImageURL ??
-                                viewModel.sale.receiptPDFURL ??
-                                viewModel.originalReceiptImageURL ??
-                                viewModel.originalReceiptPDFURL
-                        )
+                    HStack(spacing: 8) {
+                        VStack {
+                            ReceiptImageView(
+                                urlString: viewModel.sale.receiptImageURL ??
+                                    viewModel.sale.receiptPDFURL ??
+                                    viewModel.originalReceiptImageURL ??
+                                    viewModel.originalReceiptPDFURL,
+                                height: 80
+                            )
+                            Text(Strings.saleDetails.currentReceipt)
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
+                        VStack {
+                            CombinedImagePickerButton(image: $viewModel.pickedReceiptImage, height: 80)
+                            Text(Strings.saleDetails.newReceipt)
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
                     }
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(Strings.saleDetails.newReceipt)
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                        CombinedImagePickerButton(image: $viewModel.pickedReceiptImage)
-                        PDFPickerButton(url: $viewModel.pickedReceiptPDF)
-                    }
+                    PDFPickerButton(url: $viewModel.pickedReceiptPDF)
                     if viewModel.isUploading {
                         HStack {
                             ProgressView()

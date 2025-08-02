@@ -53,18 +53,19 @@ struct EditItemView: View {
             Form {
                 // MARK: – Photo Section
                 Section(header: Text(l10n.photo.title).font(.headline)) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(l10n.photo.current)
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                        RemoteImageView(urlString: editableItem.imageURL)
-                    }
-
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(l10n.photo.new)
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                        CombinedImagePickerButton(image: $pickedImage)
+                    HStack(spacing: 8) {
+                        VStack {
+                            RemoteImageView(urlString: editableItem.imageURL, height: 80)
+                            Text(l10n.photo.current)
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
+                        VStack {
+                            CombinedImagePickerButton(image: $pickedImage, height: 80)
+                            Text(l10n.photo.new)
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
                     }
 
                     // Upload status & URL display
@@ -83,19 +84,21 @@ struct EditItemView: View {
 
                 // MARK: – Purchase Receipt
                 Section(header: Text(Strings.purchaseReceipt.sectionTitle).font(.headline)) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(Strings.saleDetails.currentReceipt)
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                        ReceiptImageView(urlString: editableItem.purchaseReceiptURL)
+                    HStack(spacing: 8) {
+                        VStack {
+                            ReceiptImageView(urlString: editableItem.purchaseReceiptURL, height: 80)
+                            Text(Strings.saleDetails.currentReceipt)
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
+                        VStack {
+                            CombinedImagePickerButton(image: $pickedReceiptImage, height: 80)
+                            Text(Strings.saleDetails.newReceipt)
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
                     }
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(Strings.saleDetails.newReceipt)
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                        CombinedImagePickerButton(image: $pickedReceiptImage)
-                        PDFPickerButton(url: $pickedReceiptPDF)
-                    }
+                    PDFPickerButton(url: $pickedReceiptPDF)
 
                     if isUploadingReceipt {
                         HStack {
