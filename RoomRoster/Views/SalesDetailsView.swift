@@ -7,19 +7,18 @@ struct SalesDetailsView: View {
     let itemName: String
 #if os(macOS)
     var openEdit: ((Sale) -> Void)? = nil
-#endif
 
-    init(sale: Sale, itemName: String
-#if os(macOS)
-         , openEdit: ((Sale) -> Void)? = nil
-#endif
-    ) {
+    init(sale: Sale, itemName: String, openEdit: ((Sale) -> Void)? = nil) {
         _sale = State(initialValue: sale)
         self.itemName = itemName
-#if os(macOS)
         self.openEdit = openEdit
-#endif
     }
+#else
+    init(sale: Sale, itemName: String) {
+        _sale = State(initialValue: sale)
+        self.itemName = itemName
+    }
+#endif
     @State private var shareURL: URL?
     @State private var errorMessage: String?
 #if !os(macOS)

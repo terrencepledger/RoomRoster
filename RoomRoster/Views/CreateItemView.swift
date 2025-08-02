@@ -34,6 +34,7 @@ struct CreateItemView: View {
                 }
                 .allowsHitTesting(false)
             }
+            .task { await viewModel.loadRooms() }
 #else
         NavigationStack { content }
             .macSheetFrame()
@@ -44,6 +45,7 @@ struct CreateItemView: View {
                 }
                 .allowsHitTesting(false)
             }
+            .task { await viewModel.loadRooms() }
 #endif
     }
 
