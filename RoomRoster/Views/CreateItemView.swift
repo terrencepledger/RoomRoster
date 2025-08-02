@@ -16,7 +16,7 @@ struct CreateItemView: View {
 
     @FocusState private var tagFieldFocused: Bool
     @State private var successMessage: String?
-    
+
     var body: some View {
 #if os(macOS)
         content
@@ -115,6 +115,7 @@ struct CreateItemView: View {
                     Spacer()
                     TextField(l10n.basicInfo.enter.name, text: $viewModel.newItem.name)
                         .multilineTextAlignment(.trailing)
+                        .padding(.trailing)
                 }
 
                 HStack {
@@ -122,21 +123,10 @@ struct CreateItemView: View {
                     Spacer()
                     TextField(l10n.basicInfo.enter.description, text: $viewModel.newItem.description)
                         .multilineTextAlignment(.trailing)
+                        .padding(.trailing)
                 }
 
-                HStack {
-                    Text(l10n.basicInfo.quantity)
-                    Spacer()
-                    TextField(
-                        l10n.basicInfo.enter.quantity,
-                        value: $viewModel.newItem.quantity,
-                        format: .number
-                    )
-#if canImport(UIKit)
-                    .keyboardType(.numberPad)
-#endif
-                    .textFieldStyle(.roundedBorder)
-                }
+                quantityField
 
                 HStack {
                     Text(l10n.basicInfo.tag)
@@ -144,6 +134,7 @@ struct CreateItemView: View {
                     TextField(l10n.basicInfo.enter.tag, text: $viewModel.propertyTagInput)
                         .focused($tagFieldFocused)
                         .multilineTextAlignment(.trailing)
+                        .padding(.trailing)
                         .onChange(of: tagFieldFocused) { _, focused in
                             if !focused {
                                 withAnimation { viewModel.validateTag() }
@@ -183,7 +174,9 @@ struct CreateItemView: View {
                         l10n.details.enter.price,
                         value: $viewModel.newItem.estimatedPrice,
                         format: .number
-                    ).multilineTextAlignment(.trailing)
+                    )
+                    .multilineTextAlignment(.trailing)
+                    .padding(.trailing)
                 }
 
                 Picker(l10n.details.status, selection: $viewModel.newItem.status) {
@@ -261,6 +254,47 @@ struct CreateItemView: View {
         }
     }
 
+#if os(macOS)
+    @ViewBuilder
+    private var quantityField: some View {
+        HStack {
+            Text(l10n.basicInfo.quantity)
+            Spacer()
+            HStack(spacing: 8) {
+                Text("\(viewModel.newItem.quantity)")
+                    .frame(width: 40, alignment: .trailing)
+                Stepper("", value: $viewModel.newItem.quantity, in: 1...Int.max)
+                    .labelsHidden()
+            }
+        }
+        .padding(.trailing)
+        .onChange(of: viewModel.newItem.quantity) { _ in
+            viewModel.validateTag()
+        }
+    }
+#else
+    @ViewBuilder
+    private var quantityField: some View {
+        HStack {
+            Text(l10n.basicInfo.quantity)
+            Spacer()
+            TextField(
+                l10n.basicInfo.enter.quantity,
+                value: $viewModel.newItem.quantity,
+                format: .number
+            )
+#if canImport(UIKit)
+            .keyboardType(.numberPad)
+#endif
+            .textFieldStyle(.roundedBorder)
+            .padding(.trailing)
+        }
+        .onChange(of: viewModel.newItem.quantity) { _ in
+            viewModel.validateTag()
+        }
+    }
+#endif
+
     private var bannerStack: some View {
         VStack(spacing: 4) {
             if let message = successMessage {
@@ -279,3 +313,4 @@ struct CreateItemView: View {
         .padding()
     }
 }
+

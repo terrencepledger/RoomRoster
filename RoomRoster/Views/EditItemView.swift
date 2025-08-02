@@ -41,11 +41,8 @@ struct EditItemView: View {
     @FocusState private var tagFieldFocused: Bool
 
     var body: some View {
-#if os(macOS)
-        content
-#else
         NavigationStack { content }
-#endif
+            .macSheetFrame()
     }
 
     private var content: some View {
@@ -141,6 +138,7 @@ struct EditItemView: View {
                             .foregroundColor(.gray)
                         TextField(l10n.basicInfo.enter.name, text: $editableItem.name)
                             .textFieldStyle(.roundedBorder)
+                            .padding(.trailing)
                     }
                     VStack(alignment: .leading, spacing: 4) {
                         Text(l10n.basicInfo.description)
@@ -148,18 +146,9 @@ struct EditItemView: View {
                             .foregroundColor(.gray)
                         TextField(l10n.basicInfo.enter.description, text: $editableItem.description)
                             .textFieldStyle(.roundedBorder)
+                            .padding(.trailing)
                     }
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(l10n.basicInfo.quantity)
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                        Stepper(value: $editableItem.quantity, in: 1...Int.max) {
-                            Text("\(editableItem.quantity)")
-                        }
-                        .onChange(of: editableItem.quantity) { _, _ in
-                            validateTag()
-                        }
-                    }
+                    quantityField
                     VStack(alignment: .leading, spacing: 4) {
                         Text(l10n.basicInfo.tag)
                             .font(.caption)
@@ -167,6 +156,7 @@ struct EditItemView: View {
                         TextField(l10n.basicInfo.enter.tag, text: $propertyTagInput)
                             .focused($tagFieldFocused)
                             .textFieldStyle(.roundedBorder)
+                            .padding(.trailing)
                             .onChange(of: tagFieldFocused) { _,focused in
                                 if !focused {
                                     withAnimation {
@@ -208,6 +198,7 @@ struct EditItemView: View {
                             .keyboardType(.decimalPad)
 #endif
                             .textFieldStyle(.roundedBorder)
+                            .padding(.trailing)
                     }
                     VStack(alignment: .leading, spacing: 4) {
                         Text(l10n.details.status)
@@ -315,6 +306,50 @@ struct EditItemView: View {
             await viewModel.loadRooms()
         }
     }
+
+#if os(macOS)
+    @ViewBuilder
+    private var quantityField: some View {
+        HStack {
+            Text(l10n.basicInfo.quantity)
+                .font(.caption)
+                .foregroundColor(.gray)
+            Spacer()
+            HStack(spacing: 8) {
+                Text("\(editableItem.quantity)")
+                    .frame(width: 40, alignment: .trailing)
+                Stepper("", value: $editableItem.quantity, in: 1...Int.max)
+                    .labelsHidden()
+            }
+        }
+        .padding(.trailing)
+        .onChange(of: editableItem.quantity) { _ in
+            validateTag()
+        }
+    }
+#else
+    @ViewBuilder
+    private var quantityField: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(l10n.basicInfo.quantity)
+                .font(.caption)
+                .foregroundColor(.gray)
+            TextField(
+                l10n.basicInfo.enter.quantity,
+                value: $editableItem.quantity,
+                format: .number
+            )
+#if canImport(UIKit)
+            .keyboardType(.numberPad)
+#endif
+            .textFieldStyle(.roundedBorder)
+            .padding(.trailing)
+        }
+        .onChange(of: editableItem.quantity) { _ in
+            validateTag()
+        }
+    }
+#endif
 
     private func validateTag() {
         if propertyTagInput.isEmpty || propertyTagInput == editableItem.propertyTag?.label {
