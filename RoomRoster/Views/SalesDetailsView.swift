@@ -103,15 +103,17 @@ struct SalesDetailsView: View {
 #endif
         }
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button(l10n.editButton) {
 #if os(macOS)
-                    openEdit?(sale)
-#else
-                    isEditing = true
-#endif
+            if let openEdit {
+                ToolbarItem(placement: .primaryAction) {
+                    Button(l10n.editButton) { openEdit(sale) }
                 }
             }
+#else
+            ToolbarItem(placement: .primaryAction) {
+                Button(l10n.editButton) { isEditing = true }
+            }
+#endif
         }
         .sheet(item: $shareURL) { url in
             ShareSheet(activityItems: [url])

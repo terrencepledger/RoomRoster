@@ -264,7 +264,7 @@ struct CreateItemView: View {
                         }
                         .frame(width: fieldWidth)
                         .padding(.trailing, 4)
-                        .onChange(of: viewModel.newItem.lastKnownRoom) { _, newValue in
+                        .onChange(of: viewModel.newItem.lastKnownRoom) { newValue in
                             if newValue.name == "__add_new__" {
                                 viewModel.showingAddRoomPrompt = true
                             }

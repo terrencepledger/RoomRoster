@@ -18,6 +18,7 @@ final class CreateItemViewModel: ObservableObject {
     private let imageUploadService: ImageUploadService
     private let receiptService: PurchaseReceiptService
     private let itemsProvider: () -> [Item]
+    private var cancellables: Set<AnyCancellable> = []
 
     @Published var newItem: Item
     @Published var pickedImage: PlatformImage?
@@ -68,6 +69,15 @@ final class CreateItemViewModel: ObservableObject {
             propertyTag: nil,
             purchaseReceiptURL: nil
         )
+
+        AuthenticationManager.shared.$isSignedIn
+            .combineLatest(SpreadsheetManager.shared.$currentSheet)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] signedIn, sheet in
+                guard let self = self, signedIn, sheet != nil else { return }
+                Task { await self.loadRooms() }
+            }
+            .store(in: &cancellables)
     }
 
     func loadRooms() async {
