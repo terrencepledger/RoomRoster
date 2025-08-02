@@ -39,6 +39,9 @@ struct EditItemView: View {
     @State private var showingAddRoomPrompt = false
     @State private var newRoomName = ""
     @FocusState private var tagFieldFocused: Bool
+#if os(macOS)
+    private let fieldWidth: CGFloat = 240.0
+#endif
 
     var body: some View {
         NavigationStack { content }
@@ -49,41 +52,12 @@ struct EditItemView: View {
         ZStack(alignment: .bottom) {
             Form {
                 // MARK: – Photo Section
-                Section(header: Text(l10n.photo.title)) {
+                Section(header: Text(l10n.photo.title).font(.headline)) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(l10n.photo.current)
                             .font(.caption)
                             .foregroundColor(.gray)
-                        if let url = URL(string: editableItem.imageURL),
-                           !editableItem.imageURL.isEmpty {
-                            AsyncImage(url: url) { phase in
-                                switch phase {
-                                case .success(let img):
-                                    img.resizable()
-                                        .scaledToFit()
-                                        .frame(height: 120)
-                                        .cornerRadius(8)
-                                case .failure:
-                                    Image(systemName: "xmark.octagon")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(height: 120)
-                                        .foregroundColor(.red.opacity(0.8))
-                                default:
-                                    Image(systemName: "photo")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(height: 120)
-                                        .foregroundColor(.secondary.opacity(0.5))
-                                }
-                            }
-                        } else {
-                            Image(systemName: "photo")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 120)
-                                .foregroundColor(.secondary.opacity(0.5))
-                        }
+                        RemoteImageView(urlString: editableItem.imageURL)
                     }
 
                     VStack(alignment: .leading, spacing: 4) {
@@ -108,7 +82,7 @@ struct EditItemView: View {
                 }
 
                 // MARK: – Purchase Receipt
-                Section(header: Text(Strings.purchaseReceipt.sectionTitle)) {
+                Section(header: Text(Strings.purchaseReceipt.sectionTitle).font(.headline)) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(Strings.saleDetails.currentReceipt)
                             .font(.caption)
@@ -136,31 +110,48 @@ struct EditItemView: View {
                     }
                     HStack {
                         Text(Strings.general.receiptPath).foregroundColor(.gray)
+                            .padding(.leading, 4)
                         Spacer()
                         Text(editableItem.purchaseReceiptURL ?? "")
                             .font(.caption)
                             .multilineTextAlignment(.trailing)
+                            .padding(.trailing, 4)
                     }
                 }
 
                 // MARK: – Basic Information
-                Section(header: Text(l10n.basicInfo.title)) {
+                Section(header: Text(l10n.basicInfo.title).font(.headline)) {
 #if os(macOS)
-                    LabeledContent(l10n.basicInfo.name) {
+                    LabeledContent {
                         TextField(l10n.basicInfo.enter.name, text: $editableItem.name)
+                            .frame(width: fieldWidth)
+                            .padding(.trailing, 4)
+                    } label: {
+                        Text(l10n.basicInfo.name)
+                            .padding(.leading, 4)
                     }
-                    LabeledContent(l10n.basicInfo.description) {
+                    LabeledContent {
                         TextField(l10n.basicInfo.enter.description, text: $editableItem.description)
+                            .frame(width: fieldWidth)
+                            .padding(.trailing, 4)
+                    } label: {
+                        Text(l10n.basicInfo.description)
+                            .padding(.leading, 4)
                     }
                     quantityField
-                    LabeledContent(l10n.basicInfo.tag) {
+                    LabeledContent {
                         TextField(l10n.basicInfo.enter.tag, text: $propertyTagInput)
                             .focused($tagFieldFocused)
+                            .frame(width: fieldWidth)
+                            .padding(.trailing, 4)
                             .onChange(of: tagFieldFocused) { _,focused in
                                 if !focused {
                                     withAnimation { validateTag() }
                                 }
                             }
+                    } label: {
+                        Text(l10n.basicInfo.tag)
+                            .padding(.leading, 4)
                     }
                     if let error = tagError {
                         Text(error)
@@ -234,22 +225,32 @@ struct EditItemView: View {
                 }
 
                 // MARK: – Details
-                Section(header: Text(l10n.details.title)) {
+                Section(header: Text(l10n.details.title).font(.headline)) {
 #if os(macOS)
-                    LabeledContent(l10n.details.price) {
+                    LabeledContent {
                         TextField(l10n.details.enter.price,
                                   value: $editableItem.estimatedPrice,
                                   format: .number)
+                            .frame(width: fieldWidth)
+                            .padding(.trailing, 4)
+                    } label: {
+                        Text(l10n.details.price)
+                            .padding(.leading, 4)
                     }
-                    LabeledContent(l10n.details.status) {
+                    LabeledContent {
                         Picker(l10n.details.enter.status, selection: $editableItem.status) {
                             ForEach(Status.allCases, id: \.self) { status in
                                 Text(status.label).tag(status)
                             }
                         }
                         .pickerStyle(.menu)
+                        .frame(width: fieldWidth)
+                        .padding(.trailing, 4)
+                    } label: {
+                        Text(l10n.details.status)
+                            .padding(.leading, 4)
                     }
-                    LabeledContent(l10n.details.room.title) {
+                    LabeledContent {
                         if !viewModel.rooms.isEmpty {
                             Picker(l10n.details.room.subtitle, selection: $editableItem.lastKnownRoom) {
                                 ForEach(viewModel.rooms, id: \.id) { room in
@@ -257,6 +258,7 @@ struct EditItemView: View {
                                 }
                                 Text(l10n.details.room.add).tag(Room(name: "__add_new__"))
                             }
+                            .frame(width: fieldWidth)
                             .onChange(of: editableItem.lastKnownRoom) { _,newValue in
                                 if newValue.name == "__add_new__" {
                                     showingAddRoomPrompt = true
@@ -264,7 +266,11 @@ struct EditItemView: View {
                             }
                         } else {
                             ProgressView(l10n.details.room.loading)
+                                .frame(width: fieldWidth)
                         }
+                    } label: {
+                        Text(l10n.details.room.title)
+                            .padding(.leading, 4)
                     }
 #else
                     VStack(alignment: .leading, spacing: 4) {
@@ -390,12 +396,16 @@ struct EditItemView: View {
 
 #if os(macOS)
     private var quantityField: some View {
-        LabeledContent(l10n.basicInfo.quantity) {
+        LabeledContent {
             Stepper(value: $editableItem.quantity, in: 1...Int.max) {
                 Text("\(editableItem.quantity)")
                     .frame(width: 40, alignment: .trailing)
             }
-            .labelsHidden()
+            .frame(width: fieldWidth)
+            .padding(.trailing, 4)
+        } label: {
+            Text(l10n.basicInfo.quantity)
+                .padding(.leading, 4)
         }
         .onChange(of: editableItem.quantity) { _ in
             validateTag()

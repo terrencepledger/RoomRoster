@@ -70,7 +70,11 @@ struct CombinedImagePickerButton: View {
                     .frame(height: 120)
                     .cornerRadius(8)
             } else {
-                Label(l10n.title, systemImage: "photo.on.rectangle")
+                Image(systemName: "photo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 120)
+                    .foregroundColor(.secondary.opacity(0.5))
             }
         }
         .confirmationDialog(l10n.dialog.title, isPresented: $showSourceDialog) {
@@ -109,7 +113,11 @@ struct CombinedImagePickerButton: View {
                     .frame(height: 120)
                     .cornerRadius(8)
             } else {
-                Label(l10n.title, systemImage: "photo.on.rectangle")
+                Image(systemName: "photo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 120)
+                    .foregroundColor(.secondary.opacity(0.5))
             }
         }
         .onTapGesture { HapticManager.shared.impact() }

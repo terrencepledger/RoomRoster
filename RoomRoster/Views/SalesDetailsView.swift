@@ -36,7 +36,7 @@ struct SalesDetailsView: View {
                 row(l10n.soldBy, sale.soldBy)
                 row(l10n.department, sale.department)
             }
-            Section(l10n.receiptSection) {
+            Section { 
                 ReceiptImageView(urlString: sale.receiptImageURL)
                 if let imgURLString = sale.receiptImageURL,
                    !imgURLString.isEmpty,
@@ -70,6 +70,9 @@ struct SalesDetailsView: View {
                         }
                         .platformButtonStyle()
                     }
+            } header: {
+                Text(l10n.receiptSection)
+                    .font(.headline)
             }
         }
         .navigationTitle(itemName)

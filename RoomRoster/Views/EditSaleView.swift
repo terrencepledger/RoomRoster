@@ -25,7 +25,7 @@ struct EditSaleView: View {
 
     private var content: some View {
         Form {
-                Section(Strings.purchaseReceipt.saleSectionTitle) {
+                Section {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(Strings.saleDetails.currentReceipt)
                             .font(.caption)
@@ -55,6 +55,9 @@ struct EditSaleView: View {
                             .foregroundColor(.red)
                             .font(.caption)
                     }
+                } header: {
+                    Text(Strings.purchaseReceipt.saleSectionTitle)
+                        .font(.headline)
                 }
 
             Section {

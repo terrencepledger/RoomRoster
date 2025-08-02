@@ -53,21 +53,9 @@ struct ItemDetailsView: View {
         ZStack(alignment: .bottom) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    if let url = URL(string: item.imageURL) {
-                        AsyncImage(url: url) { image in
-                            image.resizable().scaledToFit()
-                        } placeholder: {
-                            ProgressView()
-                        }
+                    RemoteImageView(urlString: item.imageURL)
                         .frame(height: 250)
                         .cornerRadius(12)
-                    } else {
-                        Text(Strings.itemDetails.noImage)
-                            .frame(maxWidth: .infinity, minHeight: 250)
-                            .foregroundColor(.secondary)
-                            .background(Color.secondary.opacity(0.1))
-                            .cornerRadius(12)
-                    }
 
                     if item.purchaseReceiptURL != nil {
                         Text(Strings.purchaseReceipt.sectionTitle)
