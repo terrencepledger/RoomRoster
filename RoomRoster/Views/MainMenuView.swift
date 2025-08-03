@@ -62,7 +62,7 @@ struct MainMenuView: View {
                 .tag(tab)
         }
 #else
-        List(MenuTab.allCases) { tab in
+        List(MenuTab.allCases, selection: $coordinator.selectedTab) { tab in
             Label(tab.label, systemImage: tab.icon)
                 .tag(tab)
         }
