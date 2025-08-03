@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Combine
 import Foundation
 
 private typealias l10n = Strings.createItem
@@ -18,7 +17,6 @@ final class CreateItemViewModel: ObservableObject {
     private let imageUploadService: ImageUploadService
     private let receiptService: PurchaseReceiptService
     private let itemsProvider: () -> [Item]
-    private var cancellables: Set<AnyCancellable> = []
 
     @Published var newItem: Item
     @Published var pickedImage: PlatformImage?
@@ -70,14 +68,6 @@ final class CreateItemViewModel: ObservableObject {
             purchaseReceiptURL: nil
         )
 
-        AuthenticationManager.shared.$isSignedIn
-            .combineLatest(SpreadsheetManager.shared.$currentSheet)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] signedIn, sheet in
-                guard let self = self, signedIn, sheet != nil else { return }
-                Task { await self.loadRooms() }
-            }
-            .store(in: &cancellables)
     }
 
     func loadRooms() async {
@@ -192,19 +182,23 @@ final class CreateItemViewModel: ObservableObject {
         }
     }
 
-    func addRoom() async {
+    func addRoom() async -> Room? {
+        defer {
+            newRoomName = ""
+            showingAddRoomPrompt = false
+        }
         do {
             let newRoom = try await roomService.addRoom(name: newRoomName)
             newItem.lastKnownRoom = newRoom
             rooms.append(newRoom)
+            return newRoom
         } catch {
             Logger.log(error, extra: ["description": "Failed to add room"])
             newItem.lastKnownRoom = Room.placeholder()
             errorMessage = l10n.errors.addRoomFailed
             HapticManager.shared.error()
+            return nil
         }
-        newRoomName = ""
-        showingAddRoomPrompt = false
     }
 
     func saveItem() async {

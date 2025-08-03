@@ -103,6 +103,7 @@ struct InventoryView: View {
                     }
                 )
             )
+            .environmentObject(viewModel)
         }
 #endif
         .toolbar {
@@ -125,6 +126,7 @@ struct InventoryView: View {
         }
         .task {
             guard auth.isSignedIn, sheets.currentSheet != nil else { return }
+            await viewModel.loadRooms()
             await viewModel.fetchInventory()
             await viewModel.loadRecentLogs(for: viewModel.items)
 #if os(macOS)
@@ -137,6 +139,7 @@ struct InventoryView: View {
         }
         .refreshable {
             guard auth.isSignedIn, sheets.currentSheet != nil else { return }
+            await viewModel.loadRooms()
             await viewModel.fetchInventory()
             await viewModel.loadRecentLogs(for: viewModel.items)
 #if os(macOS)
@@ -155,6 +158,7 @@ struct InventoryView: View {
         .onChange(of: auth.isSignedIn) { signedIn in
             if signedIn, sheets.currentSheet != nil {
                 Task {
+                    await viewModel.loadRooms()
                     await viewModel.fetchInventory()
                     await viewModel.loadRecentLogs(for: viewModel.items)
                 }
@@ -163,6 +167,7 @@ struct InventoryView: View {
         .onChange(of: sheets.currentSheet?.id) { sheetID in
             if sheetID != nil, auth.isSignedIn {
                 Task {
+                    await viewModel.loadRooms()
                     await viewModel.fetchInventory()
                     await viewModel.loadRecentLogs(for: viewModel.items)
                 }
@@ -215,6 +220,7 @@ struct InventoryView: View {
                 ),
                 onCancel: { pane = selectedItem != nil ? .item(selectedItem!) : nil }
             )
+            .environmentObject(viewModel)
         case .edit(let item):
             EditItemView(
                 editableItem: item,

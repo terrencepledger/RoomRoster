@@ -9,9 +9,7 @@ struct CreateItemView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var viewModel: CreateItemViewModel
     var onCancel: (() -> Void)? = nil
-
-    @StateObject private var sheets = SpreadsheetManager.shared
-    @StateObject private var auth = AuthenticationManager.shared
+    @EnvironmentObject private var inventory: InventoryViewModel
 
     private func close() {
         if let onCancel { onCancel() } else { dismiss() }
@@ -34,7 +32,6 @@ struct CreateItemView: View {
                 }
                 .allowsHitTesting(false)
             }
-            .task { await viewModel.loadRooms() }
 #else
         NavigationStack { content }
             .macSheetFrame()
@@ -45,7 +42,6 @@ struct CreateItemView: View {
                 }
                 .allowsHitTesting(false)
             }
-            .task { await viewModel.loadRooms() }
 #endif
     }
 
@@ -356,7 +352,11 @@ struct CreateItemView: View {
                     text: $viewModel.newRoomName
                 )
                 Button(l10n.addRoom.button) {
-                    Task { await viewModel.addRoom() }
+                    Task {
+                        if let newRoom = await viewModel.addRoom() {
+                            inventory.rooms.append(newRoom)
+                        }
+                    }
                 }
                 .platformButtonStyle()
                 Button(Strings.general.cancel, role: .cancel) { }
@@ -369,14 +369,11 @@ struct CreateItemView: View {
             }
         }
         .onAppear {
-            Task { await viewModel.loadRooms() }
+            viewModel.rooms = inventory.rooms
             Logger.page("CreateItemView")
         }
-        .onChange(of: auth.isSignedIn) { _ in
-            Task { await viewModel.loadRooms() }
-        }
-        .onChange(of: sheets.currentSheet?.id) { _ in
-            Task { await viewModel.loadRooms() }
+        .onChange(of: inventory.rooms) { newRooms in
+            viewModel.rooms = newRooms
         }
     }
 
