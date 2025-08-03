@@ -70,20 +70,6 @@ final class CreateItemViewModel: ObservableObject {
 
     }
 
-    func loadRooms() async {
-        do {
-            await AuthenticationManager.shared.ensureSignedIn()
-            rooms = try await roomService.fetchRooms()
-        } catch {
-            if (error as? URLError)?.code == .cancelled || error is CancellationError {
-                return
-            }
-            Logger.log(error, extra: ["description": "Failed to load rooms"])
-            errorMessage = l10n.errors.loadRoomsFailed
-            HapticManager.shared.error()
-        }
-    }
-
     func onImagePicked(_ image: PlatformImage?) {
         pickedImage = image
         guard let image else { return }
@@ -212,9 +198,5 @@ final class CreateItemViewModel: ObservableObject {
             errorMessage = l10n.errors.saveFailed
             HapticManager.shared.error()
         }
-    }
-
-    func signIn() async {
-        await AuthenticationManager.shared.signIn()
     }
 }
