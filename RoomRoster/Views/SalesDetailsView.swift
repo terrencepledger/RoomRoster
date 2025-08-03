@@ -5,21 +5,34 @@ private typealias l10n = Strings.saleDetails
 struct SalesDetailsView: View {
     @State var sale: Sale
     let itemName: String
+#if os(macOS)
+    var openEdit: ((Sale) -> Void)? = nil
 
+    init(sale: Sale, itemName: String, openEdit: ((Sale) -> Void)? = nil) {
+        _sale = State(initialValue: sale)
+        self.itemName = itemName
+        self.openEdit = openEdit
+    }
+#else
     init(sale: Sale, itemName: String) {
         _sale = State(initialValue: sale)
         self.itemName = itemName
     }
+#endif
     @State private var shareURL: URL?
     @State private var errorMessage: String?
+#if !os(macOS)
     @State private var editSuccess: String?
+    @State private var isEditing = false
+#endif
     private let downloader = FileDownloadService()
 
     var body: some View {
 #if os(macOS)
-        NavigationStack { content }
-#else
         content
+#else
+        NavigationStack { content }
+            .navigationDestination(isPresented: $isEditing) { editSaleView }
 #endif
     }
 
@@ -81,15 +94,25 @@ struct SalesDetailsView: View {
                 VStack { Spacer(); ErrorBanner(message: errorMessage) }
                     .allowsHitTesting(false)
             }
+#if !os(macOS)
             if let message = editSuccess {
                 VStack { Spacer(); SuccessBanner(message: message) }
                     .allowsHitTesting(false)
             }
+#endif
         }
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                NavigationLink(l10n.editButton) { editSaleView }
+#if os(macOS)
+            if let openEdit {
+                ToolbarItem(placement: .primaryAction) {
+                    Button(l10n.editButton) { openEdit(sale) }
+                }
             }
+#else
+            ToolbarItem(placement: .primaryAction) {
+                Button(l10n.editButton) { isEditing = true }
+            }
+#endif
         }
         .sheet(item: $shareURL) { url in
             ShareSheet(activityItems: [url])
@@ -108,11 +131,13 @@ struct SalesDetailsView: View {
     private var editSaleView: some View {
         EditSaleView(viewModel: EditSaleViewModel(sale: sale)) { updated in
             sale = updated
+#if !os(macOS)
             editSuccess = Strings.saleDetails.editSuccess
             HapticManager.shared.success()
             DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
                 withAnimation { editSuccess = nil }
             }
+#endif
         }
     }
 }

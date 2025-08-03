@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Combine
 import Foundation
 
 private typealias l10n = Strings.createItem
@@ -68,19 +67,7 @@ final class CreateItemViewModel: ObservableObject {
             propertyTag: nil,
             purchaseReceiptURL: nil
         )
-    }
 
-    func loadRooms() async {
-        do {
-            rooms = try await roomService.fetchRooms()
-        } catch {
-            if (error as? URLError)?.code == .cancelled || error is CancellationError {
-                return
-            }
-            Logger.log(error, extra: ["description": "Failed to load rooms"])
-            errorMessage = l10n.errors.loadRoomsFailed
-            HapticManager.shared.error()
-        }
     }
 
     func onImagePicked(_ image: PlatformImage?) {
@@ -181,19 +168,23 @@ final class CreateItemViewModel: ObservableObject {
         }
     }
 
-    func addRoom() async {
+    func addRoom() async -> Room? {
+        defer {
+            newRoomName = ""
+            showingAddRoomPrompt = false
+        }
         do {
             let newRoom = try await roomService.addRoom(name: newRoomName)
             newItem.lastKnownRoom = newRoom
             rooms.append(newRoom)
+            return newRoom
         } catch {
             Logger.log(error, extra: ["description": "Failed to add room"])
             newItem.lastKnownRoom = Room.placeholder()
             errorMessage = l10n.errors.addRoomFailed
             HapticManager.shared.error()
+            return nil
         }
-        newRoomName = ""
-        showingAddRoomPrompt = false
     }
 
     func saveItem() async {
@@ -207,9 +198,5 @@ final class CreateItemViewModel: ObservableObject {
             errorMessage = l10n.errors.saveFailed
             HapticManager.shared.error()
         }
-    }
-
-    func signIn() async {
-        await AuthenticationManager.shared.signIn()
     }
 }
