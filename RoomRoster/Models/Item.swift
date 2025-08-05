@@ -37,10 +37,50 @@ struct Item: Identifiable, Hashable {
     var updatedBy: String
     var lastUpdated: Date?
     var propertyTag: PropertyTag?
+    var propertyTagRange: PropertyTagRange? = nil
     var purchaseReceiptURL: String?
 
     var isGrouped: Bool {
         groupID != nil || quantity > 1
+    }
+}
+
+struct PropertyTagFieldBinding: AnyFieldBinding {
+    let field: ItemField = .propertyTag
+    let label: String = "Property Tag"
+
+    func extract(from item: Item) -> String {
+        if let range = item.propertyTagRange {
+            return range.stringValue()
+        }
+        return item.propertyTag?.rawValue ?? ""
+    }
+
+    func apply(to item: inout Item, from value: String) {
+        guard !value.isEmpty else {
+            item.propertyTag = nil
+            item.propertyTagRange = nil
+            return
+        }
+        if let range = PropertyTagRange(from: value) {
+            if range.tags.count == 1 {
+                item.propertyTag = range.tags[0]
+                item.propertyTagRange = nil
+            } else {
+                item.propertyTagRange = range
+                item.propertyTag = nil
+            }
+        } else {
+            item.propertyTag = nil
+            item.propertyTagRange = nil
+        }
+    }
+
+    func diff(old: Item, new: Item, by: String, at: Date) -> HistoryAction? {
+        let oldValue = extract(from: old)
+        let newValue = extract(from: new)
+        guard oldValue != newValue else { return nil }
+        return .edited(field: label, oldValue: oldValue, newValue: newValue, by: by, date: at)
     }
 }
 
@@ -89,13 +129,7 @@ extension Item {
             },
             decode: { Date.fromShortString($0) }
         ),
-        .propertyTag: FieldBinding(
-            field: .propertyTag,
-            label: "Property Tag",
-            keyPath: \.propertyTag,
-            encode: { $0?.rawValue ?? "" },
-            decode: { PropertyTag(rawValue: $0) }
-        ),
+        .propertyTag: PropertyTagFieldBinding(),
         .purchaseReceiptURL: FieldBinding(
             field: .purchaseReceiptURL,
             label: "Purchase Receipt URL",
@@ -127,6 +161,6 @@ extension Item {
         .init(id: "", imageURL: "", name: "", description: "", groupID: nil, quantity: 0,
               dateAdded: "", estimatedPrice: nil, status: .available,
               lastKnownRoom: .empty(), updatedBy: "", lastUpdated: nil, propertyTag: nil,
-              purchaseReceiptURL: nil)
+              propertyTagRange: nil, purchaseReceiptURL: nil)
     }
 }

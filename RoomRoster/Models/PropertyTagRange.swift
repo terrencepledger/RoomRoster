@@ -64,7 +64,11 @@ struct PropertyTagRange: Hashable, Sequence, Codable {
         try container.encode(Self.collapsedString(from: tags))
     }
 
-    private static func collapsedString(from tags: [PropertyTag]) -> String {
+    func stringValue() -> String {
+        Self.collapsedString(from: tags)
+    }
+
+    static func collapsedString(from tags: [PropertyTag]) -> String {
         let sorted = tags.sorted { $0.rawValue < $1.rawValue }
         var result: [String] = []
         var index = 0

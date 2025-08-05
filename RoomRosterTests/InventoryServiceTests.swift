@@ -24,4 +24,20 @@ final class InventoryServiceTests: XCTestCase {
         XCTAssertEqual(mock.authorizedRequests.first?.1, "PUT")
         XCTAssertEqual(mock.sentRequests.count, 1)
     }
+
+    func testCreateItemSendsTagRange() async throws {
+        let mock = MockNetworkService()
+        let service = InventoryService(sheetId: "sheet", networkService: mock)
+        var item = Item.empty()
+        item.quantity = 2
+        item.propertyTagRange = PropertyTagRange(tags: [
+            PropertyTag(rawValue: "A0001")!,
+            PropertyTag(rawValue: "A0002")!
+        ])
+        try await service.createItem(item)
+        let body = mock.authorizedRequests.first?.2
+        let row = (body?["values"] as? [[String]])?.first
+        let index = ItemField.allCases.firstIndex(of: .propertyTag)!
+        XCTAssertEqual(row?[index], "A0001-A0002")
+    }
 }
