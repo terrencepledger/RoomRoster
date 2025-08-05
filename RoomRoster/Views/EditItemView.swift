@@ -343,7 +343,6 @@ struct EditItemView: View {
                             if let newURL = temporaryImageURL {
                                 editableItem.imageURL = newURL
                             }
-                            editableItem.propertyTag = PropertyTag(rawValue: propertyTagInput)
                             onSave(editableItem)
                             HapticManager.shared.success()
                             close()
@@ -443,20 +442,27 @@ struct EditItemView: View {
 #endif
 
     private func validateTag() {
-        if propertyTagInput.isEmpty || propertyTagInput == editableItem.propertyTag?.label {
+        if propertyTagInput.isEmpty {
+            editableItem.propertyTag = nil
+            tagError = nil
+            return
+        }
+        if propertyTagInput == editableItem.propertyTag?.label {
             tagError = nil
             return
         }
 
         do {
-            _ = try ItemValidator.validateTags(
+            let tags = try ItemValidator.validateTags(
                 propertyTagInput,
                 quantity: editableItem.quantity,
                 currentItemID: editableItem.id,
                 allItems: viewModel.items
             )
+            editableItem.propertyTag = tags.count == 1 ? tags[0] : nil
             tagError = nil
         } catch {
+            editableItem.propertyTag = nil
             if let validationError = error as? ItemValidationError {
                 switch validationError {
                 case .invalidTagFormat:
