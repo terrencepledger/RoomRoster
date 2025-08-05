@@ -9,7 +9,7 @@ import Foundation
 /// UI can accept flexible input while keeping property tags unique and
 /// correctly counted against the desired quantity.
 
-struct PropertyTagRange: Hashable, Sequence {
+struct PropertyTagRange: Hashable, Sequence, Codable {
     var tags: [PropertyTag]
 
     init(tags: [PropertyTag]) {
@@ -46,5 +46,56 @@ struct PropertyTagRange: Hashable, Sequence {
 
     func makeIterator() -> IndexingIterator<[PropertyTag]> {
         tags.makeIterator()
+    }
+
+    // MARK: - Codable
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let string = try container.decode(String.self)
+        guard let range = PropertyTagRange(from: string) else {
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid property tag range")
+        }
+        self = range
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(Self.collapsedString(from: tags))
+    }
+
+    private static func collapsedString(from tags: [PropertyTag]) -> String {
+        let sorted = tags.sorted { $0.rawValue < $1.rawValue }
+        var result: [String] = []
+        var index = 0
+        while index < sorted.count {
+            let startTag = sorted[index]
+            let prefix = String(startTag.rawValue.prefix(1))
+            let startNum = Int(startTag.rawValue.dropFirst())!
+            var endIndex = index
+            var lastNum = startNum
+
+            while endIndex + 1 < sorted.count {
+                let nextTag = sorted[endIndex + 1]
+                let nextPrefix = String(nextTag.rawValue.prefix(1))
+                let nextNum = Int(nextTag.rawValue.dropFirst())!
+                if nextPrefix == prefix && nextNum == lastNum + 1 {
+                    lastNum = nextNum
+                    endIndex += 1
+                } else {
+                    break
+                }
+            }
+
+            if endIndex > index {
+                result.append(String(format: "%@%04d-%@%04d", prefix, startNum, prefix, lastNum))
+            } else {
+                result.append(startTag.rawValue)
+            }
+
+            index = endIndex + 1
+        }
+
+        return result.joined(separator: ",")
     }
 }

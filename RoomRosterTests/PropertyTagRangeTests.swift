@@ -21,4 +21,17 @@ final class PropertyTagRangeTests: XCTestCase {
     func testInvalidRangeReturnsNil() {
         XCTAssertNil(PropertyTagRange(from: "A0003-A0001"))
     }
+
+    func testDifferentInitialLettersNotAllowed() {
+        XCTAssertNil(PropertyTagRange(from: "A1000-B1000"))
+    }
+
+    func testCodableRoundTrip() throws {
+        let original = "A0001-A0003,B0001"
+        let range = PropertyTagRange(from: original)!
+        let data = try JSONEncoder().encode(range)
+        let decoded = try JSONDecoder().decode(PropertyTagRange.self, from: data)
+        XCTAssertEqual(range, decoded)
+        XCTAssertEqual(String(data: data, encoding: .utf8), "\"A0001-A0003,B0001\"")
+    }
 }
