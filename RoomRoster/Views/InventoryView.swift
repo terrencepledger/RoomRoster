@@ -26,8 +26,6 @@ struct InventoryView: View {
         case saleDetails(Sale, Item)
     }
     @State private var pane: Pane?
-#else
-    @State private var showCreateItemView = false
 #endif
     @State private var expandedRooms: Set<Room> = []
     @State private var searchText: String = ""
@@ -72,7 +70,12 @@ struct InventoryView: View {
         }
     }
 #if !os(macOS)
-        .platformPopup(isPresented: $showCreateItemView) {
+        .platformPopup(
+            isPresented: Binding(
+                get: { createItemViewModel != nil },
+                set: { if !$0 { createItemViewModel = nil } }
+            )
+        ) {
             if let createItemViewModel {
                 CreateItemView(viewModel: createItemViewModel)
                     .environmentObject(viewModel)
@@ -317,7 +320,6 @@ struct InventoryView: View {
                             }
                         }
                     )
-                    showCreateItemView = true
                 }) {
                     Image(systemName: "plus")
                         .font(.system(size: 24))
