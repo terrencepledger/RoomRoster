@@ -397,20 +397,14 @@ struct CreateItemView: View {
 #else
     @ViewBuilder
     private var quantityField: some View {
-        HStack {
-            Text(l10n.basicInfo.quantity)
-            Spacer()
-            TextField(
-                l10n.basicInfo.enter.quantity,
-                value: $viewModel.newItem.quantity,
-                format: .number
-            )
-#if canImport(UIKit)
-            .keyboardType(.numberPad)
-#endif
-            .textFieldStyle(.roundedBorder)
-            .padding(.trailing)
+        Stepper(value: $viewModel.newItem.quantity, in: 1...Int.max) {
+            HStack {
+                Text(l10n.basicInfo.quantity)
+                Spacer()
+                Text("\(viewModel.newItem.quantity)")
+            }
         }
+        .padding(.trailing)
         .onChange(of: viewModel.newItem.quantity) { _ in
             viewModel.validateTag()
         }

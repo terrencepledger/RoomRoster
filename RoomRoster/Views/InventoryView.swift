@@ -368,8 +368,9 @@ struct InventoryView: View {
                                 VStack(alignment: .leading) {
                                     Text(item.name).font(.headline)
                                     Text(l10n.status(item.status.label))
-                                    if let tag = item.propertyTag {
-                                        Text(l10n.tag(tag.label))
+                                    if let (tagString, isRange) = propertyTagString(for: item) {
+                                        let text = isRange ? l10n.tags(tagString) : l10n.tag(tagString)
+                                        Text(text)
                                             .font(.subheadline)
                                             .foregroundColor(.gray)
                                     }
@@ -391,8 +392,9 @@ struct InventoryView: View {
                                     VStack(alignment: .leading) {
                                         Text(item.name).font(.headline)
                                         Text(l10n.status(item.status.label))
-                                        if let tag = item.propertyTag {
-                                            Text(l10n.tag(tag.label))
+                                        if let (tagString, isRange) = propertyTagString(for: item) {
+                                            let text = isRange ? l10n.tags(tagString) : l10n.tag(tagString)
+                                            Text(text)
                                                 .font(.subheadline)
                                                 .foregroundColor(.gray)
                                         }
@@ -501,5 +503,24 @@ struct InventoryView: View {
             }
             HapticManager.shared.impact()
         }
+    }
+}
+
+extension InventoryView {
+    /// Returns a display string for the item's property tags and whether it's a range.
+    private func propertyTagString(for item: Item) -> (String, Bool)? {
+        if let tag = item.propertyTag {
+            return (tag.label, false)
+        }
+        if let groupID = item.groupID {
+            let tags = viewModel.items
+                .filter { $0.groupID == groupID }
+                .compactMap { $0.propertyTag }
+                .sorted { $0.rawValue < $1.rawValue }
+            guard !tags.isEmpty else { return nil }
+            let range = PropertyTagRange(tags: tags)
+            return (range.label, tags.count > 1)
+        }
+        return nil
     }
 }

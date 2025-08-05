@@ -77,12 +77,11 @@ struct ItemDetailsView: View {
                             Text(String(describing: item.quantity))
                         }
 
-                        if let tag = item.propertyTag {
+                        if let (label, value) = tagInfo() {
                             HStack {
-                                Text(l10n.tag)
+                                Text(label)
                                     .font(.headline)
-                                
-                                Text(tag.label)
+                                Text(value)
                             }
                         }
 
@@ -383,6 +382,25 @@ struct ItemDetailsView: View {
 #else
         .automatic
 #endif
+    }
+}
+
+extension ItemDetailsView {
+    private func tagInfo() -> (label: String, value: String)? {
+        if let tag = item.propertyTag {
+            return (Strings.itemDetails.tag, tag.label)
+        }
+        if let groupID = item.groupID {
+            let tags = inventoryVM.items
+                .filter { $0.groupID == groupID }
+                .compactMap { $0.propertyTag }
+                .sorted { $0.rawValue < $1.rawValue }
+            guard !tags.isEmpty else { return nil }
+            let range = PropertyTagRange(tags: tags)
+            let label = tags.count > 1 ? Strings.itemDetails.tags : Strings.itemDetails.tag
+            return (label, range.label)
+        }
+        return nil
     }
 }
 
