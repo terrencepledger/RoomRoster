@@ -26,8 +26,6 @@ struct InventoryView: View {
         case saleDetails(Sale, Item)
     }
     @State private var pane: Pane?
-#else
-    @State private var showCreateItemView = false
 #endif
     @State private var expandedRooms: Set<Room> = []
     @State private var searchText: String = ""
@@ -36,6 +34,7 @@ struct InventoryView: View {
     @State private var includeDiscardedItems: Bool = false
     @State private var logVersion = 0
     @State private var successMessage: String?
+    @State private var createItemViewModel: CreateItemViewModel?
 
     #if os(macOS)
     init(selectedItemID: Binding<String?>) {
@@ -71,39 +70,16 @@ struct InventoryView: View {
         }
     }
 #if !os(macOS)
-        .platformPopup(isPresented: $showCreateItemView) {
-            CreateItemView(
-                viewModel: CreateItemViewModel(
-                    inventoryService: InventoryService(),
-                    roomService: RoomService(),
-                    itemsProvider: { viewModel.items },
-                    onSave: { newItem in
-                        Task {
-                            do {
-                                try await InventoryService().createItem(newItem)
-                                let createdBy = AuthenticationManager.shared.userName
-                                await HistoryLogService().logCreation(for: newItem, createdBy: createdBy)
-                                await viewModel.fetchInventory()
-                                successMessage = Strings.createItem.success
-                                HapticManager.shared.success()
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                                    withAnimation { successMessage = nil }
-                                }
-                            } catch {
-                                Logger.log(error, extra: ["description": "Error creating item, updating log, or re-fetching"])
-                                withAnimation {
-                                    viewModel.errorMessage = l10n.failedToSave
-                                }
-                                HapticManager.shared.error()
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                                    withAnimation { viewModel.errorMessage = nil }
-                                }
-                            }
-                        }
-                    }
-                )
+        .platformPopup(
+            isPresented: Binding(
+                get: { createItemViewModel != nil },
+                set: { if !$0 { createItemViewModel = nil } }
             )
-            .environmentObject(viewModel)
+        ) {
+            if let createItemViewModel {
+                CreateItemView(viewModel: createItemViewModel)
+                    .environmentObject(viewModel)
+            }
         }
 #endif
         .toolbar {
@@ -112,6 +88,24 @@ struct InventoryView: View {
                 if sheets.currentSheet != nil {
                     Button(action: {
                         Logger.action("Pressed Add Item Toolbar")
+                        createItemViewModel = CreateItemViewModel(
+                            inventoryService: InventoryService(),
+                            roomService: RoomService(),
+                            itemsProvider: { viewModel.items },
+                            onSave: { newItem in
+                                selectedItem = newItem
+                                selectedItemID = newItem.id
+                                pane = .item(newItem)
+                                Task {
+                                    await viewModel.fetchInventory()
+                                    successMessage = Strings.createItem.success
+                                    HapticManager.shared.success()
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                        withAnimation { successMessage = nil }
+                                    }
+                                }
+                            }
+                        )
                         pane = .create
                     }) {
                         Label(l10n.addItemButton, systemImage: "plus")
@@ -199,28 +193,13 @@ struct InventoryView: View {
             .id(item)
             .environmentObject(viewModel)
         case .create:
-            CreateItemView(
-                viewModel: CreateItemViewModel(
-                    inventoryService: InventoryService(),
-                    roomService: RoomService(),
-                    itemsProvider: { viewModel.items },
-                    onSave: { newItem in
-                        selectedItem = newItem
-                        selectedItemID = newItem.id
-                        pane = .item(newItem)
-                        Task {
-                            await viewModel.fetchInventory()
-                            successMessage = Strings.createItem.success
-                            HapticManager.shared.success()
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                                withAnimation { successMessage = nil }
-                            }
-                        }
-                    }
-                ),
-                onCancel: { pane = selectedItem != nil ? .item(selectedItem!) : nil }
-            )
-            .environmentObject(viewModel)
+            if let createItemViewModel {
+                CreateItemView(
+                    viewModel: createItemViewModel,
+                    onCancel: { pane = selectedItem != nil ? .item(selectedItem!) : nil }
+                )
+                .environmentObject(viewModel)
+            }
         case .edit(let item):
             EditItemView(
                 editableItem: item,
@@ -324,7 +303,23 @@ struct InventoryView: View {
                 Button(action: {
                     Logger.action("Pressed Add Item Button")
                     HapticManager.shared.impact()
-                    showCreateItemView.toggle()
+                    createItemViewModel = CreateItemViewModel(
+                        inventoryService: InventoryService(),
+                        roomService: RoomService(),
+                        itemsProvider: { viewModel.items },
+                        onSave: { newItem in
+                            Task {
+                                let createdBy = AuthenticationManager.shared.userName
+                                await HistoryLogService().logCreation(for: newItem, createdBy: createdBy)
+                                await viewModel.fetchInventory()
+                                successMessage = Strings.createItem.success
+                                HapticManager.shared.success()
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                    withAnimation { successMessage = nil }
+                                }
+                            }
+                        }
+                    )
                 }) {
                     Image(systemName: "plus")
                         .font(.system(size: 24))
