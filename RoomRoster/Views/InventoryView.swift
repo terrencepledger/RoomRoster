@@ -64,7 +64,7 @@ struct InventoryView: View {
                 detailPane
             }
 #else
-            NavigationView {
+            NavigationStack {
                 listPane
             }
 #endif

@@ -15,6 +15,7 @@ private typealias l10n = Strings.editItem
 
 struct EditItemView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var coordinator: MainMenuCoordinator
     @State var editableItem: Item
     var onSave: (Item) -> Void
     var onCancel: (() -> Void)? = nil
@@ -46,6 +47,9 @@ struct EditItemView: View {
     var body: some View {
         NavigationStack { content }
             .macSheetFrame()
+            .onChange(of: coordinator.selectedTab) { _ in
+                close()
+            }
     }
 
     private var content: some View {

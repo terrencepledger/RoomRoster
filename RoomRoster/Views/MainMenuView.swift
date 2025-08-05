@@ -57,14 +57,22 @@ struct MainMenuView: View {
     @ViewBuilder
     private var menuList: some View {
 #if os(macOS)
-        List(MenuTab.allCases, selection: $coordinator.selectedTab) { tab in
-            Label(tab.label, systemImage: tab.icon)
-                .tag(tab)
+        List(selection: $coordinator.selectedTab) {
+            ForEach(MenuTab.allCases) { tab in
+                Label(tab.label, systemImage: tab.icon)
+                    .tag(tab)
+            }
         }
 #else
-        List(MenuTab.allCases) { tab in
-            Label(tab.label, systemImage: tab.icon)
-                .tag(tab)
+        List {
+            ForEach(MenuTab.allCases) { tab in
+                Label(tab.label, systemImage: tab.icon)
+                    .tag(tab)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        coordinator.selectedTab = tab
+                    }
+            }
         }
 #endif
     }

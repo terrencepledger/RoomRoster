@@ -2,6 +2,7 @@ import SwiftUI
 
 struct EditSaleView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var coordinator: MainMenuCoordinator
     @StateObject var viewModel: EditSaleViewModel
     var onSave: (Sale) -> Void
 
@@ -20,6 +21,9 @@ struct EditSaleView: View {
                     }
                 }
                 .allowsHitTesting(false)
+            }
+            .onChange(of: coordinator.selectedTab) { _ in
+                dismiss()
             }
     }
 
