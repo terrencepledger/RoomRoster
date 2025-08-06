@@ -21,7 +21,8 @@ struct PropertyTagRange: Hashable, Sequence, Codable {
         for segment in string.split(separator: ",") {
             let part = segment.trimmingCharacters(in: .whitespacesAndNewlines)
             if part.contains("-") {
-                let ends = part.split(separator: "-", maxSplits: 1).map { String($0) }
+                let ends = part.split(separator: "-", maxSplits: 1)
+                    .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
                 guard ends.count == 2,
                       let start = PropertyTag(rawValue: ends[0]),
                       let end = PropertyTag(rawValue: ends[1]) else { return nil }

@@ -12,6 +12,11 @@ final class PropertyTagRangeTests: XCTestCase {
         XCTAssertEqual(range?.tags, ["A0001", "A0002", "A0003"].compactMap { PropertyTag(rawValue: $0) })
     }
 
+    func testParseRangeWithSpaces() {
+        let range = PropertyTagRange(from: "A0001 - A0003")
+        XCTAssertEqual(range?.tags.map(\.rawValue), ["A0001", "A0002", "A0003"])
+    }
+
     func testParseListAndRange() {
         let range = PropertyTagRange(from: "A0001-A0002,B0001")
         let expected = ["A0001", "A0002", "B0001"].compactMap { PropertyTag(rawValue: $0) }
