@@ -138,6 +138,14 @@ final class CreateItemViewModel: ObservableObject {
     }
 
     func validateTag() {
+        if propertyTagInput.isEmpty {
+            newItem.propertyTag = nil
+            newItem.propertyTagRange = nil
+            tagError = nil
+            showTagError = false
+            return
+        }
+
         do {
             let tags = try ItemValidator.validateTags(
                 propertyTagInput,
@@ -145,7 +153,13 @@ final class CreateItemViewModel: ObservableObject {
                 currentItemID: nil,
                 allItems: itemsProvider()
             )
-            newItem.propertyTag = tags.count == 1 ? tags[0] : nil
+            if tags.count == 1 {
+                newItem.propertyTag = tags[0]
+                newItem.propertyTagRange = nil
+            } else {
+                newItem.propertyTag = nil
+                newItem.propertyTagRange = PropertyTagRange(tags: tags)
+            }
             tagError = nil
             showTagError = false
         } catch {
@@ -165,6 +179,7 @@ final class CreateItemViewModel: ObservableObject {
             }
             showTagError = true
             newItem.propertyTag = nil
+            newItem.propertyTagRange = nil
         }
     }
 

@@ -368,8 +368,8 @@ struct InventoryView: View {
                                 VStack(alignment: .leading) {
                                     Text(item.name).font(.headline)
                                     Text(l10n.status(item.status.label))
-                                    if let tag = item.propertyTag {
-                                        Text(l10n.tag(tag.label))
+                                    if let tagString = item.propertyTagRange?.stringValue() ?? item.propertyTag?.label {
+                                        Text(l10n.tag(tagString))
                                             .font(.subheadline)
                                             .foregroundColor(.gray)
                                     }
@@ -391,8 +391,8 @@ struct InventoryView: View {
                                     VStack(alignment: .leading) {
                                         Text(item.name).font(.headline)
                                         Text(l10n.status(item.status.label))
-                                        if let tag = item.propertyTag {
-                                            Text(l10n.tag(tag.label))
+                                        if let tagString = item.propertyTagRange?.stringValue() ?? item.propertyTag?.label {
+                                            Text(l10n.tag(tagString))
                                                 .font(.subheadline)
                                                 .foregroundColor(.gray)
                                         }
@@ -434,7 +434,8 @@ struct InventoryView: View {
                 return (item, l10n.query.name)
             } else if item.description.lowercased().contains(query) {
                 return (item, l10n.query.description)
-            } else if let tag = item.propertyTag?.label.lowercased(), tag.contains(query) {
+            } else if let tag = (item.propertyTagRange?.stringValue() ?? item.propertyTag?.label)?.lowercased(),
+                      tag.contains(query) {
                 return (item, l10n.query.tag)
             } else if item.status.label.lowercased().contains(query) {
                 return (item, l10n.query.status)
