@@ -16,6 +16,12 @@ struct SalesView: View {
 #endif
     @State private var successMessage: String?
 
+    @State private var searchText: String = ""
+    @State private var startDate: Date?
+    @State private var endDate: Date?
+    @State private var minPrice: Double?
+    @State private var maxPrice: Double?
+
 #if os(macOS)
     init(selectedSaleIndex: Binding<Int?>) {
         self._selectedSaleIndex = selectedSaleIndex
@@ -80,10 +86,7 @@ struct SalesView: View {
             guard sheets.currentSheet != nil else { return }
             await viewModel.loadSales()
 #if os(macOS)
-            if let idx = selectedSaleIndex,
-               idx < viewModel.sales.count {
-                selectedSale = viewModel.sales[idx]
-            }
+            updateSelection()
 #else
             if let pending = coordinator.pendingSale,
                let match = viewModel.sales.firstIndex(of: pending) {
@@ -96,10 +99,7 @@ struct SalesView: View {
             guard sheets.currentSheet != nil else { return }
             await viewModel.loadSales()
 #if os(macOS)
-            if let idx = selectedSaleIndex,
-               idx < viewModel.sales.count {
-                selectedSale = viewModel.sales[idx]
-            }
+            updateSelection()
 #else
             if let pending = coordinator.pendingSale,
                let match = viewModel.sales.firstIndex(of: pending) {
@@ -130,6 +130,13 @@ struct SalesView: View {
                 }
             }
         }
+#if os(macOS)
+        .onChange(of: searchText) { _ in updateSelection() }
+        .onChange(of: startDate) { _ in updateSelection() }
+        .onChange(of: endDate) { _ in updateSelection() }
+        .onChange(of: minPrice) { _ in updateSelection() }
+        .onChange(of: maxPrice) { _ in updateSelection() }
+#endif
     }
 
 #if os(macOS)
@@ -139,7 +146,7 @@ struct SalesView: View {
             set: { newValue in
                 selectedSale = newValue
                 if let value = newValue,
-                   let idx = viewModel.sales.firstIndex(of: value) {
+                   let idx = filteredSales.firstIndex(of: value) {
                     selectedSaleIndex = idx
                 } else {
                     selectedSaleIndex = nil
@@ -155,12 +162,20 @@ struct SalesView: View {
     private var listPane: some View {
 #if os(macOS)
         List(selection: selectionBinding) {
-            listContent
+            Section {
+                listContent
+            } header: {
+                filterHeader
+            }
         }
         .listStyle(.inset)
 #else
         List {
-            listContent
+            Section {
+                listContent
+            } header: {
+                filterHeader
+            }
         }
 #endif
     }
@@ -173,8 +188,11 @@ struct SalesView: View {
         } else if viewModel.sales.isEmpty {
             Text(l10n.emptyState)
                 .foregroundColor(.secondary)
+        } else if filteredSales.isEmpty {
+            Text("No results")
+                .foregroundColor(.secondary)
         } else {
-            ForEach(Array(viewModel.sales.enumerated()), id: \.offset) { i, sale in
+            ForEach(Array(filteredSales.enumerated()), id: \.offset) { i, sale in
 #if os(macOS)
                 VStack(alignment: .leading) {
                     Text(viewModel.itemName(for: sale))
@@ -225,4 +243,57 @@ struct SalesView: View {
             }
         }
     }
+
+    @ViewBuilder
+    private var filterHeader: some View {
+        VStack {
+            TextField("Search", text: $searchText)
+                .textFieldStyle(.roundedBorder)
+            HStack {
+                DatePicker(
+                    "From",
+                    selection: Binding(get: { startDate ?? Date() }, set: { startDate = $0 }),
+                    displayedComponents: .date
+                )
+                DatePicker(
+                    "To",
+                    selection: Binding(get: { endDate ?? Date() }, set: { endDate = $0 }),
+                    displayedComponents: .date
+                )
+            }
+            HStack {
+                TextField(
+                    "Min Price",
+                    value: Binding(get: { minPrice ?? 0 }, set: { minPrice = $0 }),
+                    format: .number
+                )
+                TextField(
+                    "Max Price",
+                    value: Binding(get: { maxPrice ?? 0 }, set: { maxPrice = $0 }),
+                    format: .number
+                )
+            }
+        }
+    }
+
+    private var filteredSales: [Sale] {
+        viewModel.filteredSales(
+            query: searchText,
+            startDate: startDate,
+            endDate: endDate,
+            minPrice: minPrice,
+            maxPrice: maxPrice
+        )
+    }
+
+#if os(macOS)
+    private func updateSelection() {
+        if let idx = selectedSaleIndex, idx < filteredSales.count {
+            selectedSale = filteredSales[idx]
+        } else {
+            selectedSale = nil
+            selectedSaleIndex = nil
+        }
+    }
+#endif
 }
