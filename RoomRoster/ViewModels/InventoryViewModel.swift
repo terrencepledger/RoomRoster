@@ -13,6 +13,7 @@ class InventoryViewModel: ObservableObject {
     @Published var rooms: [Room] = []
     @Published var recentLogs: [String: [String]] = [:]
     @Published var errorMessage: String?
+    @Published var isLoading = false
     private let service: InventoryService
     private let roomService: RoomService
 
@@ -25,6 +26,8 @@ class InventoryViewModel: ObservableObject {
     }
 
     func loadRooms() async {
+        isLoading = true
+        defer { isLoading = false }
         do {
             self.rooms = try await roomService.fetchRooms()
         } catch {
@@ -49,6 +52,8 @@ class InventoryViewModel: ObservableObject {
     }
     
     func fetchInventory() async {
+        isLoading = true
+        defer { isLoading = false }
         do {
             let response = try await service.fetchInventory()
             self.items = response.toItems()
@@ -65,6 +70,8 @@ class InventoryViewModel: ObservableObject {
     }
 
     func loadRecentLogs(for items: [Item], maxPerItem: Int = 5) async {
+        isLoading = true
+        defer { isLoading = false }
         do {
             let sheet = try await service.fetchAllHistory()
             

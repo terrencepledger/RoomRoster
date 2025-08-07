@@ -5,6 +5,7 @@ final class SalesViewModel: ObservableObject {
     @Published var sales: [Sale] = []
     @Published var errorMessage: String? = nil
     @Published private(set) var itemsById: [String: Item] = [:]
+    @Published var isLoading = false
 
     private let salesService: SalesService
     private let inventoryService: InventoryService
@@ -19,6 +20,8 @@ final class SalesViewModel: ObservableObject {
 
     func loadSales() async {
         errorMessage = nil
+        isLoading = true
+        defer { isLoading = false }
         do {
             itemsById = [:]
             sales = try await salesService.fetchSales()
