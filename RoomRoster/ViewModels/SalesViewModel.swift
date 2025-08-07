@@ -37,4 +37,29 @@ final class SalesViewModel: ObservableObject {
     func itemName(for sale: Sale) -> String {
         itemsById[sale.itemId]?.name ?? Strings.general.loading
     }
+
+    func filteredSales(
+        query: String,
+        startDate: Date?,
+        endDate: Date?,
+        minPrice: Double?,
+        maxPrice: Double?
+    ) -> [Sale] {
+        let q = query.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        return sales.filter { sale in
+            if !q.isEmpty {
+                let name = itemName(for: sale).lowercased()
+                if !name.contains(q) { return false }
+            }
+            if let start = startDate, sale.date < start { return false }
+            if let end = endDate, sale.date > end { return false }
+            if let min = minPrice {
+                guard let price = sale.price, price >= min else { return false }
+            }
+            if let max = maxPrice {
+                guard let price = sale.price, price <= max else { return false }
+            }
+            return true
+        }
+    }
 }
