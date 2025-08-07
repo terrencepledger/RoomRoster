@@ -368,9 +368,8 @@ struct InventoryView: View {
                                 VStack(alignment: .leading) {
                                     Text(item.name).font(.headline)
                                     Text(l10n.status(item.status.label))
-                                    if let (tagString, isRange) = propertyTagString(for: item) {
-                                        let text = isRange ? l10n.tags(tagString) : l10n.tag(tagString)
-                                        Text(text)
+                                    if let tagString = item.propertyTagRange?.stringValue() ?? item.propertyTag?.label {
+                                        Text(l10n.tag(tagString))
                                             .font(.subheadline)
                                             .foregroundColor(.gray)
                                     }
@@ -392,9 +391,8 @@ struct InventoryView: View {
                                     VStack(alignment: .leading) {
                                         Text(item.name).font(.headline)
                                         Text(l10n.status(item.status.label))
-                                        if let (tagString, isRange) = propertyTagString(for: item) {
-                                            let text = isRange ? l10n.tags(tagString) : l10n.tag(tagString)
-                                            Text(text)
+                                        if let tagString = item.propertyTagRange?.stringValue() ?? item.propertyTag?.label {
+                                            Text(l10n.tag(tagString))
                                                 .font(.subheadline)
                                                 .foregroundColor(.gray)
                                         }

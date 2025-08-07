@@ -138,7 +138,7 @@ final class CreateItemViewModel: ObservableObject {
     }
 
     func validateTag() {
-        if propertyTagInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+        if propertyTagInput.isEmpty {
             newItem.propertyTag = nil
             newItem.propertyTagRange = nil
             tagError = nil
