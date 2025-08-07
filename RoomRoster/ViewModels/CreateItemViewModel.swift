@@ -210,6 +210,8 @@ final class CreateItemViewModel: ObservableObject {
         validateTag()
         guard tagError == nil else { return }
         do {
+            newItem.updatedBy = AuthenticationManager.shared.userName ?? ""
+            newItem.lastUpdated = Date()
             try await inventoryService.createItem(newItem)
             onSave?(newItem)
         } catch {
