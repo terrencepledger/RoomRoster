@@ -77,12 +77,12 @@ struct ItemDetailsView: View {
                             Text(String(describing: item.quantity))
                         }
 
-                        if let tagString = item.propertyTagRange?.stringValue() ?? item.propertyTag?.label {
+                        if let (label, value) = tagInfo() {
                             HStack {
                                 Text(label)
                                     .font(.headline)
 
-                                Text(tagString)
+                                Text(value)
                             }
                         }
 
