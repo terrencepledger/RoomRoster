@@ -79,7 +79,7 @@ struct ItemDetailsView: View {
 
                         if let tagString = item.propertyTagRange?.stringValue() ?? item.propertyTag?.label {
                             HStack {
-                                Text(l10n.tag)
+                                Text(label)
                                     .font(.headline)
 
                                 Text(tagString)
@@ -383,6 +383,29 @@ struct ItemDetailsView: View {
 #else
         .automatic
 #endif
+    }
+}
+
+extension ItemDetailsView {
+    private func tagInfo() -> (label: String, value: String)? {
+        if let range = item.propertyTagRange {
+            let label = range.tags.count > 1 ? Strings.itemDetails.tags : Strings.itemDetails.tag
+            return (label, range.label)
+        }
+        if let tag = item.propertyTag {
+            return (Strings.itemDetails.tag, tag.label)
+        }
+        if let groupID = item.groupID {
+            let tags = inventoryVM.items
+                .filter { $0.groupID == groupID }
+                .flatMap { $0.propertyTagRange?.tags ?? ($0.propertyTag.map { [$0] } ?? []) }
+                .sorted { $0.rawValue < $1.rawValue }
+            guard !tags.isEmpty else { return nil }
+            let range = PropertyTagRange(tags: tags)
+            let label = tags.count > 1 ? Strings.itemDetails.tags : Strings.itemDetails.tag
+            return (label, range.label)
+        }
+        return nil
     }
 }
 

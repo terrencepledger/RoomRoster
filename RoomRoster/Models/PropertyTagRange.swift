@@ -104,3 +104,36 @@ struct PropertyTagRange: Hashable, Sequence, Codable {
         return result.joined(separator: ",")
     }
 }
+
+extension PropertyTagRange {
+    /// A human‑readable representation of the range.
+    ///
+    /// - Single tag ranges return that tag's label.
+    /// - Sequential tags with a common prefix return "first-last".
+    /// - Non‑sequential tags return a comma‑separated list.
+    var label: String {
+        let sorted = tags.sorted { $0.rawValue < $1.rawValue }
+        guard let first = sorted.first else { return "" }
+        if sorted.count == 1 { return first.label }
+
+        let prefix = String(first.rawValue.prefix(1))
+        var expected = Int(first.rawValue.dropFirst()) ?? 0
+        var sequential = true
+
+        for tag in sorted {
+            let tagPrefix = String(tag.rawValue.prefix(1))
+            let tagNum = Int(tag.rawValue.dropFirst()) ?? 0
+            if tagPrefix != prefix || tagNum != expected {
+                sequential = false
+                break
+            }
+            expected += 1
+        }
+
+        if sequential, let last = sorted.last {
+            return "\(first.label)-\(last.label)"
+        }
+
+        return sorted.map { $0.label }.joined(separator: ",")
+    }
+}

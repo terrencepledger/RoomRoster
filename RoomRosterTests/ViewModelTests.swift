@@ -58,8 +58,10 @@ final class ViewModelTests: XCTestCase {
             receiptService: PurchaseReceiptService(),
             itemsProvider: { [] }
         )
-        vm.newItem.quantity = 2
         vm.propertyTagInput = "A0001"
+        vm.validateTag()
+        XCTAssertNil(vm.tagError)
+        vm.newItem.quantity = 2
         vm.validateTag()
         XCTAssertTrue(vm.showTagError)
         XCTAssertEqual(vm.tagError, Strings.createItem.errors.tag.quantityMismatch)

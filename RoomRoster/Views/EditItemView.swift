@@ -424,15 +424,9 @@ struct EditItemView: View {
             Text(l10n.basicInfo.quantity)
                 .font(.caption)
                 .foregroundColor(.gray)
-            TextField(
-                l10n.basicInfo.enter.quantity,
-                value: $editableItem.quantity,
-                format: .number
-            )
-#if canImport(UIKit)
-            .keyboardType(.numberPad)
-#endif
-            .textFieldStyle(.roundedBorder)
+            Stepper(value: $editableItem.quantity, in: 1...Int.max) {
+                Text("\(editableItem.quantity)")
+            }
             .padding(.trailing)
         }
         .onChange(of: editableItem.quantity) { _ in

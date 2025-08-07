@@ -43,6 +43,9 @@ struct Strings {
         static func tag(_ tag: String) -> String {
             "Tag: \(tag)"
         }
+        static func tags(_ tags: String) -> String {
+            "Tags: \(tags)"
+        }
         static func matchedLabel(_ context: String) -> String {
             "Matched in: \(context)"
         }
@@ -128,6 +131,7 @@ struct Strings {
         static let title = "Item Details"
         static let quantity = "Quantity:"
         static let tag = "Property Tag:"
+        static let tags = "Property Tags:"
         static let dateAdded = "Date Added:"
         static let priceTitle = "Estimated Price:"
         static let status = "Status:"
