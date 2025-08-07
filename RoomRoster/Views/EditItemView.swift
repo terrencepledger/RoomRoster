@@ -169,7 +169,7 @@ struct EditItemView: View {
                                     withAnimation {
                                         if tagError != nil {
                                             if !tagFieldFocused {
-                                                propertyTagInput = editableItem.propertyTag?.label ?? ""
+                                                propertyTagInput = editableItem.propertyTagRange?.stringValue() ?? editableItem.propertyTag?.label ?? ""
                                             }
                                             validateTag()
                                         }
@@ -219,7 +219,7 @@ struct EditItemView: View {
                                         withAnimation {
                                             if tagError != nil {
                                                 if !tagFieldFocused {
-                                                    propertyTagInput = editableItem.propertyTag?.label ?? ""
+                                                    propertyTagInput = editableItem.propertyTagRange?.stringValue() ?? editableItem.propertyTag?.label ?? ""
                                                 }
                                                 validateTag()
                                             }
@@ -343,7 +343,6 @@ struct EditItemView: View {
                             if let newURL = temporaryImageURL {
                                 editableItem.imageURL = newURL
                             }
-                            editableItem.propertyTag = PropertyTag(rawValue: propertyTagInput)
                             onSave(editableItem)
                             HapticManager.shared.success()
                             close()
@@ -388,7 +387,7 @@ struct EditItemView: View {
             }
         .onAppear {
             Logger.page("EditItemView")
-            propertyTagInput = editableItem.propertyTag?.rawValue ?? ""
+            propertyTagInput = editableItem.propertyTagRange?.stringValue() ?? editableItem.propertyTag?.rawValue ?? ""
             if let parsed = Date.fromShortString(editableItem.dateAdded) {
                 dateAddedDate = parsed
             }
@@ -437,20 +436,35 @@ struct EditItemView: View {
 #endif
 
     private func validateTag() {
-        if propertyTagInput.isEmpty || propertyTagInput == editableItem.propertyTag?.label {
+        if propertyTagInput.isEmpty {
+            editableItem.propertyTag = nil
+            editableItem.propertyTagRange = nil
+            tagError = nil
+            return
+        }
+        if propertyTagInput == (editableItem.propertyTagRange?.stringValue() ?? editableItem.propertyTag?.label) {
             tagError = nil
             return
         }
 
         do {
-            _ = try ItemValidator.validateTags(
+            let tags = try ItemValidator.validateTags(
                 propertyTagInput,
                 quantity: editableItem.quantity,
                 currentItemID: editableItem.id,
                 allItems: viewModel.items
             )
+            if tags.count == 1 {
+                editableItem.propertyTag = tags[0]
+                editableItem.propertyTagRange = nil
+            } else {
+                editableItem.propertyTag = nil
+                editableItem.propertyTagRange = PropertyTagRange(tags: tags)
+            }
             tagError = nil
         } catch {
+            editableItem.propertyTag = nil
+            editableItem.propertyTagRange = nil
             if let validationError = error as? ItemValidationError {
                 switch validationError {
                 case .invalidTagFormat:

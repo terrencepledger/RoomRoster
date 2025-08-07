@@ -436,7 +436,8 @@ struct InventoryView: View {
                 return (item, l10n.query.name)
             } else if item.description.lowercased().contains(query) {
                 return (item, l10n.query.description)
-            } else if let tag = item.propertyTag?.label.lowercased(), tag.contains(query) {
+            } else if let tag = (item.propertyTagRange?.stringValue() ?? item.propertyTag?.label)?.lowercased(),
+                      tag.contains(query) {
                 return (item, l10n.query.tag)
             } else if item.status.label.lowercased().contains(query) {
                 return (item, l10n.query.status)
@@ -509,13 +510,16 @@ struct InventoryView: View {
 extension InventoryView {
     /// Returns a display string for the item's property tags and whether it's a range.
     private func propertyTagString(for item: Item) -> (String, Bool)? {
+        if let range = item.propertyTagRange {
+            return (range.label, range.tags.count > 1)
+        }
         if let tag = item.propertyTag {
             return (tag.label, false)
         }
         if let groupID = item.groupID {
             let tags = viewModel.items
                 .filter { $0.groupID == groupID }
-                .compactMap { $0.propertyTag }
+                .flatMap { $0.propertyTagRange?.tags ?? ($0.propertyTag.map { [$0] } ?? []) }
                 .sorted { $0.rawValue < $1.rawValue }
             guard !tags.isEmpty else { return nil }
             let range = PropertyTagRange(tags: tags)

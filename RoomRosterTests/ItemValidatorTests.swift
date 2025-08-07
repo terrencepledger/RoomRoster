@@ -47,4 +47,12 @@ final class ItemValidatorTests: XCTestCase {
         let tags = try ItemValidator.validateTags("A0001-A0002", quantity: 2, currentItemID: nil, allItems: [])
         XCTAssertEqual(tags.map(\.rawValue), ["A0001", "A0002"])
     }
+
+    func testValidateCrossLetterRangeThrows() {
+        XCTAssertThrowsError(
+            try ItemValidator.validateTags("A1000-B1000", quantity: 2, currentItemID: nil, allItems: [])
+        ) { error in
+            XCTAssertEqual(error as? ItemValidationError, .invalidTagFormat)
+        }
+    }
 }
