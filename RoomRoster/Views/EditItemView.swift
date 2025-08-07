@@ -37,6 +37,7 @@ struct EditItemView: View {
     @State private var dateAddedDate: Date = Date()
     @State private var propertyTagInput: String = ""
     @State private var tagError: String? = nil
+    @State private var showScanner = false
     @State private var showingAddRoomPrompt = false
     @State private var newRoomName = ""
     @FocusState private var tagFieldFocused: Bool
@@ -150,7 +151,11 @@ struct EditItemView: View {
                         TextField(l10n.basicInfo.enter.tag, text: $propertyTagInput)
                             .focused($tagFieldFocused)
                             .frame(width: fieldWidth)
-                            .padding(.trailing, 4)
+                            .padding(.trailing, 28)
+                            .overlay(alignment: .trailing) {
+                                scanButton
+                                    .padding(.trailing, 4)
+                            }
                             .onChange(of: tagFieldFocused) { focused in
                                 if !focused {
                                     withAnimation { validateTag() }
@@ -202,7 +207,11 @@ struct EditItemView: View {
                         TextField(l10n.basicInfo.enter.tag, text: $propertyTagInput)
                             .focused($tagFieldFocused)
                             .textFieldStyle(.roundedBorder)
-                            .padding(.trailing)
+                            .padding(.trailing, 28)
+                            .overlay(alignment: .trailing) {
+                                scanButton
+                                    .padding(.trailing, 8)
+                            }
                             .onChange(of: tagFieldFocused) { focused in
                                 if !focused {
                                     withAnimation {
@@ -398,6 +407,28 @@ struct EditItemView: View {
         .task {
             await viewModel.loadRooms()
         }
+        .sheet(isPresented: $showScanner) {
+            BarcodeScannerView { code in
+                propertyTagInput = code
+                validateTag()
+                showScanner = false
+            }
+        }
+    }
+
+    private var scanButton: some View {
+        #if targetEnvironment(macCatalyst)
+        Button(action: {}) {
+            Image(systemName: "barcode.viewfinder")
+        }
+        .disabled(true)
+        #else
+        Button {
+            showScanner = true
+        } label: {
+            Image(systemName: "barcode.viewfinder")
+        }
+        #endif
     }
 
 #if os(macOS)
