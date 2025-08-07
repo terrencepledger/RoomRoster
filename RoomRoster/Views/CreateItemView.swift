@@ -336,6 +336,7 @@ struct CreateItemView: View {
                 }
             }
             .disabled(
+                viewModel.isSaving ||
                 viewModel.newItem.name.isEmpty ||
                 viewModel.newItem.description.isEmpty ||
                 viewModel.tagError != nil ||

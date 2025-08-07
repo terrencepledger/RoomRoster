@@ -1,4 +1,5 @@
 import XCTest
+import Foundation
 @testable import RoomRoster
 
 final class ViewModelTests: XCTestCase {
@@ -62,5 +63,32 @@ final class ViewModelTests: XCTestCase {
         vm.validateTag()
         XCTAssertTrue(vm.showTagError)
         XCTAssertEqual(vm.tagError, Strings.createItem.errors.tag.quantityMismatch)
+    }
+
+    @MainActor
+    func testCreateItemViewModelPreventsDuplicateSaves() async {
+        final class SlowMockNetworkService: MockNetworkService {
+            override func sendRequest(_ request: URLRequest) async throws {
+                try await Task.sleep(nanoseconds: 50_000_000)
+                try await super.sendRequest(request)
+            }
+        }
+        let mockNetwork = SlowMockNetworkService()
+        let inventoryService = InventoryService(sheetId: "s", networkService: mockNetwork)
+        let vm = CreateItemViewModel(
+            inventoryService: inventoryService,
+            roomService: RoomService(sheetId: "s", networkService: MockNetworkService()),
+            receiptService: PurchaseReceiptService(),
+            itemsProvider: { [] }
+        )
+        vm.newItem.name = "Test"
+        vm.newItem.description = "Desc"
+        vm.newItem.lastKnownRoom = Room(name: "Room1")
+
+        async let first = vm.saveItem()
+        async let second = vm.saveItem()
+        _ = await (first, second)
+
+        XCTAssertEqual(mockNetwork.sentRequests.count, 1)
     }
 }

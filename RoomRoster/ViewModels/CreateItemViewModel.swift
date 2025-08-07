@@ -24,6 +24,7 @@ final class CreateItemViewModel: ObservableObject {
     @Published var pickedReceiptPDF: URL?
     @Published var isUploading: Bool = false
     @Published var isUploadingReceipt: Bool = false
+    @Published var isSaving: Bool = false
     @Published var uploadError: String?
     @Published var receiptUploadError: String?
     @Published var tagError: String?
@@ -203,6 +204,9 @@ final class CreateItemViewModel: ObservableObject {
     }
 
     func saveItem() async {
+        guard !isSaving else { return }
+        isSaving = true
+        defer { isSaving = false }
         validateTag()
         guard tagError == nil else { return }
         do {
