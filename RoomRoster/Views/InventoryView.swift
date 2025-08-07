@@ -177,6 +177,12 @@ struct InventoryView: View {
                 .allowsHitTesting(false)
                 .padding()
         }
+        if viewModel.isLoading {
+            ZStack {
+                Color.black.opacity(0.3).ignoresSafeArea()
+                ProgressView()
+            }
+        }
     }
 
 #if os(macOS)

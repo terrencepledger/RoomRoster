@@ -18,6 +18,32 @@ final class ViewModelTests: XCTestCase {
     }
 
     @MainActor
+    func testInventoryViewModelLoadingFlag() async {
+        final class SlowInventoryService: InventoryService {
+            override func fetchInventory() async throws -> GoogleSheetsResponse {
+                try await Task.sleep(nanoseconds: 50_000_000)
+                return GoogleSheetsResponse(range: "", majorDimension: "ROWS", values: [])
+            }
+        }
+        let inventoryService = SlowInventoryService(sheetId: "s", networkService: MockNetworkService())
+        let vm = InventoryViewModel(
+            inventoryService: inventoryService,
+            roomService: RoomService(sheetId: "s", networkService: MockNetworkService())
+        )
+        async let initial: Void = vm.fetchInventory()
+        await Task.yield()
+        XCTAssertTrue(vm.isLoading)
+        await initial
+        XCTAssertFalse(vm.isLoading)
+
+        async let refresh: Void = vm.fetchInventory()
+        await Task.yield()
+        XCTAssertTrue(vm.isLoading)
+        await refresh
+        XCTAssertFalse(vm.isLoading)
+    }
+
+    @MainActor
     func testCreateItemViewModelValidateTag() {
         let vm = CreateItemViewModel(
             inventoryService: InventoryService(sheetId: "s", networkService: MockNetworkService()),
@@ -92,5 +118,31 @@ final class ViewModelTests: XCTestCase {
         _ = await (first, second)
 
         XCTAssertEqual(mockNetwork.sentRequests.count, 1)
+    }
+
+    @MainActor
+    func testSalesViewModelLoadingFlag() async {
+        final class SlowSalesService: SalesService {
+            override func fetchSales() async throws -> [Sale] {
+                try await Task.sleep(nanoseconds: 50_000_000)
+                return []
+            }
+        }
+        let salesService = SlowSalesService(sheetId: "s", networkService: MockNetworkService())
+        let vm = SalesViewModel(
+            salesService: salesService,
+            inventoryService: InventoryService(sheetId: "s", networkService: MockNetworkService())
+        )
+        async let initial: Void = vm.loadSales()
+        await Task.yield()
+        XCTAssertTrue(vm.isLoading)
+        await initial
+        XCTAssertFalse(vm.isLoading)
+
+        async let refresh: Void = vm.loadSales()
+        await Task.yield()
+        XCTAssertTrue(vm.isLoading)
+        await refresh
+        XCTAssertFalse(vm.isLoading)
     }
 }
