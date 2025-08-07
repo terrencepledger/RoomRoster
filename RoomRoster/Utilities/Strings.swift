@@ -37,6 +37,8 @@ struct Strings {
         static let includeSoldToggle = "Include Sold Items"
         static let includeDiscardedToggle = "Include Discarded"
         static let addItemButton = "Add Item"
+        static let moveRoomButton = "Move Room"
+        static let updateStatusButton = "Update Status"
         static func status(_ status: String) -> String {
             "Status: \(status)"
         }
@@ -54,6 +56,7 @@ struct Strings {
         static let failedToLoadRooms = "Failed to load rooms. Please try again."
         static let failedToAddRoom = "Failed to add room. Please try again."
         static let failedToLoadLogs = "Failed to load logs. Please try again."
+        static let failedToUpdate = "Failed to update item. Please try again."
         static let emptyState = "No items to display"
         static let selectSheetPrompt = "Select a sheet in the Sheets tab"
         static let selectItemPrompt = "Select an item"

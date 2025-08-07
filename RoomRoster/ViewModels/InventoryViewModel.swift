@@ -83,4 +83,34 @@ class InventoryViewModel: ObservableObject {
             HapticManager.shared.error()
         }
     }
+
+    func move(items: [Item], to room: Room) async {
+        for item in items {
+            var updated = item
+            updated.lastKnownRoom = room
+            do {
+                try await service.updateItem(updated)
+            } catch {
+                Logger.log(error, extra: ["description": "Failed to move item"])
+                errorMessage = Strings.inventory.failedToUpdate
+                HapticManager.shared.error()
+            }
+        }
+        await fetchInventory()
+    }
+
+    func updateStatus(items: [Item], to status: Status) async {
+        for item in items {
+            var updated = item
+            updated.status = status
+            do {
+                try await service.updateItem(updated)
+            } catch {
+                Logger.log(error, extra: ["description": "Failed to update status"])
+                errorMessage = Strings.inventory.failedToUpdate
+                HapticManager.shared.error()
+            }
+        }
+        await fetchInventory()
+    }
 }

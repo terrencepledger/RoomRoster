@@ -107,4 +107,32 @@ actor InventoryService {
         Logger.network("InventoryService-updateItem")
         try await networkService.sendRequest(request)
     }
+
+    func deleteItem(_ item: Item) async throws {
+        let rowNumber = try await getRowNumber(for: item.id)
+        let sheetId = await MainActor.run { sheetIdProvider() } ?? ""
+        let urlString = "https://sheets.googleapis.com/v4/spreadsheets/\(sheetId):batchUpdate"
+        guard let url = URL(string: urlString) else { throw NetworkError.invalidURL }
+        let body: [String: Any] = [
+            "requests": [
+                [
+                    "deleteDimension": [
+                        "range": [
+                            "sheetId": 0,
+                            "dimension": "ROWS",
+                            "startIndex": rowNumber - 1,
+                            "endIndex": rowNumber
+                        ]
+                    ]
+                ]
+            ]
+        ]
+        let request = try await networkService.authorizedRequest(
+            url: url,
+            method: "POST",
+            jsonBody: body
+        )
+        Logger.network("InventoryService-deleteItem")
+        try await networkService.sendRequest(request)
+    }
 }
