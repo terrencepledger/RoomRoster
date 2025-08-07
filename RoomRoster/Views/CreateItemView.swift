@@ -17,6 +17,7 @@ struct CreateItemView: View {
 
     @FocusState private var tagFieldFocused: Bool
     @State private var successMessage: String?
+    @State private var showScanner = false
 #if os(macOS)
     private let fieldWidth: CGFloat = 240.0
 #endif
@@ -147,7 +148,11 @@ struct CreateItemView: View {
                     TextField(l10n.basicInfo.enter.tag, text: $viewModel.propertyTagInput)
                         .focused($tagFieldFocused)
                         .frame(width: fieldWidth)
-                        .padding(.trailing, 4)
+                        .padding(.trailing, 28)
+                        .overlay(alignment: .trailing) {
+                            scanButton
+                                .padding(.trailing, 4)
+                        }
                         .onChange(of: tagFieldFocused) { focused in
                             if !focused {
                                 withAnimation { viewModel.validateTag() }
@@ -182,7 +187,10 @@ struct CreateItemView: View {
                     TextField(l10n.basicInfo.enter.tag, text: $viewModel.propertyTagInput)
                         .focused($tagFieldFocused)
                         .multilineTextAlignment(.trailing)
-                        .padding(.trailing)
+                        .padding(.trailing, 28)
+                        .overlay(alignment: .trailing) {
+                            scanButton
+                        }
                         .onChange(of: tagFieldFocused) { focused in
                             if !focused {
                                 withAnimation { viewModel.validateTag() }
@@ -376,6 +384,28 @@ struct CreateItemView: View {
         .onChange(of: inventory.rooms) { newRooms in
             viewModel.rooms = newRooms
         }
+        .sheet(isPresented: $showScanner) {
+            BarcodeScannerView { code in
+                viewModel.propertyTagInput = code
+                viewModel.validateTag()
+                showScanner = false
+            }
+        }
+    }
+
+    private var scanButton: some View {
+        #if targetEnvironment(macCatalyst)
+        Button(action: {}) {
+            Image(systemName: "barcode.viewfinder")
+        }
+        .disabled(true)
+        #else
+        Button {
+            showScanner = true
+        } label: {
+            Image(systemName: "barcode.viewfinder")
+        }
+        #endif
     }
 
 #if os(macOS)
