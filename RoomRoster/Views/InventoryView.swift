@@ -35,6 +35,8 @@ struct InventoryView: View {
     @State private var logVersion = 0
     @State private var successMessage: String?
     @State private var createItemViewModel: CreateItemViewModel?
+    @State private var editMode: EditMode = .inactive
+    @State private var selectedItems: Set<Item> = []
 
     #if os(macOS)
     init(selectedItemID: Binding<String?>) {
@@ -82,8 +84,12 @@ struct InventoryView: View {
             }
         }
 #endif
+        .environment(\.editMode, $editMode)
         .toolbar {
-            #if os(macOS)
+            ToolbarItem(placement: .primaryAction) {
+                EditButton()
+            }
+#if os(macOS)
             ToolbarItem(placement: .primaryAction) {
                 if sheets.currentSheet != nil {
                     Button(action: {
@@ -112,7 +118,69 @@ struct InventoryView: View {
                     }
                 }
             }
-            #endif
+            ToolbarItemGroup {
+                if editMode == .active && !selectedItems.isEmpty {
+                    Menu(l10n.moveRoomButton) {
+                        ForEach(viewModel.rooms, id: \.self) { room in
+                            Button(room.label) {
+                                Task {
+                                    await viewModel.move(items: Array(selectedItems), to: room)
+                                    selectedItems.removeAll()
+                                }
+                            }
+                        }
+                    }
+                    Menu(l10n.updateStatusButton) {
+                        ForEach(Status.allCases, id: \.self) { status in
+                            Button(status.label) {
+                                Task {
+                                    await viewModel.updateStatus(items: Array(selectedItems), to: status)
+                                    selectedItems.removeAll()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+#else
+            ToolbarItemGroup(placement: .bottomBar) {
+                if editMode == .active && !selectedItems.isEmpty {
+                    Menu(l10n.moveRoomButton) {
+                        ForEach(viewModel.rooms, id: \.self) { room in
+                            Button(room.label) {
+                                Task {
+                                    await viewModel.move(items: Array(selectedItems), to: room)
+                                    selectedItems.removeAll()
+                                }
+                            }
+                        }
+                    }
+                    Menu(l10n.updateStatusButton) {
+                        ForEach(Status.allCases, id: \.self) { status in
+                            Button(status.label) {
+                                Task {
+                                    await viewModel.updateStatus(items: Array(selectedItems), to: status)
+                                    selectedItems.removeAll()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+#endif
+        }
+        .onChange(of: editMode) { mode in
+            if mode == .inactive {
+#if os(macOS)
+                if let item = selectedItems.first {
+                    selectedItem = item
+                    selectedItemID = item.id
+                }
+#endif
+                if selectedItems.count > 1 {
+                    selectedItems.removeAll()
+                }
+            }
         }
         .navigationTitle(l10n.title)
         .onAppear {
@@ -146,6 +214,9 @@ struct InventoryView: View {
         }
 #if os(macOS)
         .onChange(of: viewModel.items) { _ in
+            syncSelectionWithInventory()
+        }
+        .onChange(of: selectedItemID) { _ in
             syncSelectionWithInventory()
         }
 #endif
@@ -277,7 +348,13 @@ struct InventoryView: View {
             set: { newValue in
                 selectedItem = newValue
                 selectedItemID = newValue?.id
-                if let value = newValue { pane = .item(value) } else { pane = nil }
+                if let value = newValue {
+                    pane = .item(value)
+                    selectedItems = [value]
+                } else {
+                    pane = nil
+                    selectedItems.removeAll()
+                }
             }
         )
     }
@@ -290,12 +367,19 @@ struct InventoryView: View {
         ZStack(alignment: .bottomTrailing) {
 
 #if os(macOS)
-            List(selection: selectionBinding) {
-                listContent
+            if editMode == .active {
+                List(selection: $selectedItems) {
+                    listContent
+                }
+                .listStyle(.inset)
+            } else {
+                List(selection: selectionBinding) {
+                    listContent
+                }
+                .listStyle(.inset)
             }
-            .listStyle(.inset)
 #else
-            List {
+            List(selection: $selectedItems) {
                 listContent
             }
 
@@ -333,6 +417,18 @@ struct InventoryView: View {
             }
 #endif
         }
+#if os(macOS)
+        .onChange(of: selectedItems) { newValue in
+            if editMode == .inactive {
+                if let item = newValue.first {
+                    selectedItem = item
+                    selectedItemID = item.id
+                    pane = .item(item)
+                    selectedItems = [item]
+                }
+            }
+        }
+#endif
     }
 
     @ViewBuilder
@@ -478,6 +574,7 @@ struct InventoryView: View {
             return
         }
         selectedItem = match
+        selectedItems = [match]
         if case .item = pane {
             pane = .item(match)
         }
