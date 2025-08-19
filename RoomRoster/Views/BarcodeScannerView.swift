@@ -1,6 +1,7 @@
 #if canImport(AVFoundation) && !targetEnvironment(macCatalyst)
 import SwiftUI
 import AVFoundation
+import Vision
 
 struct BarcodeScannerView: UIViewControllerRepresentable {
     var onScan: (String) -> Void
@@ -17,8 +18,9 @@ struct BarcodeScannerView: UIViewControllerRepresentable {
 
     func updateUIViewController(_ uiViewController: ScannerViewController, context: Context) {}
 
-    final class Coordinator: NSObject, AVCaptureMetadataOutputObjectsDelegate {
+    final class Coordinator: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCaptureVideoDataOutputSampleBufferDelegate {
         let onScan: (String) -> Void
+        private var didScan = false
 
         init(onScan: @escaping (String) -> Void) {
             self.onScan = onScan
@@ -30,10 +32,44 @@ struct BarcodeScannerView: UIViewControllerRepresentable {
             from connection: AVCaptureConnection
         ) {
             guard
+                !didScan,
                 let object = metadataObjects.first as? AVMetadataMachineReadableCodeObject,
                 let value = object.stringValue
             else { return }
+            didScan = true
             onScan(value)
+        }
+
+        func captureOutput(
+            _ output: AVCaptureOutput,
+            didOutput sampleBuffer: CMSampleBuffer,
+            from connection: AVCaptureConnection
+        ) {
+            guard !didScan,
+                  let buffer = CMSampleBufferGetImageBuffer(sampleBuffer)
+            else { return }
+
+            let request = VNRecognizeTextRequest { [weak self] request, error in
+                guard
+                    let self = self,
+                    !self.didScan,
+                    let results = request.results as? [VNRecognizedTextObservation]
+                else { return }
+
+                for observation in results {
+                    guard let candidate = observation.topCandidates(1).first else { continue }
+                    let text = candidate.string.trimmingCharacters(in: .whitespacesAndNewlines)
+                    if text.range(of: "^A\\d{4}$", options: .regularExpression) != nil {
+                        self.didScan = true
+                        self.onScan(text)
+                        break
+                    }
+                }
+            }
+            request.recognitionLevel = .fast
+
+            let handler = VNImageRequestHandler(cvPixelBuffer: buffer, orientation: .up, options: [:])
+            try? handler.perform([request])
         }
     }
 
@@ -49,13 +85,17 @@ struct BarcodeScannerView: UIViewControllerRepresentable {
             else { return }
             session.addInput(input)
 
-            let output = AVCaptureMetadataOutput()
-            session.addOutput(output)
-            output.setMetadataObjectsDelegate(coordinator, queue: .main)
-            output.metadataObjectTypes = [
+            let metadataOutput = AVCaptureMetadataOutput()
+            session.addOutput(metadataOutput)
+            metadataOutput.setMetadataObjectsDelegate(coordinator, queue: .main)
+            metadataOutput.metadataObjectTypes = [
                 .ean8, .ean13, .pdf417, .code128, .code39, .code39Mod43,
                 .code93, .upce, .aztec, .qr
             ]
+
+            let videoOutput = AVCaptureVideoDataOutput()
+            videoOutput.setSampleBufferDelegate(coordinator, queue: DispatchQueue(label: "TextScanQueue"))
+            session.addOutput(videoOutput)
 
             let preview = AVCaptureVideoPreviewLayer(session: session)
             preview.videoGravity = .resizeAspectFill
@@ -86,3 +126,4 @@ struct BarcodeScannerView: View {
     }
 }
 #endif
+
