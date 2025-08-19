@@ -21,9 +21,14 @@ struct BarcodeScannerView: UIViewControllerRepresentable {
     final class Coordinator: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCaptureVideoDataOutputSampleBufferDelegate {
         let onScan: (String) -> Void
         private var didScan = false
+        private var legacyScanRequested = false
 
         init(onScan: @escaping (String) -> Void) {
             self.onScan = onScan
+        }
+
+        func requestLegacyScan() {
+            legacyScanRequested = true
         }
 
         func metadataOutput(
@@ -45,9 +50,11 @@ struct BarcodeScannerView: UIViewControllerRepresentable {
             didOutput sampleBuffer: CMSampleBuffer,
             from connection: AVCaptureConnection
         ) {
-            guard !didScan,
+            guard !didScan, legacyScanRequested,
                   let buffer = CMSampleBufferGetImageBuffer(sampleBuffer)
             else { return }
+
+            legacyScanRequested = false
 
             let request = VNRecognizeTextRequest { [weak self] request, error in
                 guard
@@ -101,6 +108,10 @@ struct BarcodeScannerView: UIViewControllerRepresentable {
             preview.videoGravity = .resizeAspectFill
             preview.frame = view.layer.bounds
             view.layer.addSublayer(preview)
+
+            let doubleTap = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap))
+            doubleTap.numberOfTapsRequired = 2
+            view.addGestureRecognizer(doubleTap)
         }
 
         override func viewDidAppear(_ animated: Bool) {
@@ -111,6 +122,10 @@ struct BarcodeScannerView: UIViewControllerRepresentable {
         override func viewWillDisappear(_ animated: Bool) {
             super.viewWillDisappear(animated)
             session.stopRunning()
+        }
+
+        @objc private func handleDoubleTap() {
+            coordinator?.requestLegacyScan()
         }
     }
 }
