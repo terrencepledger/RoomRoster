@@ -35,6 +35,10 @@ struct InventoryView: View {
     @State private var logVersion = 0
     @State private var successMessage: String?
     @State private var createItemViewModel: CreateItemViewModel?
+#if !os(macOS)
+    @State private var path = NavigationPath()
+#endif
+    @State private var showingScanner = false
 
     #if os(macOS)
     init(selectedItemID: Binding<String?>) {
@@ -63,8 +67,12 @@ struct InventoryView: View {
                 detailPane
             }
 #else
-            NavigationStack {
+            NavigationStack(path: $path) {
                 listPane
+            }
+            .navigationDestination(for: Item.self) { item in
+                ItemDetailsView(item: item)
+                    .environmentObject(viewModel)
             }
 #endif
         }
@@ -83,38 +91,33 @@ struct InventoryView: View {
         }
 #endif
         .toolbar {
-            #if os(macOS)
-            ToolbarItem(placement: .primaryAction) {
+#if os(macOS)
+            ToolbarItemGroup(placement: .primaryAction) {
                 if sheets.currentSheet != nil {
+#if !targetEnvironment(macCatalyst)
                     Button(action: {
-                        Logger.action("Pressed Add Item Toolbar")
-                        createItemViewModel = CreateItemViewModel(
-                            inventoryService: InventoryService(),
-                            roomService: RoomService(),
-                            itemsProvider: { viewModel.items },
-                            onSave: { newItem in
-                                selectedItem = newItem
-                                selectedItemID = newItem.id
-                                pane = .item(newItem)
-                                Task {
-                                    await viewModel.fetchInventory()
-                                    successMessage = Strings.createItem.success
-                                    HapticManager.shared.success()
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                                        withAnimation { successMessage = nil }
-                                    }
-                                }
-                            }
-                        )
-                        pane = .create
+                        Logger.action("Pressed Scan Toolbar")
+                        showingScanner = true
                     }) {
+                        Label("Scan", systemImage: "barcode.viewfinder")
+                    }
+#endif
+                    Button(action: { openCreateItem() }) {
                         Label(l10n.addItemButton, systemImage: "plus")
                     }
                 }
             }
-            #endif
+#endif
         }
         .navigationTitle(l10n.title)
+#if !targetEnvironment(macCatalyst)
+        .sheet(isPresented: $showingScanner) {
+            BarcodeScannerView { code in
+                handleScanned(code)
+                showingScanner = false
+            }
+        }
+#endif
         .onAppear {
             Logger.page("InventoryView")
         }
@@ -295,32 +298,28 @@ struct InventoryView: View {
             }
             .listStyle(.inset)
 #else
-            List {
-                listContent
-            }
+        List {
+            listContent
+        }
 
-            if sheets.currentSheet != nil {
+        if sheets.currentSheet != nil {
+            VStack(spacing: 16) {
+#if !targetEnvironment(macCatalyst)
                 Button(action: {
-                    Logger.action("Pressed Add Item Button")
+                    Logger.action("Pressed Scan Button")
                     HapticManager.shared.impact()
-                    createItemViewModel = CreateItemViewModel(
-                        inventoryService: InventoryService(),
-                        roomService: RoomService(),
-                        itemsProvider: { viewModel.items },
-                        onSave: { newItem in
-                            Task {
-                                let createdBy = AuthenticationManager.shared.userName
-                                await HistoryLogService().logCreation(for: newItem, createdBy: createdBy)
-                                await viewModel.fetchInventory()
-                                successMessage = Strings.createItem.success
-                                HapticManager.shared.success()
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                                    withAnimation { successMessage = nil }
-                                }
-                            }
-                        }
-                    )
+                    showingScanner = true
                 }) {
+                    Image(systemName: "barcode.viewfinder")
+                        .font(.system(size: 24))
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.blue)
+                        .clipShape(Circle())
+                        .shadow(radius: 4)
+                }
+#endif
+                Button(action: { openCreateItem() }) {
                     Image(systemName: "plus")
                         .font(.system(size: 24))
                         .foregroundColor(.white)
@@ -329,11 +328,12 @@ struct InventoryView: View {
                         .clipShape(Circle())
                         .shadow(radius: 4)
                 }
-                .padding()
             }
-#endif
+            .padding()
         }
+#endif
     }
+}
 
     @ViewBuilder
     private var listContent: some View {
@@ -384,10 +384,7 @@ struct InventoryView: View {
                                 .tag(item)
                                 .contentShape(Rectangle())
 #else
-                                NavigationLink(
-                                    destination: ItemDetailsView(item: item)
-                                        .environmentObject(viewModel)
-                                ) {
+                                NavigationLink(value: item) {
                                     VStack(alignment: .leading) {
                                         Text(item.name).font(.headline)
                                         Text(l10n.status(item.status.label))
@@ -524,5 +521,71 @@ extension InventoryView {
             return (range.label, tags.count > 1)
         }
         return nil
+    }
+
+    func openCreateItem(prefilledTag: String? = nil) {
+        Logger.action("Pressed Add Item Button")
+        HapticManager.shared.impact()
+        let vm = CreateItemViewModel(
+            inventoryService: InventoryService(),
+            roomService: RoomService(),
+            itemsProvider: { viewModel.items },
+            onSave: { newItem in
+#if os(macOS)
+                selectedItem = newItem
+                selectedItemID = newItem.id
+                pane = .item(newItem)
+                Task {
+                    await viewModel.fetchInventory()
+                    successMessage = Strings.createItem.success
+                    HapticManager.shared.success()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                        withAnimation { successMessage = nil }
+                    }
+                }
+#else
+                Task {
+                    let createdBy = AuthenticationManager.shared.userName
+                    await HistoryLogService().logCreation(for: newItem, createdBy: createdBy)
+                    await viewModel.fetchInventory()
+                    successMessage = Strings.createItem.success
+                    HapticManager.shared.success()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                        withAnimation { successMessage = nil }
+                    }
+                }
+#endif
+            }
+        )
+        if let prefilledTag {
+            vm.propertyTagInput = prefilledTag
+            vm.validateTag()
+        }
+        createItemViewModel = vm
+#if os(macOS)
+        pane = .create
+#endif
+    }
+
+    func handleScanned(_ code: String) {
+        guard let tag = PropertyTag(rawValue: code) else {
+            openCreateItem(prefilledTag: code)
+            return
+        }
+        if let match = viewModel.items.first(where: { item in
+            if let pt = item.propertyTag, pt.rawValue == tag.rawValue { return true }
+            if let range = item.propertyTagRange, range.tags.contains(tag) { return true }
+            return false
+        }) {
+#if os(macOS)
+            selectedItem = match
+            selectedItemID = match.id
+            pane = .item(match)
+#else
+            path.append(match)
+#endif
+        } else {
+            openCreateItem(prefilledTag: tag.rawValue)
+        }
     }
 }
