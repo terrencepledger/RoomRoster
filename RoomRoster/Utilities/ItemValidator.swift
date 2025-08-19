@@ -33,14 +33,15 @@ struct ItemValidator {
     ///
     /// - Parameters:
     ///   - input: The raw tag string entered by the user.
-    ///   - quantity: Expected number of items. Must match the number of parsed tags.
+    ///   - quantity: Optional expected number of items. When provided, the number of
+    ///               parsed tags must match this value.
     ///   - currentItemID: If editing an existing item, its identifier so duplicates are ignored.
     ///   - allItems: Existing items used to check for duplicate tags.
     /// - Throws: ``ItemValidationError`` if the input is invalid or contains duplicates.
     /// - Returns: Parsed property tags.
     static func validateTags(
         _ input: String,
-        quantity: Int,
+        quantity: Int? = nil,
         currentItemID: String?,
         allItems: [Item]
     ) throws -> [PropertyTag] {
@@ -48,7 +49,7 @@ struct ItemValidator {
             throw ItemValidationError.invalidTagFormat
         }
 
-        if range.tags.count != quantity {
+        if let quantity, range.tags.count != quantity {
             throw ItemValidationError.quantityMismatch
         }
 

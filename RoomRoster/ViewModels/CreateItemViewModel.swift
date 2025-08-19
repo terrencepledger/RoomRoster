@@ -150,10 +150,10 @@ final class CreateItemViewModel: ObservableObject {
         do {
             let tags = try ItemValidator.validateTags(
                 propertyTagInput,
-                quantity: newItem.quantity,
                 currentItemID: nil,
                 allItems: itemsProvider()
             )
+            newItem.quantity = tags.count
             if tags.count == 1 {
                 newItem.propertyTag = tags[0]
                 newItem.propertyTagRange = nil

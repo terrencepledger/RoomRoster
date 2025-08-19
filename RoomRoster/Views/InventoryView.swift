@@ -368,8 +368,13 @@ struct InventoryView: View {
                                 VStack(alignment: .leading) {
                                     Text(item.name).font(.headline)
                                     Text(l10n.status(item.status.label))
-                                    if let tagString = item.propertyTagRange?.stringValue() ?? item.propertyTag?.label {
-                                        Text(l10n.tag(tagString))
+                                    if let range = item.propertyTagRange {
+                                        let label = range.tags.count > 1 ? l10n.tags(range.stringValue()) : l10n.tag(range.stringValue())
+                                        Text(label)
+                                            .font(.subheadline)
+                                            .foregroundColor(.gray)
+                                    } else if let tag = item.propertyTag?.label {
+                                        Text(l10n.tag(tag))
                                             .font(.subheadline)
                                             .foregroundColor(.gray)
                                     }
@@ -388,8 +393,13 @@ struct InventoryView: View {
                                     VStack(alignment: .leading) {
                                         Text(item.name).font(.headline)
                                         Text(l10n.status(item.status.label))
-                                        if let tagString = item.propertyTagRange?.stringValue() ?? item.propertyTag?.label {
-                                            Text(l10n.tag(tagString))
+                                        if let range = item.propertyTagRange {
+                                            let label = range.tags.count > 1 ? l10n.tags(range.stringValue()) : l10n.tag(range.stringValue())
+                                            Text(label)
+                                                .font(.subheadline)
+                                                .foregroundColor(.gray)
+                                        } else if let tag = item.propertyTag?.label {
+                                            Text(l10n.tag(tag))
                                                 .font(.subheadline)
                                                 .foregroundColor(.gray)
                                         }
@@ -401,7 +411,6 @@ struct InventoryView: View {
                                         }
                                     }
                                 }
-                                .buttonStyle(.plain)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .contentShape(Rectangle())
 #endif

@@ -25,13 +25,13 @@ final class ItemValidatorTests: XCTestCase {
             propertyTag: PropertyTag(rawValue: "A0001"),
             purchaseReceiptURL: nil
         )
-        XCTAssertThrowsError(try ItemValidator.validateTags("A0001", quantity: 1, currentItemID: nil, allItems: [item])) { error in
+        XCTAssertThrowsError(try ItemValidator.validateTags("A0001", currentItemID: nil, allItems: [item])) { error in
             XCTAssertEqual(error as? ItemValidationError, .duplicateTag)
         }
     }
 
     func testValidateTagSuccess() throws {
-        let tags = try ItemValidator.validateTags("A0001", quantity: 1, currentItemID: nil, allItems: [])
+        let tags = try ItemValidator.validateTags("A0001", currentItemID: nil, allItems: [])
         XCTAssertEqual(tags, [PropertyTag(rawValue: "A0001")!])
     }
 
@@ -50,7 +50,7 @@ final class ItemValidatorTests: XCTestCase {
 
     func testValidateCrossLetterRangeThrows() {
         XCTAssertThrowsError(
-            try ItemValidator.validateTags("A1000-B1000", quantity: 2, currentItemID: nil, allItems: [])
+            try ItemValidator.validateTags("A1000-B1000", currentItemID: nil, allItems: [])
         ) { error in
             XCTAssertEqual(error as? ItemValidationError, .invalidTagFormat)
         }
