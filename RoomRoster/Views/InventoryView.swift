@@ -58,40 +58,25 @@ struct InventoryView: View {
     }
 
     var body: some View {
-        ZStack(alignment: .bottomTrailing) {
-        Group {
 #if os(macOS)
+        ZStack(alignment: .bottomTrailing) {
             NavigationSplitView {
                 listPane
             } detail: {
                 detailPane
             }
-#else
-            NavigationStack(path: $path) {
-                listPane
+            if let message = successMessage {
+                SuccessBanner(message: message)
+                    .allowsHitTesting(false)
+                    .padding()
             }
-            .navigationDestination(for: Item.self) { item in
-                ItemDetailsView(item: item)
-                    .environmentObject(viewModel)
-            }
-#endif
-        }
-    }
-#if !os(macOS)
-        .platformPopup(
-            isPresented: Binding(
-                get: { createItemViewModel != nil },
-                set: { if !$0 { createItemViewModel = nil } }
-            )
-        ) {
-            if let createItemViewModel {
-                CreateItemView(viewModel: createItemViewModel)
-                    .environmentObject(viewModel)
+            if let error = viewModel.errorMessage {
+                ErrorBanner(message: error)
+                    .allowsHitTesting(false)
+                    .padding()
             }
         }
-#endif
         .toolbar {
-#if os(macOS)
             ToolbarItemGroup(placement: .primaryAction) {
                 if sheets.currentSheet != nil {
 #if !targetEnvironment(macCatalyst)
@@ -107,8 +92,54 @@ struct InventoryView: View {
                     }
                 }
             }
-#endif
         }
+#else
+        NavigationStack(path: $path) {
+            ZStack(alignment: .bottomTrailing) {
+                listPane
+                if let message = successMessage {
+                    SuccessBanner(message: message)
+                        .allowsHitTesting(false)
+                        .padding()
+                }
+                if let error = viewModel.errorMessage {
+                    ErrorBanner(message: error)
+                        .allowsHitTesting(false)
+                        .padding()
+                }
+            }
+            .platformPopup(
+                isPresented: Binding(
+                    get: { createItemViewModel != nil },
+                    set: { if !$0 { createItemViewModel = nil } }
+                )
+            ) {
+                if let createItemViewModel {
+                    CreateItemView(viewModel: createItemViewModel)
+                        .environmentObject(viewModel)
+                }
+            }
+        }
+        .navigationDestination(for: Item.self) { item in
+            ItemDetailsView(item: item)
+                .environmentObject(viewModel)
+        }
+        .toolbar {
+            if sheets.currentSheet != nil {
+#if !targetEnvironment(macCatalyst)
+                Button(action: {
+                    Logger.action("Pressed Scan Toolbar")
+                    showingScanner = true
+                }) {
+                    Label("Scan", systemImage: "barcode.viewfinder")
+                }
+#endif
+                Button(action: { openCreateItem() }) {
+                    Label(l10n.addItemButton, systemImage: "plus")
+                }
+            }
+        }
+#endif
         .navigationTitle(l10n.title)
 #if !targetEnvironment(macCatalyst)
         .sheet(isPresented: $showingScanner) {
@@ -169,16 +200,6 @@ struct InventoryView: View {
                     await viewModel.loadRecentLogs(for: viewModel.items)
                 }
             }
-        }
-        if let message = successMessage {
-            SuccessBanner(message: message)
-                .allowsHitTesting(false)
-                .padding()
-        }
-        if let error = viewModel.errorMessage {
-            ErrorBanner(message: error)
-                .allowsHitTesting(false)
-                .padding()
         }
     }
 
