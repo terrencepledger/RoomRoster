@@ -58,25 +58,60 @@ struct InventoryView: View {
     }
 
     var body: some View {
+        Group {
 #if os(macOS)
-        ZStack(alignment: .bottomTrailing) {
-            NavigationSplitView {
-                listPane
-            } detail: {
-                detailPane
+            ZStack(alignment: .bottomTrailing) {
+                NavigationSplitView {
+                    listPane
+                } detail: {
+                    detailPane
+                }
+                if let message = successMessage {
+                    SuccessBanner(message: message)
+                        .allowsHitTesting(false)
+                        .padding()
+                }
+                if let error = viewModel.errorMessage {
+                    ErrorBanner(message: error)
+                        .allowsHitTesting(false)
+                        .padding()
+                }
             }
-            if let message = successMessage {
-                SuccessBanner(message: message)
-                    .allowsHitTesting(false)
-                    .padding()
+#else
+            NavigationStack(path: $path) {
+                ZStack(alignment: .bottomTrailing) {
+                    listPane
+                    if let message = successMessage {
+                        SuccessBanner(message: message)
+                            .allowsHitTesting(false)
+                            .padding()
+                    }
+                    if let error = viewModel.errorMessage {
+                        ErrorBanner(message: error)
+                            .allowsHitTesting(false)
+                            .padding()
+                    }
+                }
+                .platformPopup(
+                    isPresented: Binding(
+                        get: { createItemViewModel != nil },
+                        set: { if !$0 { createItemViewModel = nil } }
+                    )
+                ) {
+                    if let createItemViewModel {
+                        CreateItemView(viewModel: createItemViewModel)
+                            .environmentObject(viewModel)
+                    }
+                }
+                .navigationDestination(for: Item.self) { item in
+                    ItemDetailsView(item: item)
+                        .environmentObject(viewModel)
+                }
             }
-            if let error = viewModel.errorMessage {
-                ErrorBanner(message: error)
-                    .allowsHitTesting(false)
-                    .padding()
-            }
+#endif
         }
         .toolbar {
+#if os(macOS)
             ToolbarItemGroup(placement: .primaryAction) {
                 if sheets.currentSheet != nil {
 #if !targetEnvironment(macCatalyst)
@@ -92,39 +127,7 @@ struct InventoryView: View {
                     }
                 }
             }
-        }
 #else
-        NavigationStack(path: $path) {
-            ZStack(alignment: .bottomTrailing) {
-                listPane
-                if let message = successMessage {
-                    SuccessBanner(message: message)
-                        .allowsHitTesting(false)
-                        .padding()
-                }
-                if let error = viewModel.errorMessage {
-                    ErrorBanner(message: error)
-                        .allowsHitTesting(false)
-                        .padding()
-                }
-            }
-            .platformPopup(
-                isPresented: Binding(
-                    get: { createItemViewModel != nil },
-                    set: { if !$0 { createItemViewModel = nil } }
-                )
-            ) {
-                if let createItemViewModel {
-                    CreateItemView(viewModel: createItemViewModel)
-                        .environmentObject(viewModel)
-                }
-            }
-        }
-        .navigationDestination(for: Item.self) { item in
-            ItemDetailsView(item: item)
-                .environmentObject(viewModel)
-        }
-        .toolbar {
             if sheets.currentSheet != nil {
 #if !targetEnvironment(macCatalyst)
                 Button(action: {
@@ -138,8 +141,8 @@ struct InventoryView: View {
                     Label(l10n.addItemButton, systemImage: "plus")
                 }
             }
-        }
 #endif
+        }
         .navigationTitle(l10n.title)
 #if !targetEnvironment(macCatalyst)
         .sheet(isPresented: $showingScanner) {
@@ -312,49 +315,48 @@ struct InventoryView: View {
     @ViewBuilder
     private var listPane: some View {
         ZStack(alignment: .bottomTrailing) {
-
 #if os(macOS)
             List(selection: selectionBinding) {
                 listContent
             }
             .listStyle(.inset)
 #else
-        List {
-            listContent
-        }
-
-        if sheets.currentSheet != nil {
-            VStack(spacing: 16) {
-#if !targetEnvironment(macCatalyst)
-                Button(action: {
-                    Logger.action("Pressed Scan Button")
-                    HapticManager.shared.impact()
-                    showingScanner = true
-                }) {
-                    Image(systemName: "barcode.viewfinder")
-                        .font(.system(size: 24))
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(Color.blue)
-                        .clipShape(Circle())
-                        .shadow(radius: 4)
-                }
-#endif
-                Button(action: { openCreateItem() }) {
-                    Image(systemName: "plus")
-                        .font(.system(size: 24))
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(Color.blue)
-                        .clipShape(Circle())
-                        .shadow(radius: 4)
-                }
+            List {
+                listContent
             }
-            .padding()
-        }
+
+            if sheets.currentSheet != nil {
+                VStack(spacing: 16) {
+#if !targetEnvironment(macCatalyst)
+                    Button(action: {
+                        Logger.action("Pressed Scan Button")
+                        HapticManager.shared.impact()
+                        showingScanner = true
+                    }) {
+                        Image(systemName: "barcode.viewfinder")
+                            .font(.system(size: 24))
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.blue)
+                            .clipShape(Circle())
+                            .shadow(radius: 4)
+                    }
 #endif
+                    Button(action: { openCreateItem() }) {
+                        Image(systemName: "plus")
+                            .font(.system(size: 24))
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.blue)
+                            .clipShape(Circle())
+                            .shadow(radius: 4)
+                    }
+                }
+                .padding()
+            }
+#endif
+        }
     }
-}
 
     @ViewBuilder
     private var listContent: some View {
