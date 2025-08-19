@@ -58,38 +58,58 @@ struct InventoryView: View {
     }
 
     var body: some View {
-        ZStack(alignment: .bottomTrailing) {
         Group {
 #if os(macOS)
-            NavigationSplitView {
-                listPane
-            } detail: {
-                detailPane
+            ZStack(alignment: .bottomTrailing) {
+                NavigationSplitView {
+                    listPane
+                } detail: {
+                    detailPane
+                }
+                if let message = successMessage {
+                    SuccessBanner(message: message)
+                        .allowsHitTesting(false)
+                        .padding()
+                }
+                if let error = viewModel.errorMessage {
+                    ErrorBanner(message: error)
+                        .allowsHitTesting(false)
+                        .padding()
+                }
             }
 #else
             NavigationStack(path: $path) {
-                listPane
-            }
-            .navigationDestination(for: Item.self) { item in
-                ItemDetailsView(item: item)
-                    .environmentObject(viewModel)
+                ZStack(alignment: .bottomTrailing) {
+                    listPane
+                    if let message = successMessage {
+                        SuccessBanner(message: message)
+                            .allowsHitTesting(false)
+                            .padding()
+                    }
+                    if let error = viewModel.errorMessage {
+                        ErrorBanner(message: error)
+                            .allowsHitTesting(false)
+                            .padding()
+                    }
+                }
+                .platformPopup(
+                    isPresented: Binding(
+                        get: { createItemViewModel != nil },
+                        set: { if !$0 { createItemViewModel = nil } }
+                    )
+                ) {
+                    if let createItemViewModel {
+                        CreateItemView(viewModel: createItemViewModel)
+                            .environmentObject(viewModel)
+                    }
+                }
+                .navigationDestination(for: Item.self) { item in
+                    ItemDetailsView(item: item)
+                        .environmentObject(viewModel)
+                }
             }
 #endif
         }
-    }
-#if !os(macOS)
-        .platformPopup(
-            isPresented: Binding(
-                get: { createItemViewModel != nil },
-                set: { if !$0 { createItemViewModel = nil } }
-            )
-        ) {
-            if let createItemViewModel {
-                CreateItemView(viewModel: createItemViewModel)
-                    .environmentObject(viewModel)
-            }
-        }
-#endif
         .toolbar {
 #if os(macOS)
             ToolbarItemGroup(placement: .primaryAction) {
@@ -105,6 +125,20 @@ struct InventoryView: View {
                     Button(action: { openCreateItem() }) {
                         Label(l10n.addItemButton, systemImage: "plus")
                     }
+                }
+            }
+#else
+            if sheets.currentSheet != nil {
+#if !targetEnvironment(macCatalyst)
+                Button(action: {
+                    Logger.action("Pressed Scan Toolbar")
+                    showingScanner = true
+                }) {
+                    Label("Scan", systemImage: "barcode.viewfinder")
+                }
+#endif
+                Button(action: { openCreateItem() }) {
+                    Label(l10n.addItemButton, systemImage: "plus")
                 }
             }
 #endif
@@ -169,16 +203,6 @@ struct InventoryView: View {
                     await viewModel.loadRecentLogs(for: viewModel.items)
                 }
             }
-        }
-        if let message = successMessage {
-            SuccessBanner(message: message)
-                .allowsHitTesting(false)
-                .padding()
-        }
-        if let error = viewModel.errorMessage {
-            ErrorBanner(message: error)
-                .allowsHitTesting(false)
-                .padding()
         }
     }
 
@@ -291,49 +315,48 @@ struct InventoryView: View {
     @ViewBuilder
     private var listPane: some View {
         ZStack(alignment: .bottomTrailing) {
-
 #if os(macOS)
             List(selection: selectionBinding) {
                 listContent
             }
             .listStyle(.inset)
 #else
-        List {
-            listContent
-        }
-
-        if sheets.currentSheet != nil {
-            VStack(spacing: 16) {
-#if !targetEnvironment(macCatalyst)
-                Button(action: {
-                    Logger.action("Pressed Scan Button")
-                    HapticManager.shared.impact()
-                    showingScanner = true
-                }) {
-                    Image(systemName: "barcode.viewfinder")
-                        .font(.system(size: 24))
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(Color.blue)
-                        .clipShape(Circle())
-                        .shadow(radius: 4)
-                }
-#endif
-                Button(action: { openCreateItem() }) {
-                    Image(systemName: "plus")
-                        .font(.system(size: 24))
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(Color.blue)
-                        .clipShape(Circle())
-                        .shadow(radius: 4)
-                }
+            List {
+                listContent
             }
-            .padding()
-        }
+
+            if sheets.currentSheet != nil {
+                VStack(spacing: 16) {
+#if !targetEnvironment(macCatalyst)
+                    Button(action: {
+                        Logger.action("Pressed Scan Button")
+                        HapticManager.shared.impact()
+                        showingScanner = true
+                    }) {
+                        Image(systemName: "barcode.viewfinder")
+                            .font(.system(size: 24))
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.blue)
+                            .clipShape(Circle())
+                            .shadow(radius: 4)
+                    }
 #endif
+                    Button(action: { openCreateItem() }) {
+                        Image(systemName: "plus")
+                            .font(.system(size: 24))
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.blue)
+                            .clipShape(Circle())
+                            .shadow(radius: 4)
+                    }
+                }
+                .padding()
+            }
+#endif
+        }
     }
-}
 
     @ViewBuilder
     private var listContent: some View {
@@ -368,8 +391,13 @@ struct InventoryView: View {
                                 VStack(alignment: .leading) {
                                     Text(item.name).font(.headline)
                                     Text(l10n.status(item.status.label))
-                                    if let tagString = item.propertyTagRange?.stringValue() ?? item.propertyTag?.label {
-                                        Text(l10n.tag(tagString))
+                                    if let range = item.propertyTagRange {
+                                        let label = range.tags.count > 1 ? l10n.tags(range.stringValue()) : l10n.tag(range.stringValue())
+                                        Text(label)
+                                            .font(.subheadline)
+                                            .foregroundColor(.gray)
+                                    } else if let tag = item.propertyTag?.label {
+                                        Text(l10n.tag(tag))
                                             .font(.subheadline)
                                             .foregroundColor(.gray)
                                     }
@@ -388,8 +416,13 @@ struct InventoryView: View {
                                     VStack(alignment: .leading) {
                                         Text(item.name).font(.headline)
                                         Text(l10n.status(item.status.label))
-                                        if let tagString = item.propertyTagRange?.stringValue() ?? item.propertyTag?.label {
-                                            Text(l10n.tag(tagString))
+                                        if let range = item.propertyTagRange {
+                                            let label = range.tags.count > 1 ? l10n.tags(range.stringValue()) : l10n.tag(range.stringValue())
+                                            Text(label)
+                                                .font(.subheadline)
+                                                .foregroundColor(.gray)
+                                        } else if let tag = item.propertyTag?.label {
+                                            Text(l10n.tag(tag))
                                                 .font(.subheadline)
                                                 .foregroundColor(.gray)
                                         }
@@ -401,7 +434,6 @@ struct InventoryView: View {
                                         }
                                     }
                                 }
-                                .buttonStyle(.plain)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .contentShape(Rectangle())
 #endif
