@@ -156,6 +156,7 @@ struct BarcodeScannerView: UIViewControllerRepresentable {
         }
 
         @objc private func handleDoubleTap() {
+            Logger.action("Double Tapped Scan Preview")
             coordinator?.boostLegacyScan()
         }
 
