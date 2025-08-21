@@ -99,9 +99,9 @@
 		C616CDE1A2B34C5D67890ABE /* SalesDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C616CDE1A2B34C5D67890ABD /* SalesDetailsView.swift */; };
 		CE2487F2AA23494BBE56993D /* ReportsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12FE82B0693248D49E8D77BB /* ReportsViewModel.swift */; };
 		DE7D257232324BDDB96C6F37 /* RoomServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614508236AFA4269887FF35A /* RoomServiceTests.swift */; };
-                E0B282C5B6FF4AADB74F1235 /* DocumentPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B282C5B6FF4AADB74F1234 /* DocumentPickerView.swift */; };
-                AF92508CC3AD4558844194AA /* BarcodeScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2987006832490F89CFB17C /* BarcodeScannerView.swift */; };
-                E9FBF450607D494DA1894333 /* MockNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF137618CD644A1997B55ED6 /* MockNetworkService.swift */; };
+		E0B282C5B6FF4AADB74F1235 /* DocumentPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B282C5B6FF4AADB74F1234 /* DocumentPickerView.swift */; };
+		AF92508CC3AD4558844194AA /* BarcodeScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2987006832490F89CFB17C /* BarcodeScannerView.swift */; platformFilter = ios; };
+		E9FBF450607D494DA1894333 /* MockNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF137618CD644A1997B55ED6 /* MockNetworkService.swift */; };
 		EC28A959CE63441E9F3C1048 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70EC0F7257914A11A7589F29 /* ShareSheet.swift */; };
                 FDB33D97700C2EF04190FA52 /* GmailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01D35FCE10EB02BEFD65D29 /* GmailService.swift */; };
                 FB42C5677D8D477793E2A66E /* PlatformImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA014E93EE2475992EB91B0 /* PlatformImage.swift */; };

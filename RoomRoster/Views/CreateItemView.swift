@@ -384,6 +384,7 @@ struct CreateItemView: View {
         .onChange(of: inventory.rooms) { newRooms in
             viewModel.rooms = newRooms
         }
+#if os(iOS)
         .sheet(isPresented: $showScanner) {
             BarcodeScannerView { code in
                 viewModel.propertyTagInput = code
@@ -391,20 +392,18 @@ struct CreateItemView: View {
                 showScanner = false
             }
         }
+#endif
     }
 
     private var scanButton: some View {
-        #if targetEnvironment(macCatalyst)
-        Button(action: {}) {
-            Image(systemName: "barcode.viewfinder")
-        }
-        .disabled(true)
-        #else
+        #if os(iOS)
         Button {
             showScanner = true
         } label: {
             Image(systemName: "barcode.viewfinder")
         }
+        #else
+        EmptyView()
         #endif
     }
 
