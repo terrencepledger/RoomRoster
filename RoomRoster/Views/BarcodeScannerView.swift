@@ -1,4 +1,4 @@
-#if canImport(AVFoundation) && !targetEnvironment(macCatalyst)
+#if canImport(AVFoundation) && os(iOS)
 import SwiftUI
 import AVFoundation
 import Vision

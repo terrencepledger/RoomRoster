@@ -407,6 +407,7 @@ struct EditItemView: View {
         .task {
             await viewModel.loadRooms()
         }
+#if os(iOS)
         .sheet(isPresented: $showScanner) {
             BarcodeScannerView { code in
                 propertyTagInput = code
@@ -414,20 +415,18 @@ struct EditItemView: View {
                 showScanner = false
             }
         }
+#endif
     }
 
     private var scanButton: some View {
-        #if targetEnvironment(macCatalyst)
-        Button(action: {}) {
-            Image(systemName: "barcode.viewfinder")
-        }
-        .disabled(true)
-        #else
+        #if os(iOS)
         Button {
             showScanner = true
         } label: {
             Image(systemName: "barcode.viewfinder")
         }
+        #else
+        EmptyView()
         #endif
     }
 

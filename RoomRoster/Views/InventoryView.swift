@@ -114,14 +114,6 @@ struct InventoryView: View {
 #if os(macOS)
             ToolbarItemGroup(placement: .primaryAction) {
                 if sheets.currentSheet != nil {
-#if !targetEnvironment(macCatalyst)
-                    Button(action: {
-                        Logger.action("Pressed Scan Toolbar")
-                        showingScanner = true
-                    }) {
-                        Label("Scan", systemImage: "barcode.viewfinder")
-                    }
-#endif
                     Button(action: { openCreateItem() }) {
                         Label(l10n.addItemButton, systemImage: "plus")
                     }
@@ -129,14 +121,12 @@ struct InventoryView: View {
             }
 #else
             if sheets.currentSheet != nil {
-#if !targetEnvironment(macCatalyst)
                 Button(action: {
                     Logger.action("Pressed Scan Toolbar")
                     showingScanner = true
                 }) {
                     Label("Scan", systemImage: "barcode.viewfinder")
                 }
-#endif
                 Button(action: { openCreateItem() }) {
                     Label(l10n.addItemButton, systemImage: "plus")
                 }
@@ -144,7 +134,7 @@ struct InventoryView: View {
 #endif
         }
         .navigationTitle(l10n.title)
-#if !targetEnvironment(macCatalyst)
+#if os(iOS)
         .sheet(isPresented: $showingScanner) {
             BarcodeScannerView { code in
                 handleScanned(code)
@@ -327,7 +317,7 @@ struct InventoryView: View {
 
             if sheets.currentSheet != nil {
                 VStack(spacing: 16) {
-#if !targetEnvironment(macCatalyst)
+#if os(iOS)
                     Button(action: {
                         Logger.action("Pressed Scan Button")
                         HapticManager.shared.impact()
