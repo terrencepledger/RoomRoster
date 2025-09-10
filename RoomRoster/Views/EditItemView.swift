@@ -16,26 +16,12 @@ private typealias l10n = Strings.editItem
 struct EditItemView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var coordinator: MainMenuCoordinator
-    @State var editableItem: Item
+    @EnvironmentObject var inventoryVM: InventoryViewModel
+    @StateObject private var viewModel: EditItemViewModel
     var onSave: (Item) -> Void
     var onCancel: (() -> Void)? = nil
 
-    private func close() {
-        if let onCancel { onCancel() } else { dismiss() }
-    }
-
-    @EnvironmentObject var viewModel: InventoryViewModel
-
-    @State private var pickedImage: PlatformImage?
-    @State private var pickedReceiptImage: PlatformImage?
-    @State private var pickedReceiptPDF: URL?
-    @State private var isUploading = false
-    @State private var isUploadingReceipt = false
-    @State private var uploadError: String?
-    @State private var receiptUploadError: String?
-    @State private var temporaryImageURL: String?
-    @State private var dateAddedDate: Date = Date()
-    @State private var propertyTagInput: String = ""
+    @State private var propertyTagInput: String
     @State private var tagError: String? = nil
     @State private var showScanner = false
     @State private var showingAddRoomPrompt = false
@@ -44,6 +30,17 @@ struct EditItemView: View {
 #if os(macOS)
     private let fieldWidth: CGFloat = 240.0
 #endif
+
+    init(editableItem: Item, onSave: @escaping (Item) -> Void, onCancel: (() -> Void)? = nil) {
+        _viewModel = StateObject(wrappedValue: EditItemViewModel(item: editableItem))
+        self.onSave = onSave
+        self.onCancel = onCancel
+        _propertyTagInput = State(initialValue: editableItem.propertyTagRange?.stringValue() ?? editableItem.propertyTag?.rawValue ?? "")
+    }
+
+    private func close() {
+        if let onCancel { onCancel() } else { dismiss() }
+    }
 
     var body: some View {
         NavigationStack { content }
@@ -60,13 +57,13 @@ struct EditItemView: View {
                 Section(header: Text(l10n.photo.title).font(.headline)) {
                     HStack(spacing: 8) {
                         VStack {
-                            RemoteImageView(urlString: editableItem.imageURL, height: 80)
+                            RemoteImageView(urlString: viewModel.editableItem.imageURL, height: 80)
                             Text(l10n.photo.current)
                                 .font(.caption)
                                 .foregroundColor(.gray)
                         }
                         VStack {
-                            CombinedImagePickerButton(image: $pickedImage, height: 80)
+                            CombinedImagePickerButton(image: $viewModel.pickedImage, height: 80)
                             Text(l10n.photo.new)
                                 .font(.caption)
                                 .foregroundColor(.gray)
@@ -74,13 +71,13 @@ struct EditItemView: View {
                     }
 
                     // Upload status & URL display
-                    if isUploading {
+                    if viewModel.isUploading {
                         HStack {
                             ProgressView()
                             Text(l10n.photo.loading)
                         }
                     }
-                    if let error = uploadError {
+                    if let error = viewModel.uploadError {
                         Text(error)
                             .foregroundColor(.red)
                             .font(.caption)
@@ -91,27 +88,27 @@ struct EditItemView: View {
                 Section(header: Text(Strings.purchaseReceipt.sectionTitle).font(.headline)) {
                     HStack(spacing: 8) {
                         VStack {
-                            ReceiptImageView(urlString: editableItem.purchaseReceiptURL, height: 80)
+                            ReceiptImageView(urlString: viewModel.editableItem.purchaseReceiptURL, height: 80)
                             Text(Strings.saleDetails.currentReceipt)
                                 .font(.caption)
                                 .foregroundColor(.gray)
                         }
                         VStack {
-                            CombinedImagePickerButton(image: $pickedReceiptImage, height: 80)
+                            CombinedImagePickerButton(image: $viewModel.pickedReceiptImage, height: 80)
                             Text(Strings.saleDetails.newReceipt)
                                 .font(.caption)
                                 .foregroundColor(.gray)
                         }
                     }
-                    PDFPickerButton(url: $pickedReceiptPDF)
+                    PDFPickerButton(url: $viewModel.pickedReceiptPDF)
 
-                    if isUploadingReceipt {
+                    if viewModel.isUploadingReceipt {
                         HStack {
                             ProgressView()
                             Text(Strings.general.uploadingReceipt)
                         }
                     }
-                    if let error = receiptUploadError {
+                    if let error = viewModel.receiptUploadError {
                         Text(error)
                             .foregroundColor(.red)
                             .font(.caption)
@@ -120,7 +117,7 @@ struct EditItemView: View {
                         Text(Strings.general.receiptPath).foregroundColor(.gray)
                             .padding(.leading, 4)
                         Spacer()
-                        Text(editableItem.purchaseReceiptURL ?? "")
+                        Text(viewModel.editableItem.purchaseReceiptURL ?? "")
                             .font(.caption)
                             .multilineTextAlignment(.trailing)
                             .padding(.trailing, 4)
@@ -131,7 +128,7 @@ struct EditItemView: View {
                 Section(header: Text(l10n.basicInfo.title).font(.headline)) {
 #if os(macOS)
                     LabeledContent {
-                        TextField(l10n.basicInfo.enter.name, text: $editableItem.name)
+                        TextField(l10n.basicInfo.enter.name, text: $viewModel.editableItem.name)
                             .frame(width: fieldWidth)
                             .padding(.trailing, 4)
                     } label: {
@@ -139,7 +136,7 @@ struct EditItemView: View {
                             .padding(.leading, 4)
                     }
                     LabeledContent {
-                        TextField(l10n.basicInfo.enter.description, text: $editableItem.description)
+                        TextField(l10n.basicInfo.enter.description, text: $viewModel.editableItem.description)
                             .frame(width: fieldWidth)
                             .padding(.trailing, 4)
                     } label: {
@@ -174,7 +171,7 @@ struct EditItemView: View {
                                     withAnimation {
                                         if tagError != nil {
                                             if !tagFieldFocused {
-                                                propertyTagInput = editableItem.propertyTagRange?.stringValue() ?? editableItem.propertyTag?.label ?? ""
+                                                propertyTagInput = viewModel.editableItem.propertyTagRange?.stringValue() ?? viewModel.editableItem.propertyTag?.label ?? ""
                                             }
                                             validateTag()
                                         }
@@ -187,7 +184,7 @@ struct EditItemView: View {
                         Text(l10n.basicInfo.name)
                             .font(.caption)
                             .foregroundColor(.gray)
-                        TextField(l10n.basicInfo.enter.name, text: $editableItem.name)
+                        TextField(l10n.basicInfo.enter.name, text: $viewModel.editableItem.name)
                             .textFieldStyle(.roundedBorder)
                             .padding(.trailing)
                     }
@@ -195,7 +192,7 @@ struct EditItemView: View {
                         Text(l10n.basicInfo.description)
                             .font(.caption)
                             .foregroundColor(.gray)
-                        TextField(l10n.basicInfo.enter.description, text: $editableItem.description)
+                        TextField(l10n.basicInfo.enter.description, text: $viewModel.editableItem.description)
                             .textFieldStyle(.roundedBorder)
                             .padding(.trailing)
                     }
@@ -228,7 +225,7 @@ struct EditItemView: View {
                                         withAnimation {
                                             if tagError != nil {
                                                 if !tagFieldFocused {
-                                                    propertyTagInput = editableItem.propertyTagRange?.stringValue() ?? editableItem.propertyTag?.label ?? ""
+                                                    propertyTagInput = viewModel.editableItem.propertyTagRange?.stringValue() ?? viewModel.editableItem.propertyTag?.label ?? ""
                                                 }
                                                 validateTag()
                                             }
@@ -245,7 +242,7 @@ struct EditItemView: View {
 #if os(macOS)
                     LabeledContent {
                         TextField(l10n.details.enter.price,
-                                  value: $editableItem.estimatedPrice,
+                                  value: $viewModel.editableItem.estimatedPrice,
                                   format: .number)
                             .frame(width: fieldWidth)
                             .padding(.trailing, 4)
@@ -254,7 +251,7 @@ struct EditItemView: View {
                             .padding(.leading, 4)
                     }
                     LabeledContent {
-                        Picker(l10n.details.enter.status, selection: $editableItem.status) {
+                        Picker(l10n.details.enter.status, selection: $viewModel.editableItem.status) {
                             ForEach(Status.allCases, id: \.self) { status in
                                 Text(status.label).tag(status)
                             }
@@ -267,15 +264,15 @@ struct EditItemView: View {
                             .padding(.leading, 4)
                     }
                     LabeledContent {
-                        if !viewModel.rooms.isEmpty {
-                            Picker(l10n.details.room.subtitle, selection: $editableItem.lastKnownRoom) {
-                                ForEach(viewModel.rooms, id: \.id) { room in
+                        if !inventoryVM.rooms.isEmpty {
+                            Picker(l10n.details.room.subtitle, selection: $viewModel.editableItem.lastKnownRoom) {
+                                ForEach(inventoryVM.rooms, id: \.id) { room in
                                     Text(room.label).tag(room)
                                 }
                                 Text(l10n.details.room.add).tag(Room(name: "__add_new__"))
                             }
                             .frame(width: fieldWidth)
-                            .onChange(of: editableItem.lastKnownRoom) { newValue in
+                            .onChange(of: viewModel.editableItem.lastKnownRoom) { newValue in
                                 if newValue.name == "__add_new__" {
                                     showingAddRoomPrompt = true
                                 }
@@ -294,7 +291,7 @@ struct EditItemView: View {
                             .font(.caption)
                             .foregroundColor(.gray)
                         TextField(l10n.details.enter.price,
-                                  value: $editableItem.estimatedPrice,
+                                  value: $viewModel.editableItem.estimatedPrice,
                                   format: .number)
 #if canImport(UIKit)
                             .keyboardType(.decimalPad)
@@ -306,7 +303,7 @@ struct EditItemView: View {
                         Text(l10n.details.status)
                              .font(.caption)
                              .foregroundColor(.gray)
-                        Picker(l10n.details.enter.status, selection: $editableItem.status) {
+                        Picker(l10n.details.enter.status, selection: $viewModel.editableItem.status) {
                             ForEach(Status.allCases, id: \.self) { status in
                                 Text(status.label).tag(status)
                             }
@@ -317,14 +314,14 @@ struct EditItemView: View {
                         Text(l10n.details.room.title)
                             .font(.caption)
                             .foregroundColor(.gray)
-                        if !viewModel.rooms.isEmpty {
-                            Picker(l10n.details.room.subtitle, selection: $editableItem.lastKnownRoom) {
-                                ForEach(viewModel.rooms, id: \.id) { room in
+                        if !inventoryVM.rooms.isEmpty {
+                            Picker(l10n.details.room.subtitle, selection: $viewModel.editableItem.lastKnownRoom) {
+                                ForEach(inventoryVM.rooms, id: \.id) { room in
                                     Text(room.label).tag(room)
                                 }
                                 Text(l10n.details.room.add).tag(Room(name: "__add_new__"))
                             }
-                            .onChange(of: editableItem.lastKnownRoom) { newValue in
+                            .onChange(of: viewModel.editableItem.lastKnownRoom) { newValue in
                                 if newValue.name == "__add_new__" {
                                     showingAddRoomPrompt = true
                                 }
@@ -343,29 +340,28 @@ struct EditItemView: View {
                             validateTag()
                         }
                         guard tagError == nil else { return }
-
                         Task {
                             Logger.action("Pressed Save Button")
-                            await uploadPickedImage()
-                            await saveReceiptImage(pickedReceiptImage)
-                            await saveReceiptPDF(pickedReceiptPDF)
-                            if let newURL = temporaryImageURL {
-                                editableItem.imageURL = newURL
-                            }
-                            onSave(editableItem)
+                            await viewModel.save()
+                            onSave(viewModel.editableItem)
                             HapticManager.shared.success()
                             close()
                         }
                     }
-                    .disabled(editableItem.name.isEmpty || editableItem.description.isEmpty || tagError != nil)
+                    .disabled(
+                        viewModel.editableItem.name.isEmpty ||
+                        viewModel.editableItem.description.isEmpty ||
+                        tagError != nil ||
+                        viewModel.isSaving
+                    )
                     .platformButtonStyle()
                 }
             }
             VStack(spacing: 4) {
-                if let error = uploadError {
+                if let error = viewModel.uploadError {
                     ErrorBanner(message: error)
                 }
-                if let error = receiptUploadError {
+                if let error = viewModel.receiptUploadError {
                     ErrorBanner(message: error)
                 }
             }
@@ -376,14 +372,14 @@ struct EditItemView: View {
             TextField(l10n.addRoomAlert.placeholder, text: $newRoomName)
             Button(l10n.addRoomAlert.add) {
                 Task {
-                    if let newRoom = await viewModel.addRoom(name: newRoomName) {
-                        editableItem.lastKnownRoom = newRoom
-                        } else {
-                            editableItem.lastKnownRoom = Room.placeholder()
-                        }
-                        newRoomName = ""
-                        HapticManager.shared.success()
+                    if let newRoom = await inventoryVM.addRoom(name: newRoomName) {
+                        viewModel.editableItem.lastKnownRoom = newRoom
+                    } else {
+                        viewModel.editableItem.lastKnownRoom = Room.placeholder()
                     }
+                    newRoomName = ""
+                    HapticManager.shared.success()
+                }
                 }
                 .platformButtonStyle()
                 Button(Strings.general.cancel, role: .cancel) { }
@@ -396,16 +392,13 @@ struct EditItemView: View {
             }
         .onAppear {
             Logger.page("EditItemView")
-            propertyTagInput = editableItem.propertyTagRange?.stringValue() ?? editableItem.propertyTag?.rawValue ?? ""
-            if let parsed = Date.fromShortString(editableItem.dateAdded) {
-                dateAddedDate = parsed
-            }
+            // Initialized in init
         }
         .task {
-            await viewModel.fetchInventory()
+            await inventoryVM.fetchInventory()
         }
         .task {
-            await viewModel.loadRooms()
+            await inventoryVM.loadRooms()
         }
 #if os(iOS)
         .sheet(isPresented: $showScanner) {
@@ -433,8 +426,8 @@ struct EditItemView: View {
 #if os(macOS)
     private var quantityField: some View {
         LabeledContent {
-            Stepper(value: $editableItem.quantity, in: 1...Int.max) {
-                Text("\(editableItem.quantity)")
+            Stepper(value: $viewModel.editableItem.quantity, in: 1...Int.max) {
+                Text("\(viewModel.editableItem.quantity)")
                     .frame(width: 40, alignment: .trailing)
             }
             .frame(width: fieldWidth)
@@ -443,7 +436,7 @@ struct EditItemView: View {
             Text(l10n.basicInfo.quantity)
                 .padding(.leading, 4)
         }
-        .onChange(of: editableItem.quantity) { _ in
+        .onChange(of: viewModel.editableItem.quantity) { _ in
             validateTag()
         }
     }
@@ -454,12 +447,12 @@ struct EditItemView: View {
             Text(l10n.basicInfo.quantity)
                 .font(.caption)
                 .foregroundColor(.gray)
-            Stepper(value: $editableItem.quantity, in: 1...Int.max) {
-                Text("\(editableItem.quantity)")
+            Stepper(value: $viewModel.editableItem.quantity, in: 1...Int.max) {
+                Text("\(viewModel.editableItem.quantity)")
             }
             .padding(.trailing)
         }
-        .onChange(of: editableItem.quantity) { _ in
+        .onChange(of: viewModel.editableItem.quantity) { _ in
             validateTag()
         }
     }
@@ -467,12 +460,12 @@ struct EditItemView: View {
 
     private func validateTag() {
         if propertyTagInput.isEmpty {
-            editableItem.propertyTag = nil
-            editableItem.propertyTagRange = nil
+            viewModel.editableItem.propertyTag = nil
+            viewModel.editableItem.propertyTagRange = nil
             tagError = nil
             return
         }
-        if propertyTagInput == (editableItem.propertyTagRange?.stringValue() ?? editableItem.propertyTag?.label) {
+        if propertyTagInput == (viewModel.editableItem.propertyTagRange?.stringValue() ?? viewModel.editableItem.propertyTag?.label) {
             tagError = nil
             return
         }
@@ -480,21 +473,21 @@ struct EditItemView: View {
         do {
             let tags = try ItemValidator.validateTags(
                 propertyTagInput,
-                quantity: editableItem.quantity,
-                currentItemID: editableItem.id,
-                allItems: viewModel.items
+                quantity: viewModel.editableItem.quantity,
+                currentItemID: viewModel.editableItem.id,
+                allItems: inventoryVM.items
             )
             if tags.count == 1 {
-                editableItem.propertyTag = tags[0]
-                editableItem.propertyTagRange = nil
+                viewModel.editableItem.propertyTag = tags[0]
+                viewModel.editableItem.propertyTagRange = nil
             } else {
-                editableItem.propertyTag = nil
-                editableItem.propertyTagRange = PropertyTagRange(tags: tags)
+                viewModel.editableItem.propertyTag = nil
+                viewModel.editableItem.propertyTagRange = PropertyTagRange(tags: tags)
             }
             tagError = nil
         } catch {
-            editableItem.propertyTag = nil
-            editableItem.propertyTagRange = nil
+            viewModel.editableItem.propertyTag = nil
+            viewModel.editableItem.propertyTagRange = nil
             if let validationError = error as? ItemValidationError {
                 switch validationError {
                 case .invalidTagFormat:
@@ -509,57 +502,6 @@ struct EditItemView: View {
             } else {
                 tagError = nil
             }
-        }
-    }
-
-    private func uploadPickedImage() async {
-        guard let selected = pickedImage else { return }
-
-        isUploading = true
-        uploadError = nil
-
-        defer { isUploading = false }
-        do {
-            let url = try await ImageUploadService()
-                .uploadImageAsync(image: selected, forItemId: editableItem.id)
-            temporaryImageURL = url.absoluteString
-        } catch {
-            Logger.log(error, extra: [
-                "description": "Upload Image Failed"
-            ])
-            uploadError = l10n.errors.imageUpload(error.localizedDescription)
-            HapticManager.shared.error()
-        }
-    }
-
-    private func saveReceiptImage(_ image: PlatformImage?) async {
-        guard let image else { return }
-        isUploadingReceipt = true
-        receiptUploadError = nil
-        defer { isUploadingReceipt = false }
-        do {
-            let url = try await PurchaseReceiptService()
-                .uploadReceipt(image: image, for: editableItem.id)
-            editableItem.purchaseReceiptURL = url.absoluteString
-        } catch {
-            receiptUploadError = Strings.purchaseReceipt.errors.uploadFailed(error.localizedDescription)
-            HapticManager.shared.error()
-        }
-    }
-
-    private func saveReceiptPDF(_ url: URL?) async {
-        guard let url else { return }
-        isUploadingReceipt = true
-        receiptUploadError = nil
-        defer { isUploadingReceipt = false }
-        do {
-            let data = try Data(contentsOf: url)
-            let saved = try await PurchaseReceiptService()
-                .uploadReceiptPDF(data, for: editableItem.id)
-            editableItem.purchaseReceiptURL = saved.absoluteString
-        } catch {
-            receiptUploadError = Strings.purchaseReceipt.errors.uploadFailed(error.localizedDescription)
-            HapticManager.shared.error()
         }
     }
 }

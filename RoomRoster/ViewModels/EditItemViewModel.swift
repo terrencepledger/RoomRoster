@@ -11,10 +11,14 @@ import Foundation
 @MainActor
 final class EditItemViewModel: ObservableObject {
     @Published var editableItem: Item
+    @Published var pickedImage: PlatformImage?
     @Published var pickedReceiptImage: PlatformImage?
     @Published var pickedReceiptPDF: URL?
     @Published var isUploadingReceipt: Bool = false
     @Published var receiptUploadError: String?
+    @Published var isUploading: Bool = false
+    @Published var uploadError: String?
+    @Published var temporaryImageURL: String?
     @Published var isSaving: Bool = false
 
     private let inventoryService: InventoryService
@@ -44,6 +48,7 @@ final class EditItemViewModel: ObservableObject {
     }
 
     func saveUpdates(updatedBy: String?) async throws {
+        guard !isSaving else { return }
         isSaving = true
         defer { isSaving = false }
 
@@ -52,12 +57,52 @@ final class EditItemViewModel: ObservableObject {
         await historyService.logChanges(old: previous, new: editableItem, updatedBy: updatedBy)
     }
 
+    func save() async {
+        guard !isSaving else { return }
+        isSaving = true
+        defer { isSaving = false }
+
+        await uploadPickedImage()
+        if let image = pickedReceiptImage {
+            await saveReceiptImage(image)
+        }
+        if let url = pickedReceiptPDF {
+            await saveReceiptPDF(from: url)
+        }
+        if let newURL = temporaryImageURL {
+            editableItem.imageURL = newURL
+        }
+    }
+
     func onReceiptPicked(_ image: PlatformImage?) {
         pickedReceiptImage = image
     }
 
     func onReceiptPDFPicked(_ url: URL?) {
         pickedReceiptPDF = url
+    }
+
+    func onImagePicked(_ image: PlatformImage?) {
+        pickedImage = image
+    }
+
+    private func uploadPickedImage() async {
+        guard let selected = pickedImage else { return }
+
+        isUploading = true
+        uploadError = nil
+        defer { isUploading = false }
+        do {
+            let url = try await ImageUploadService()
+                .uploadImageAsync(image: selected, forItemId: editableItem.id)
+            temporaryImageURL = url.absoluteString
+        } catch {
+            Logger.log(error, extra: [
+                "description": "Upload Image Failed",
+            ])
+            uploadError = Strings.editItem.errors.imageUpload(error.localizedDescription)
+            HapticManager.shared.error()
+        }
     }
 
     private func saveReceiptImage(_ image: PlatformImage) async {
