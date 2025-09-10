@@ -252,7 +252,11 @@ struct SalesView: View {
             }
             DatePicker(
                 "Date Range",
-                selection: Binding(get: { dateRange ?? Date()...Date() }, set: { dateRange = $0 }),
+                selection: Binding<ClosedRange<Date>>(
+                    get: { dateRange ?? Date()...Date() },
+                    set: { dateRange = $0 }
+                ),
+                in: Date.distantPast...Date.distantFuture,
                 displayedComponents: .date
             )
             HStack {
