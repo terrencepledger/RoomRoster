@@ -17,8 +17,7 @@ struct SalesView: View {
     @State private var successMessage: String?
 
     @State private var searchText: String = ""
-    @State private var startDate: Date?
-    @State private var endDate: Date?
+    @State private var dateRange: ClosedRange<Date>?
     @State private var minPrice: Double?
     @State private var maxPrice: Double?
 
@@ -132,8 +131,7 @@ struct SalesView: View {
         }
 #if os(macOS)
         .onChange(of: searchText) { _ in updateSelection() }
-        .onChange(of: startDate) { _ in updateSelection() }
-        .onChange(of: endDate) { _ in updateSelection() }
+        .onChange(of: dateRange) { _ in updateSelection() }
         .onChange(of: minPrice) { _ in updateSelection() }
         .onChange(of: maxPrice) { _ in updateSelection() }
 #endif
@@ -247,20 +245,16 @@ struct SalesView: View {
     @ViewBuilder
     private var filterHeader: some View {
         VStack {
-            TextField("Search", text: $searchText)
-                .textFieldStyle(.roundedBorder)
             HStack {
-                DatePicker(
-                    "From",
-                    selection: Binding(get: { startDate ?? Date() }, set: { startDate = $0 }),
-                    displayedComponents: .date
-                )
-                DatePicker(
-                    "To",
-                    selection: Binding(get: { endDate ?? Date() }, set: { endDate = $0 }),
-                    displayedComponents: .date
-                )
+                TextField("Search", text: $searchText)
+                    .textFieldStyle(.roundedBorder)
+                Button("Clear") { clearFilters() }
             }
+            DatePicker(
+                "Date Range",
+                selection: Binding(get: { dateRange ?? Date()...Date() }, set: { dateRange = $0 }),
+                displayedComponents: .date
+            )
             HStack {
                 TextField(
                     "Min Price",
@@ -279,8 +273,7 @@ struct SalesView: View {
     private var filteredSales: [Sale] {
         viewModel.filteredSales(
             query: searchText,
-            startDate: startDate,
-            endDate: endDate,
+            dateRange: dateRange,
             minPrice: minPrice,
             maxPrice: maxPrice
         )
@@ -296,4 +289,11 @@ struct SalesView: View {
         }
     }
 #endif
+
+    private func clearFilters() {
+        searchText = ""
+        dateRange = nil
+        minPrice = nil
+        maxPrice = nil
+    }
 }
