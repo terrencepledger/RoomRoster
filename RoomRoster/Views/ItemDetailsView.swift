@@ -299,7 +299,7 @@ struct ItemDetailsView: View {
                         let updatedBy = AuthenticationManager.shared.userName
                         await HistoryLogService()
                             .logChanges(old: oldItem, new: updatedItem, updatedBy: updatedBy)
-                        await viewModel.fetchItemHistory(for: item.id)
+                        await viewModel.fetchItemHistory(for: item.id, forceRefresh: true)
                         await inventoryVM.fetchInventory()
                         editSuccess = Strings.editItem.success
                         HapticManager.shared.success()
@@ -364,7 +364,7 @@ struct ItemDetailsView: View {
         }
         .refreshable {
             Logger.action("Refreshing")
-            await viewModel.fetchItemHistory(for: item.id)
+            await viewModel.fetchItemHistory(for: item.id, forceRefresh: true)
         }
     }
 

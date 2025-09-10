@@ -17,10 +17,13 @@ class ItemDetailsViewModel: ObservableObject {
     private let downloader = FileDownloadService()
     private let receiptService = PurchaseReceiptService()
 
-    func fetchItemHistory(for itemId: String) async {
+    func fetchItemHistory(for itemId: String, forceRefresh: Bool = false) async {
         isLoadingHistory = true
         defer { isLoadingHistory = false }
         do {
+            if forceRefresh {
+                await service.invalidateHistoryCache()
+            }
             let logs = try await service.fetchItemHistory(itemId: itemId)
             historyLogs = logs
         } catch {
