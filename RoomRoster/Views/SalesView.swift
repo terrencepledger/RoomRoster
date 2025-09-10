@@ -17,7 +17,7 @@ struct SalesView: View {
     @State private var successMessage: String?
 
     @State private var searchText: String = ""
-    @State private var dateRange: ClosedRange<Date>?
+    @State private var dateRange: DateInterval?
     @State private var minPrice: Double?
     @State private var maxPrice: Double?
 
@@ -252,11 +252,10 @@ struct SalesView: View {
             }
             DatePicker(
                 "Date Range",
-                selection: Binding<ClosedRange<Date>>(
-                    get: { dateRange ?? Date()...Date() },
+                selection: Binding<DateInterval>(
+                    get: { dateRange ?? DateInterval(start: Date(), end: Date()) },
                     set: { dateRange = $0 }
                 ),
-                in: Date.distantPast...Date.distantFuture,
                 displayedComponents: .date
             )
             HStack {

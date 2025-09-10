@@ -40,7 +40,7 @@ final class SalesViewModel: ObservableObject {
 
     func filteredSales(
         query: String,
-        dateRange: ClosedRange<Date>?,
+        dateRange: DateInterval?,
         minPrice: Double?,
         maxPrice: Double?
     ) -> [Sale] {
@@ -51,7 +51,7 @@ final class SalesViewModel: ObservableObject {
                 if !name.contains(q) { return false }
             }
             if let range = dateRange {
-                if sale.date < range.lowerBound || sale.date > range.upperBound { return false }
+                if !range.contains(sale.date) { return false }
             }
             if let min = minPrice {
                 guard let price = sale.price, price >= min else { return false }
