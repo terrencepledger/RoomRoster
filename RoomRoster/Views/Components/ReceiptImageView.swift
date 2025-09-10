@@ -21,11 +21,8 @@ struct RemoteImageView: View {
                         .frame(width: height, height: height)
                         .foregroundColor(.red.opacity(0.8))
                 default:
-                    Image(systemName: "photo")
-                        .resizable()
-                        .scaledToFit()
+                    ProgressView()
                         .frame(width: height, height: height)
-                        .foregroundColor(.secondary.opacity(0.5))
                 }
             }
         } else {
@@ -60,11 +57,8 @@ struct ReceiptImageView: View {
                         .frame(width: height, height: height)
                         .foregroundColor(.red.opacity(0.8))
                 default:
-                    Image(systemName: "photo")
-                        .resizable()
-                        .scaledToFit()
+                    ProgressView()
                         .frame(width: height, height: height)
-                        .foregroundColor(.secondary.opacity(0.5))
                 }
             }
         } else if let urlString, !urlString.isEmpty {
