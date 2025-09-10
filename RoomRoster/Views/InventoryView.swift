@@ -381,6 +381,7 @@ struct InventoryView: View {
                                 VStack(alignment: .leading) {
                                     Text(item.name).font(.headline)
                                     Text(l10n.status(item.status.label))
+                                        .foregroundColor(item.status.color)
                                     if let range = item.propertyTagRange {
                                         let label = range.tags.count > 1 ? l10n.tags(range.stringValue()) : l10n.tag(range.stringValue())
                                         Text(label)
@@ -406,6 +407,7 @@ struct InventoryView: View {
                                     VStack(alignment: .leading) {
                                         Text(item.name).font(.headline)
                                         Text(l10n.status(item.status.label))
+                                            .foregroundColor(item.status.color)
                                         if let range = item.propertyTagRange {
                                             let label = range.tags.count > 1 ? l10n.tags(range.stringValue()) : l10n.tag(range.stringValue())
                                             Text(label)
