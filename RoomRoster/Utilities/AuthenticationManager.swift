@@ -49,11 +49,17 @@ class AuthenticationManager: ObservableObject {
     }
 
     func ensureSignedIn() async {
+        await refreshTokensIfNeeded()
         await signIn()
     }
 
     private func signInSilently() async -> Bool {
         if let user = GIDSignIn.sharedInstance.currentUser {
+            do {
+                try await user.refreshTokensIfNeeded()
+            } catch {
+                Logger.log(error, extra: ["description": "Failed refreshing tokens"])
+            }
             updateUser(from: user)
             await SpreadsheetManager.shared.loadSheets()
             return true
@@ -61,12 +67,24 @@ class AuthenticationManager: ObservableObject {
 
         do {
             let restored = try await GIDSignIn.sharedInstance.restorePreviousSignIn()
+            try await restored.refreshTokensIfNeeded()
             updateUser(from: restored)
             await SpreadsheetManager.shared.loadSheets()
             return true
         } catch {
             Logger.log(error, extra: ["description": "Failed restoring sign in"])
             return false
+        }
+    }
+
+    private func refreshTokensIfNeeded() async {
+        guard isSignedIn, let user = GIDSignIn.sharedInstance.currentUser else { return }
+        do {
+            try await user.refreshTokensIfNeeded()
+            updateUser(from: user)
+        } catch {
+            Logger.log(error, extra: ["description": "Failed refreshing tokens"])
+            signOut()
         }
     }
 
