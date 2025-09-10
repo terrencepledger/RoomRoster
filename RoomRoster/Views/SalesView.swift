@@ -17,7 +17,7 @@ struct SalesView: View {
     @State private var successMessage: String?
 
     @State private var searchText: String = ""
-    @State private var dateRange: DateInterval?
+    @State private var dateRange: ClosedRange<Date>?
     @State private var minPrice: Double?
     @State private var maxPrice: Double?
 
@@ -252,8 +252,8 @@ struct SalesView: View {
             }
             DatePicker(
                 "Date Range",
-                selection: Binding<DateInterval>(
-                    get: { dateRange ?? DateInterval(start: Date(), end: Date()) },
+                selection: Binding(
+                    get: { dateRange ?? Date()...Date() },
                     set: { dateRange = $0 }
                 ),
                 displayedComponents: .date

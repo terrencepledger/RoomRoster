@@ -40,7 +40,7 @@ final class SalesViewModel: ObservableObject {
 
     func filteredSales(
         query: String,
-        dateRange: DateInterval?,
+        dateRange: ClosedRange<Date>?,
         minPrice: Double?,
         maxPrice: Double?
     ) -> [Sale] {
