@@ -25,59 +25,64 @@ struct SettingsView: View {
     }
 
     var body: some View {
-        Form {
-            if let message = auth.signInError {
-                Banner.error(message)
-            }
-            Section(l10n.accountSection) {
-                if auth.isSignedIn {
-                    if let user = auth.userName ?? auth.email {
-                        HStack {
-                            Text(l10n.signedInAs)
-                            Spacer()
-                            Text(user)
-                                .foregroundColor(.secondary)
+        NavigationStack {
+            Form {
+                if let message = auth.signInError {
+                    Banner.error(message)
+                }
+                Section(l10n.accountSection) {
+                    if auth.isSignedIn {
+                        if let user = auth.userName ?? auth.email {
+                            HStack {
+                                Text(l10n.signedInAs)
+                                Spacer()
+                                Text(user)
+                                    .foregroundColor(.secondary)
+                            }
                         }
-                    }
-                    Button(l10n.signOutButton) {
-                        auth.signOut()
-                        sheets.signOut()
-                        HapticManager.shared.success()
-                    }
-                    .platformButtonStyle()
-                } else {
-                    Button(l10n.signInButton) {
-                        Task {
-                            await auth.signIn()
+                        Button(l10n.signOutButton) {
+                            auth.signOut()
+                            sheets.signOut()
                             HapticManager.shared.success()
                         }
+                        .platformButtonStyle()
+                    } else {
+                        Button(l10n.signInButton) {
+                            Task {
+                                await auth.signIn()
+                                HapticManager.shared.success()
+                            }
+                        }
+                        .platformButtonStyle()
                     }
-                    .platformButtonStyle()
+                }
+
+                Section(l10n.appSettingsSection) {
+                    Toggle(l10n.darkModeToggle, isOn: $isDarkMode)
+                        .onChange(of: isDarkMode) { _ in
+                            HapticManager.shared.impact()
+                        }
+                    Toggle(l10n.hapticsToggle, isOn: $hapticsEnabled)
+                        .onChange(of: hapticsEnabled) { _ in
+                            HapticManager.shared.impact()
+                        }
+                    NavigationLink(l10n.editRoomsButton) {
+                        EditRoomsView()
+                    }
+                }
+
+                Section(l10n.aboutSection) {
+                    HStack {
+                        Text(l10n.versionLabel)
+                        Spacer()
+                        Text(versionString)
+                            .foregroundColor(.secondary)
+                    }
                 }
             }
-
-            Section(l10n.appSettingsSection) {
-                Toggle(l10n.darkModeToggle, isOn: $isDarkMode)
-                    .onChange(of: isDarkMode) { _ in
-                        HapticManager.shared.impact()
-                    }
-                Toggle(l10n.hapticsToggle, isOn: $hapticsEnabled)
-                    .onChange(of: hapticsEnabled) { _ in
-                        HapticManager.shared.impact()
-                    }
-            }
-
-            Section(l10n.aboutSection) {
-                HStack {
-                    Text(l10n.versionLabel)
-                    Spacer()
-                    Text(versionString)
-                        .foregroundColor(.secondary)
-                }
-            }
+            .formStyle(.grouped)
+            .navigationTitle(l10n.title)
         }
-        .formStyle(.grouped)
-        .navigationTitle(l10n.title)
         .onAppear { Logger.page("SettingsView") }
     }
 }

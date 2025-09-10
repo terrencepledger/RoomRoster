@@ -233,9 +233,11 @@ struct Strings {
         static let signedInAs = "Signed in as"
         static let appSettingsSection   = "App Settings"
         static let darkModeToggle       = "Dark Mode"
+        static let hapticsToggle        = "Haptics"
+        static let editRoomsButton      = "Edit Rooms"
+        static let roomsTitle           = "Rooms"
         static let aboutSection         = "About"
         static let versionLabel         = "Version"
-        static let hapticsToggle        = "Haptics"
     }
 
     // MARK: - ReportsView

@@ -69,11 +69,12 @@
 		B65F71252DE6491700310D40 /* MainMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F71242DE6491700310D40 /* MainMenuView.swift */; };
 		B65F71272DE6493600310D40 /* ReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F71262DE6493600310D40 /* ReportsView.swift */; };
 		B65F71292DE6494A00310D40 /* SheetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F71282DE6494A00310D40 /* SheetsView.swift */; };
-		B65F712B2DE6495900310D40 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F712A2DE6495900310D40 /* SettingsView.swift */; };
-		B65F712D2DE64F8500310D40 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F712C2DE64F8500310D40 /* Strings.swift */; };
-		B65F71302DEB5C5200310D40 /* ItemValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F712F2DEB5C4D00310D40 /* ItemValidator.swift */; };
-		B66016AF2DA9CEDC0012FDD0 /* CreateItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */; };
-		B67560442DF0D231001A5D9D /* CreateItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67560432DF0D231001A5D9D /* CreateItemViewModel.swift */; };
+                B65F712B2DE6495900310D40 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F712A2DE6495900310D40 /* SettingsView.swift */; };
+                B65F712D2DE64F8500310D40 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F712C2DE64F8500310D40 /* Strings.swift */; };
+                B65F71302DEB5C5200310D40 /* ItemValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F712F2DEB5C4D00310D40 /* ItemValidator.swift */; };
+                B66016AF2DA9CEDC0012FDD0 /* CreateItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */; };
+                964990C70AB3416FBC312B18 /* EditRoomsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091ADA7DABB344E9893742E3 /* EditRoomsView.swift */; };
+                B67560442DF0D231001A5D9D /* CreateItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67560432DF0D231001A5D9D /* CreateItemViewModel.swift */; };
 		B6A6D6D62DD7AAEE00378BFF /* ItemField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A6D6D52DD7AAEE00378BFF /* ItemField.swift */; };
 		B6A6D6D82DD7AB3800378BFF /* FieldBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A6D6D72DD7AB3800378BFF /* FieldBinding.swift */; };
 		B6A6D6DC2DD8FD4E00378BFF /* ErrorBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A6D6DB2DD8FD4E00378BFF /* ErrorBanner.swift */; };
@@ -194,8 +195,9 @@
 		B65F712A2DE6495900310D40 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B65F712C2DE64F8500310D40 /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		B65F712F2DEB5C4D00310D40 /* ItemValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemValidator.swift; sourceTree = "<group>"; };
-		B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateItemView.swift; sourceTree = "<group>"; };
-		B67560432DF0D231001A5D9D /* CreateItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateItemViewModel.swift; sourceTree = "<group>"; };
+                B66016AE2DA9CEDC0012FDD0 /* CreateItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateItemView.swift; sourceTree = "<group>"; };
+                091ADA7DABB344E9893742E3 /* EditRoomsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRoomsView.swift; sourceTree = "<group>"; };
+                B67560432DF0D231001A5D9D /* CreateItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateItemViewModel.swift; sourceTree = "<group>"; };
 		B6A6D6D52DD7AAEE00378BFF /* ItemField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemField.swift; sourceTree = "<group>"; };
 		B6A6D6D72DD7AB3800378BFF /* FieldBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldBinding.swift; sourceTree = "<group>"; };
 		B6A6D6DB2DD8FD4E00378BFF /* ErrorBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorBanner.swift; sourceTree = "<group>"; };
@@ -271,11 +273,12 @@
                                 767B05912D4C5DC000566C25 /* InventoryView.swift */,
 				767B05C02D4C666F00566C25 /* ItemDetailsView.swift */,
 				B65F71242DE6491700310D40 /* MainMenuView.swift */,
-				B65F71262DE6493600310D40 /* ReportsView.swift */,
-				B65F712A2DE6495900310D40 /* SettingsView.swift */,
-				B65F71282DE6494A00310D40 /* SheetsView.swift */,
-				6624E3822EF84521B07B00F3 /* SalesView.swift */,
-				C616CDE1A2B34C5D67890ABD /* SalesDetailsView.swift */,
+                                B65F71262DE6493600310D40 /* ReportsView.swift */,
+                                B65F712A2DE6495900310D40 /* SettingsView.swift */,
+                                091ADA7DABB344E9893742E3 /* EditRoomsView.swift */,
+                                B65F71282DE6494A00310D40 /* SheetsView.swift */,
+                                6624E3822EF84521B07B00F3 /* SalesView.swift */,
+                                C616CDE1A2B34C5D67890ABD /* SalesDetailsView.swift */,
 				68CAB974B03A4708BB968FC8 /* SellItemView.swift */,
 			);
 			path = Views;
@@ -607,10 +610,11 @@
 				B3C17C2B098B4B398D39C2BE /* ItemGroup.swift in Sources */,
 				ABCDEF012345678901234568 /* PropertyTagRange.swift in Sources */,
                                 B67560442DF0D231001A5D9D /* CreateItemViewModel.swift in Sources */,
-				B65F712B2DE6495900310D40 /* SettingsView.swift in Sources */,
-				B6D80EFD2E28DD8D00748907 /* SpreadsheetManager.swift in Sources */,
-				B615ED222DE2BB4E009BE623 /* RoomService.swift in Sources */,
-				767E82C92D8F1AA500B48011 /* NetworkService.swift in Sources */,
+                                B65F712B2DE6495900310D40 /* SettingsView.swift in Sources */,
+                                964990C70AB3416FBC312B18 /* EditRoomsView.swift in Sources */,
+                                B6D80EFD2E28DD8D00748907 /* SpreadsheetManager.swift in Sources */,
+                                B615ED222DE2BB4E009BE623 /* RoomService.swift in Sources */,
+                                767E82C92D8F1AA500B48011 /* NetworkService.swift in Sources */,
                                 B6D80EFE2E295A1600748907 /* HapticManager.swift in Sources */,
                                 0A2B89787187428E8B76DD58 /* DepreciationCalculator.swift in Sources */,
                                 8F419DC95DD3457AB0BC226A /* PlatformStyles.swift in Sources */,
