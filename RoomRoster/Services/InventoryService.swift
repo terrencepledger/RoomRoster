@@ -57,6 +57,10 @@ actor InventoryService {
         return sheet
     }
 
+    func invalidateHistoryCache() {
+        cachedHistory = nil
+    }
+
     func fetchItemHistory(itemId: String) async throws -> [String] {
         let sheet = try await fetchAllHistory()
         guard let row = sheet.values.first(where: { $0.first == itemId }) else { return [] }
