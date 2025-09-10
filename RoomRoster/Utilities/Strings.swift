@@ -57,6 +57,11 @@ struct Strings {
         static let emptyState = "No items to display"
         static let selectSheetPrompt = "Select a sheet in the Sheets tab"
         static let selectItemPrompt = "Select an item"
+        struct addRoom {
+            static let title = "Add New Room"
+            static let placeholder = "Room Name"
+            static let button = "Add"
+        }
         struct query {
             static let name = "name"
             static let description = "description"
