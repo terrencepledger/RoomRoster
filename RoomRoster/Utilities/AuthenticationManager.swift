@@ -65,7 +65,6 @@ class AuthenticationManager: ObservableObject {
             await SpreadsheetManager.shared.loadSheets()
             return true
         } catch {
-            Logger.log(error, extra: ["description": "Failed restoring sign in"])
             return false
         }
     }
