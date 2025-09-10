@@ -32,6 +32,15 @@ struct SalesView: View {
     }
 #endif
 
+    private static let allDates: ClosedRange<Date> = Date.distantPast...Date.distantFuture
+
+    private var dateRangeBinding: Binding<ClosedRange<Date>> {
+        Binding(
+            get: { dateRange ?? Self.allDates },
+            set: { dateRange = $0 }
+        )
+    }
+
     var body: some View {
         ZStack(alignment: .bottom) {
         Group {
@@ -252,13 +261,10 @@ struct SalesView: View {
             }
             DatePicker(
                 "Date Range",
-                selection: Binding<ClosedRange<Date>>(
-                    get: { dateRange ?? Date.distantPast...Date.distantFuture },
-                    set: { dateRange = $0 }
-                ),
-                in: Date.distantPast...Date.distantFuture,
+                selection: dateRangeBinding,
                 displayedComponents: .date
             )
+            .datePickerStyle(.graphical)
             HStack {
                 TextField(
                     "Min Price",
